@@ -10,7 +10,9 @@ from datetime import datetime
 import json
 from pathlib import Path
 
-from agents.base_agent import BaseAgent, AgentInput, AgentOutput, AgentCapability
+# Import BaseAgent from local module, models from single source of truth
+from agents.base_agent import BaseAgent
+from interfaces.agent_models import AgentInput, AgentOutput, AgentCapability
 
 logger = logging.getLogger(__name__)
 

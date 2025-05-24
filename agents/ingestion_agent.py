@@ -15,6 +15,7 @@ import io
 import re
 from urllib.parse import urlparse
 
+# Import from single source of truth
 from interfaces.agent_models import (
     AgentInput, AgentOutput, AgentCapability, ContentMetadata
 )

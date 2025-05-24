@@ -15,8 +15,10 @@ import logging
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from agents.base_agent import AgentInput, AgentOutput
+# Import models from single source of truth
+from interfaces.agent_models import AgentInput, AgentOutput
 from agents.digest_agent import DigestAgent
+from agents.ingestion_agent import IngestionAgent
 
 
 logging.basicConfig(
@@ -29,22 +31,60 @@ logger = logging.getLogger(__name__)
 class CLIRunner:
     """Simple CLI runner for agent operations."""
     
-    def __init__(self):
+    def __init__(self, storage_path: Optional[Path] = None, temp_path: Optional[Path] = None):
+        """Initialize the CLI runner.
+        
+        Args:
+            storage_path: Path to content storage directory
+            temp_path: Path to temporary files directory
+        """
+        self.storage_path = storage_path or Path("./data/knowledge")
+        self.temp_path = temp_path or Path("./data/temp")
+        
+        # Initialize agents
         self.agents = {
-            'digest': DigestAgent()
+            'digest': DigestAgent(),
+            'ingestion': IngestionAgent(
+                storage_path=self.storage_path,
+                temp_path=self.temp_path
+            )
         }
     
     async def run_agent(self, agent_name: str, input_data: Dict[str, Any]) -> AgentOutput:
-        """Run a specific agent with the given input."""
+        """Run a specific agent with the given input.
+        
+        Args:
+            agent_name: Name of the agent to run
+            input_data: Input data dictionary
+            
+        Returns:
+            AgentOutput from the agent
+            
+        Raises:
+            ValueError: If agent name is unknown
+        """
         if agent_name not in self.agents:
             raise ValueError(f"Unknown agent: {agent_name}")
         
         agent = self.agents[agent_name]
-        agent_input = AgentInput(
-            task_id=input_data.get('task_id', 'cli-task'),
-            content=input_data.get('content', {}),
-            metadata=input_data.get('metadata', {})
-        )
+        
+        # Create AgentInput based on agent type
+        if agent_name == 'ingestion':
+            agent_input = AgentInput(
+                task_id=input_data.get('task_id', 'cli-task'),
+                task_type=input_data.get('task_type', 'url'),
+                source='cli',
+                content=input_data.get('content', {}),
+                metadata=input_data.get('metadata', {}),
+                context=input_data.get('context', {})
+            )
+        else:
+            agent_input = AgentInput(
+                task_id=input_data.get('task_id', 'cli-task'),
+                source='cli',
+                content=input_data.get('content', {}),
+                metadata=input_data.get('metadata', {})
+            )
         
         logger.info(f"Running {agent_name} agent with task_id: {agent_input.task_id}")
         result = await agent.process(agent_input)
@@ -101,8 +141,14 @@ def main():
     
     # Run agent command (generic)
     run_parser = subparsers.add_parser('run', help='Run an agent with JSON input')
-    run_parser.add_argument('agent', choices=['digest'], help='Agent to run')
+    run_parser.add_argument('agent', choices=['digest', 'ingestion'], help='Agent to run')
     run_parser.add_argument('input', help='JSON input data')
+    
+    # Common options
+    parser.add_argument('--storage-path', type=Path, default='./data/knowledge',
+                       help='Path to content storage directory')
+    parser.add_argument('--temp-path', type=Path, default='./data/temp',
+                       help='Path to temporary files directory')
     
     args = parser.parse_args()
     
@@ -110,7 +156,10 @@ def main():
         parser.print_help()
         return
     
-    runner = CLIRunner()
+    runner = CLIRunner(
+        storage_path=args.storage_path,
+        temp_path=args.temp_path
+    )
     
     async def execute():
         try:
@@ -125,11 +174,31 @@ def main():
             elif args.command == 'run':
                 input_data = json.loads(args.input)
                 result = await runner.run_agent(args.agent, input_data)
-                print(json.dumps({
-                    'status': result.status,
-                    'content': result.content,
-                    'metadata': result.metadata
-                }, indent=2))
+                
+                # Print results in a structured format
+                print("\nProcessing Results:")
+                print("------------------")
+                print(f"Task ID: {result.task_id}")
+                print(f"Status: {result.status}")
+                print(f"Duration: {result.duration_ms}ms")
+                
+                if result.status == "success":
+                    if args.agent == 'ingestion':
+                        print("\nContent Details:")
+                        print(f"Content ID: {result.result['content_id']}")
+                        print(f"Content Type: {result.result['content_type']}")
+                        print(f"Content Length: {result.result['content_length']} characters")
+                        
+                        if result.result.get('metadata'):
+                            print("\nMetadata:")
+                            for key, value in result.result['metadata'].items():
+                                if key != 'additional_metadata':
+                                    print(f"{key}: {value}")
+                    else:
+                        print("\nResult:")
+                        print(json.dumps(result.result, indent=2))
+                else:
+                    print(f"\nError: {result.error}")
                 
         except Exception as e:
             logger.error(f"Error executing command: {e}")

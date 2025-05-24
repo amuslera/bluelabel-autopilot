@@ -5,38 +5,12 @@ following MCP (Model Context Protocol) compliance standards.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Optional, Callable
+from typing import Dict, Any, List, Optional
 from datetime import datetime
 import uuid
-from pydantic import BaseModel, Field
 
-
-class AgentInput(BaseModel):
-    """Standardized input for all agents following MCP patterns."""
-    task_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    source: str = Field(..., description="Source identifier (e.g., 'whatsapp', 'web', 'cli')")
-    content: Dict[str, Any] = Field(default_factory=dict, description="Main content payload")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
-    context: Dict[str, Any] = Field(default_factory=dict, description="Execution context")
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
-
-
-class AgentOutput(BaseModel):
-    """Standardized output from all agents following MCP patterns."""
-    task_id: str = Field(..., description="Matching task_id from input")
-    status: str = Field(..., description="Status: 'success', 'error', 'pending'")
-    result: Dict[str, Any] = Field(default_factory=dict, description="Processing results")
-    error: Optional[str] = Field(None, description="Error message if status is 'error'")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
-    duration_ms: Optional[int] = Field(None, description="Processing duration in milliseconds")
-
-
-class AgentCapability(BaseModel):
-    """Describes a capability or tool available to an agent."""
-    name: str = Field(..., description="Capability name")
-    description: str = Field(..., description="What this capability does")
-    parameters: Dict[str, Any] = Field(default_factory=dict, description="Expected parameters")
+# Import standardized models from the single source of truth
+from interfaces.agent_models import AgentInput, AgentOutput, AgentCapability
     
     
 class BaseAgent(ABC):

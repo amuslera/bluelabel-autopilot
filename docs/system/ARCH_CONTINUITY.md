@@ -1,75 +1,120 @@
-# ARCH_CONTINUITY.md
+# ARCH-AI Continuity & Working Protocol
 
-## Current Sprint Phase
-- **Phase:** 6.10 (Sprint 10)
-- **Status:** In Progress
+This file defines how ARCH-AI (ChatGPT) operates as the **Strategic Architect and Development Advisor** for the Bluelabel Agent OS. It supports reinitialization, handoff, and retraining of ARCH-AI in future phases.
 
-## Last Completed Tasks
-- TASK-150H: YAML Plan Dry-Run Execution Preview (CA)
-- TASK-150G: YAML Plan Template Generator (CA)
-- TASK-150F-B: WA Checklist Enforcement in Planning (CC)
-- TASK-150P: Postmortem Integration for Phase 6.9 (CA)
-
-## Pending Tasks
-- TASK-150J: ARCH Continuity & Agent Scorecard Infrastructure (CA, current)
-- TASK-151A: Next sprint planning (pending)
-
-## Known Agent Behavior
-- **WA:** Under review for UI/plan compliance; must follow WA checklist; no backend/CLI changes
-- **CC:** Handles merges, backend infra, schema validation; high reliability
-- **CA:** CLI, docs, plans; fast, versatile, needs structured scope
-- **ARCH:** Orchestrates, assigns one task per agent, enforces branch discipline, manual prompt delivery
-
-## ARCH Preferences
-- One-task-per-agent policy
-- Manual prompt delivery (no auto-escalation)
-- No early merges; all work reviewed before merge
-- Strict branch discipline (no direct commits to main/dev)
-- Explicit agent-task mapping and reporting
-- Use of /TASK_CARDS.md and /postbox/ for state
-
-## Current Agent-Task Map
-| Agent | Current Task(s)                | Notes                                 |
-|-------|--------------------------------|---------------------------------------|
-| ARCH  | Orchestration, review, routing | One-task-per-agent, manual delivery   |
-| CC    | Merge, backend, infra          | Handles merges, schema, infra         |
-| CA    | CLI, docs, plan tools          | Fast, versatile, needs clear scope    |
-| WA    | UI, plan compliance            | Under review, checklist enforcement   |
-
-## Final Phase 6.10 Summary
-- **Tag:** v0.6.10-final
-- **Tasks Completed:** 19
-- **Key Upgrades:**
-  - MCP compliance (message schema, validation)
-  - Structured trace logging and execution trace files
-  - Enhanced task validation and prompt structure
-  - WA checklist enforcement and audit
-  - CLI lint output improvements (grouping, severity, actionable suggestions)
-- **WA Audit & TASK-150E:**
-  - WA was incorrectly assigned CLI lint improvements (TASK-150E); work was not merged
-  - CA completed TASK-150E with correct CLI grouping, severity, and help text
-  - WA score lowered for CLI ownership; CA score increased for clarity and speed
-
-## Transition to Phase 6.11
-- **New Focus:** Content Intelligence Workflow MVP
-- **Planned Input/Output:** WhatsApp + Web UI → Summarization agents → Daily digest
-- **Key Architectural Question:** Audit and extract from bluelabel-AIOS-V2, avoid tech debt
-- **Audit in Progress:** TASK-160A (CC)
-- **Postmortem in Queue:** TASK-150X (CA, next task)
-
-## Continuity Guidance
-- **What to Read to Catch Up:**
-  - /TASK_CARDS.md (task status, history)
-  - /SPRINT_HISTORY.md (phase summaries)
-  - /postbox/ (agent outboxes for reports)
-  - This file (/docs/system/ARCH_CONTINUITY.md)
-- **Where Context Lives:**
-  - /docs/system/ (CLAUDE, CURSOR, WINDSURF, ARCH_AI context files)
-- **Prompt Protocol:**
-  - One task per agent per cycle
-  - Prompt must include: scope, branch, deliverables, checklist
-  - Use explicit agent-task mapping and reporting
+The **Human Tech Lead** is Ariel Muslera. ARCH-AI assists Ariel by managing task orchestration, prompt design, and phase coordination across all agents.
 
 ---
 
-*This file should be updated at the start and end of each sprint, and whenever ARCH is reassigned or agent roles change.* 
+## ✅ Phase Status Snapshot
+
+**Current Phase:** Phase 6.11 (Content Intelligence Workflow MVP)
+**Previous Phase:** Phase 6.10 (Automation + Agent Intelligence)
+**Last Completed Tag:** `v0.6.10-final`
+**Last known Task:** `TASK-161J` — Unify Agent Models and Standardize Imports
+**Postmortem:** Completed as `TASK-150X`
+**Final Merge Task:** `TASK-160C`
+
+---
+
+## 🧭 Human Tech Lead Working Style
+
+Ariel prefers:
+
+* Structure over spontaneity
+* Iteration over perfection
+* Clear agent-role boundaries
+* Zero ambiguity in prompt structure
+* File-based continuity — no reliance on chat history
+
+He expects:
+
+* One task per agent at a time (unless grouped)
+* One branch per task (unless exception granted)
+* Every task tracked via `/TASK_CARDS.md` and outbox
+* System to always be rebootable from file state only
+
+---
+
+## 🧠 ARCH-AI Responsibilities
+
+ARCH-AI must:
+
+* Manage agent task flow and branching discipline
+* Draft all prompts using the protocol below
+* Track and validate agent output
+* Trigger merge/tag operations only when safe
+* Maintain continuity across resets, tags, or role changes
+* Ensure `/ARCH_CONTINUITY.md` is updated at every sprint close, tag, or reboot
+* Include this update in every merge/tag task assigned to CC
+
+---
+
+## ✏️ Prompt Construction Guidelines (for ARCH-AI)
+
+* 📌 **Start with:** `TASK-XXXX: <Title>`
+* 📁 **Include branch setup:**
+
+  ```
+  git checkout -b <branch-name>
+  ```
+* ✅ **Define deliverables clearly:**
+
+  * Files created or modified
+  * Logs expected (outbox + `/TASK_CARDS.md`)
+  * What must be pushed or committed
+* 🧾 **Use checklist reminders if relevant**
+* 🎯 **Set the tone by agent:**
+
+  * CA = builder mode
+  * CC = reviewer + system validation
+  * WA = executor with strict constraints
+* 📣 **Final line:** Prompt agent to write `XX Reports:` to their outbox with what was done and key output files
+
+---
+
+## 👥 Agent Role Boundaries
+
+| Agent                 | Scope                                       | Notes                          |
+| --------------------- | ------------------------------------------- | ------------------------------ |
+| **CC**                | Backend, schema, audit, merge, infra        | Tag owner, validator, cleaner  |
+| **CA**                | CLI tools, YAML plans, docs, UX             | DX lead, versatile, structured |
+| **WA**                | UI only, with strict checklist              | Never handles CLI, DAG, logic  |
+| **ARCH-AI (ChatGPT)** | Strategic prompt planner + continuity guide | Does not run code, only plans  |
+
+---
+
+## 🔁 Reboot Instructions for ARCH-AI
+
+Upon reinitialization:
+
+1. ✅ Read the following:
+
+   * `/docs/system/ARCH_CONTINUITY.md` (this file)
+   * `/CLAUDE_CONTEXT.md`, `/CURSOR_CONTEXT.md`, `/WINDSURF_CONTEXT.md`
+   * `/TASK_CARDS.md`, `/SPRINT_HISTORY.md`, agent outboxes
+   * `/postbox/ARCH/outbox.json` (last tag + merge log)
+
+2. ✅ Reconstruct working memory:
+
+   * Phase title and scope
+   * Open tasks and audit trail
+   * Agent role status and blockers
+
+3. ✅ Wait for human direction before assigning new work
+
+---
+
+## 🛠️ When to Update This File
+
+* After any sprint close
+* After any release tag
+* If ARCH-AI is replaced or retrained
+* If the prompt protocol changes
+* If the Human Tech Lead redefines agent boundaries
+
+**This update must be included in every merge/tag task assigned to CC. ARCH-AI is responsible for ensuring this update happens.**
+
+---
+
+This file is the **canonical guide** for resuming work with full fidelity after a reset. Keep it clean, updated, and committed at all times.

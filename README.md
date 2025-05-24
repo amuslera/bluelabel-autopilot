@@ -18,13 +18,14 @@ bluelabel-autopilot/
 ├── agents/                 # Core agent implementations
 │   ├── base_agent.py      # Base class with MCP-compliant I/O
 │   ├── agent_models.py    # Shared data models
-│   └── digest_agent.py    # Content digest generation
+│   ├── digest_agent.py    # Content digest generation
+│   └── ingestion_agent.py # URL and PDF content processing
 ├── prompts/               # YAML prompt templates
 │   └── contentmind/       # Content processing prompts
 ├── runner/                # CLI and execution
 │   └── cli_runner.py      # Command-line interface
 └── storage/               # File-based data storage
-    └── summaries/         # Content summaries JSON store
+    └── knowledge/         # Processed content storage
 ```
 
 ## Installation
@@ -42,6 +43,8 @@ pip install -r requirements.txt
 
 ### CLI Commands
 
+#### Digest Agent
+
 ```bash
 # Generate a digest from stored summaries
 python runner/cli_runner.py digest --format markdown
@@ -49,26 +52,84 @@ python runner/cli_runner.py digest --format markdown
 # Add a new summary
 python runner/cli_runner.py add-summary "TechCrunch Article" "AI startup raises $50M..." --url "https://example.com"
 
-# Run agent with custom JSON input
+# Run digest agent with custom JSON input
 python runner/cli_runner.py run digest '{"task_id": "test", "content": {"action": "generate_digest"}}'
+```
+
+#### Ingestion Agent
+
+```bash
+# Process a URL
+python runner/cli_runner.py run ingestion '{
+    "task_id": "test-url",
+    "task_type": "url",
+    "content": {
+        "url": "https://example.com/sample-article"
+    }
+}'
+
+# Process a PDF
+python runner/cli_runner.py run ingestion '{
+    "task_id": "test-pdf",
+    "task_type": "pdf",
+    "content": {
+        "file_path": "path/to/document.pdf"
+    }
+}'
+
+# Using sample input files
+python runner/cli_runner.py run ingestion --input tests/sample_url_input.json
+python runner/cli_runner.py run ingestion --input tests/sample_pdf_input.json
+```
+
+### Common Options
+
+```bash
+# Specify custom storage paths
+python runner/cli_runner.py run ingestion --input tests/sample_url_input.json \
+    --storage-path ./custom/knowledge \
+    --temp-path ./custom/temp
 ```
 
 ### Python API
 
 ```python
 from agents.digest_agent import DigestAgent
+from agents.ingestion_agent import IngestionAgent
 from agents.base_agent import AgentInput
 
-# Create agent
-agent = DigestAgent()
+# Create agents
+digest_agent = DigestAgent()
+ingestion_agent = IngestionAgent(
+    storage_path=Path("./data/knowledge"),
+    temp_path=Path("./data/temp")
+)
 
-# Process input
-input_data = AgentInput(
+# Process URL content
+url_input = AgentInput(
+    task_id="url-001",
+    task_type="url",
+    source="api",
+    content={"url": "https://example.com"}
+)
+url_result = await ingestion_agent.process(url_input)
+
+# Process PDF content
+pdf_input = AgentInput(
+    task_id="pdf-001",
+    task_type="pdf",
+    source="api",
+    content={"file_path": "path/to/document.pdf"}
+)
+pdf_result = await ingestion_agent.process(pdf_input)
+
+# Generate digest
+digest_input = AgentInput(
     task_id="digest-001",
+    source="api",
     content={"action": "generate_digest", "format": "markdown"}
 )
-result = await agent.process(input_data)
-print(result.content)
+digest_result = await digest_agent.process(digest_input)
 ```
 
 ## Agents
@@ -94,6 +155,35 @@ Generated on: 2025-01-23
 AI startup raises $50M for revolutionary content processing...
 
 [Read more](https://example.com)
+```
+
+### IngestionAgent
+Processes content from URLs and PDFs.
+
+**Features:**
+- URL content extraction
+- PDF text extraction
+- Metadata extraction
+- Content validation
+- File-based storage
+
+**Example Output:**
+```
+Processing Results:
+------------------
+Task ID: test-url
+Status: success
+Duration: 1234ms
+
+Content Details:
+Content ID: url_abc123
+Content Type: url
+Content Length: 12345 characters
+
+Metadata:
+title: Sample Article
+author: John Doe
+date: 2025-01-23
 ```
 
 ## Prompt Templates
@@ -125,7 +215,7 @@ class MyAgent(BaseAgent):
         return AgentOutput(
             task_id=input_data.task_id,
             status="completed",
-            content="Result"
+            result="Result"
         )
 ```
 

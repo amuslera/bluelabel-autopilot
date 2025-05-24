@@ -160,4 +160,63 @@
         "Add more sample inputs for edge cases",
         "Consider adding progress indicators for long-running tasks"
     ]
+}
+
+{
+    "task_id": "TASK-161K",
+    "timestamp": "2024-03-19T00:00:00Z",
+    "implementation_summary": {
+        "title": "CLI Runner Extension for IngestionAgent",
+        "description": "Extended the main CLI runner to support both DigestAgent and IngestionAgent, providing a unified command-line interface for all agent operations.",
+        "key_features": [
+            "Unified CLI interface for all agents",
+            "Agent-specific input handling",
+            "Enhanced output formatting",
+            "Configurable storage paths",
+            "Comprehensive documentation"
+        ]
+    },
+    "files": [
+        {
+            "path": "runner/cli_runner.py",
+            "type": "implementation",
+            "description": "Updated CLI runner with IngestionAgent support"
+        },
+        {
+            "path": "README.md",
+            "type": "documentation",
+            "description": "Updated with new CLI examples and agent documentation"
+        }
+    ],
+    "cli_test_behavior": {
+        "command": "python runner/cli_runner.py run ingestion --input tests/sample_url_input.json",
+        "output_format": "Structured text output with processing results",
+        "error_handling": "Clear error messages with argparse exceptions",
+        "validation": "Input validation for both agents"
+    },
+    "sample_output": {
+        "url_processing": {
+            "command": "python runner/cli_runner.py run ingestion '{\"task_id\": \"test-url\", \"task_type\": \"url\", \"content\": {\"url\": \"https://example.com\"}}'",
+            "output": "Processing Results:\n------------------\nTask ID: test-url\nStatus: success\nDuration: 1234ms\n\nContent Details:\nContent ID: url_abc123\nContent Type: url\nContent Length: 12345 characters\n\nMetadata:\ntitle: Sample Article\nauthor: John Doe\ndate: 2025-01-23"
+        },
+        "pdf_processing": {
+            "command": "python runner/cli_runner.py run ingestion '{\"task_id\": \"test-pdf\", \"task_type\": \"pdf\", \"content\": {\"file_path\": \"tests/sample.pdf\"}}'",
+            "output": "Processing Results:\n------------------\nTask ID: test-pdf\nStatus: success\nDuration: 567ms\n\nContent Details:\nContent ID: pdf_xyz789\nContent Type: pdf\nContent Length: 6789 characters\n\nMetadata:\ntitle: Sample PDF\nauthor: Jane Smith\ndate: 2025-01-23"
+        }
+    },
+    "edge_cases_tested": [
+        "Missing required fields in input",
+        "Invalid JSON format",
+        "File not found",
+        "Unsupported agent type",
+        "Invalid URL format",
+        "Non-existent PDF file",
+        "Custom storage paths"
+    ],
+    "next_steps": [
+        "Add unit tests for CLI runner",
+        "Create integration tests",
+        "Add more sample inputs",
+        "Consider progress indicators for long-running tasks"
+    ]
 } 
