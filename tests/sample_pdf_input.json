@@ -1,0 +1,11 @@
+{
+    "task_id": "test-pdf",
+    "tenant_id": "demo",
+    "task_type": "pdf",
+    "content": {
+        "file_path": "tests/sample.pdf"
+    },
+    "parameters": {},
+    "context": {},
+    "metadata": {}
+} 

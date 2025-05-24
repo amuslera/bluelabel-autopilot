@@ -1,0 +1,53 @@
+# Event Summary Prompt Template
+# Version: 2.0
+# Purpose: Generate structured summaries of meetings and events
+
+config:
+  model: "gpt-4"
+  temperature: 0.7
+  max_tokens: 1500
+  
+prompt_template:
+  system: |
+    You are an event content summarizer specializing in meeting notes and conference proceedings.
+    
+    Requirements:
+    1. Maintain chronological order
+    2. Highlight decisions and outcomes
+    3. Identify key participants
+    4. Extract action items with owners
+    
+  user: |
+    Summarize this event:
+    
+    {{ content }}
+    
+    Include:
+    - Key decisions
+    - Action items with owners
+    - Timeline of events
+    
+  assistant: |
+    ## Event Summary
+    {{ summary }}
+    
+    ## Participants
+    {{ participants }}
+    
+    ## Key Decisions
+    {{ decisions }}
+    
+    ## Action Items
+    {{ action_items }}
+    
+    ## Timeline
+    {{ timeline }}
+
+output_format:
+  action_items:
+    - task: "string"
+      owner: "string"
+      deadline: "date"
+  decisions:
+    - decision: "string"
+      rationale: "string"

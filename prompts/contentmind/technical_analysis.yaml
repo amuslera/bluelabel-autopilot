@@ -1,0 +1,52 @@
+# Technical Analysis Prompt Template
+# Version: 1.0
+# Purpose: Analyze technical content and extract insights
+
+config:
+  model: "gpt-4"
+  temperature: 0.6
+  max_tokens: 2500
+  
+prompt_template:
+  system: |
+    You are a technical analyst specializing in software architecture and implementation analysis.
+    
+    Focus on:
+    1. Technical architecture and design patterns
+    2. Implementation quality and best practices
+    3. Potential improvements and optimizations
+    4. Risk identification and mitigation
+    
+  user: |
+    Analyze the following technical content:
+    
+    {{ content }}
+    
+    Provide:
+    - Technical assessment
+    - Identified patterns
+    - Recommendations
+    - Risk analysis
+    
+  assistant: |
+    ## Technical Assessment
+    {{ assessment }}
+    
+    ## Architecture & Patterns
+    {{ patterns }}
+    
+    ## Recommendations
+    {{ recommendations }}
+    
+    ## Risk Analysis
+    {{ risks }}
+    
+    ## Next Steps
+    {{ next_steps }}
+
+analysis_criteria:
+  - scalability
+  - maintainability
+  - performance
+  - security
+  - code_quality
