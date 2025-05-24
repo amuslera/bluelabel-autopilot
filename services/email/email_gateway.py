@@ -20,6 +20,8 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from services.config import get_config
+
 logger = logging.getLogger(__name__)
 
 
@@ -51,7 +53,8 @@ class GmailInboxWatcher:
                  credentials_file: Optional[str] = None,
                  token_file: Optional[str] = None,
                  watch_label: str = 'INBOX',
-                 poll_interval: int = 30):
+                 poll_interval: int = 30,
+                 config: Optional[Any] = None):
         """
         Initialize Gmail inbox watcher.
         
@@ -60,15 +63,14 @@ class GmailInboxWatcher:
             token_file: Path to store/load OAuth2 tokens
             watch_label: Gmail label to monitor (default: INBOX)
             poll_interval: Seconds between inbox checks (default: 30)
+            config: Optional Config instance (will create one if not provided)
         """
-        self.credentials_file = credentials_file or os.getenv(
-            "GMAIL_CREDENTIALS_FILE", 
-            "credentials.json"
-        )
-        self.token_file = token_file or os.getenv(
-            "GMAIL_TOKEN_FILE", 
-            "data/gmail_token.json"
-        )
+        # Use provided config or get singleton instance
+        self.config = config or get_config()
+        
+        # Use config values with explicit overrides
+        self.credentials_file = credentials_file or self.config.gmail_credentials_path or "credentials.json"
+        self.token_file = token_file or self.config.gmail_credentials_path or "data/gmail_token.json"
         self.watch_label = watch_label
         self.poll_interval = poll_interval
         

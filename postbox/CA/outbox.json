@@ -1736,4 +1736,119 @@
             "/postbox/CA/outbox.json": "✅ Logged the report."
         }
     }
+}
+
+{
+    "task_id": "TASK-161CN",
+    "status": "completed",
+    "timestamp": "2025-05-26T01:45:00Z",
+    "summary": "CA Reports: Completed Kick Off Phase 6.12 Sprint 3: Initialize Plan + Docs. Sprint plan created, continuity updated, and task registered.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161CN-ca-sprint3-kickoff",
+            "Created sprint plan at /docs/devphases/PHASE_6.12/sprints/SPRINT_3_PLAN.md",
+            "Updated continuity documentation",
+            "Registered task in /TASK_CARDS.md",
+            "Logged report to /postbox/CA/outbox.json"
+        ],
+        "sprint_plan_details": {
+            "theme": "Delivery Robustness, Configuration Security, and Infrastructure Readiness",
+            "milestone": "v0.6.12-alpha3",
+            "tasks": [
+                "TASK-161CN (CA)",
+                "TASK-161CO (WA)",
+                "TASK-161CP, TASK-161CQ, TASK-161CR, TASK-161CV, TASK-161CW (CC)",
+                "TASK-161CS, TASK-161CU (CA)",
+                "TASK-161CT (WA)"
+            ],
+            "success_criteria": "All tasks completed and tested, no critical bugs or issues, documentation updated",
+            "known_risks": [
+                "Email delivery failures",
+                "LLM credential errors"
+            ]
+        },
+        "continuity_updates": {
+            "ARCH_CONTINUITY.md": "Sprint 2 marked complete, Sprint 3 kickoff entry added",
+            "CLAUDE_CONTEXT.md": "Current phase/sprint updated if needed"
+        },
+        "report_recorded": {
+            "TASK_CARDS.md": "✅ Updated with TASK-161CN details.",
+            "/postbox/CA/outbox.json": "✅ Logged the report."
+        }
+    }
+}
+
+{
+    "task_id": "TASK-161CS",
+    "status": "completed",
+    "timestamp": "2025-05-26T02:00:00Z",
+    "summary": "CA Reports: Completed Add Sender Whitelist & Permission Filter to Email Trigger. Sender check added, utility created, and report recorded.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161CS-ca-sender-permission-filter",
+            "Added sender check to /services/email/email_workflow_orchestrator.py",
+            "Created utility at /services/email/email_permissions.py",
+            "Updated /config/.env.sample with new key",
+            "Added tests for match and reject scenarios",
+            "Registered task in /TASK_CARDS.md",
+            "Logged report to /postbox/CA/outbox.json"
+        ],
+        "sample_whitelist": "alice@example.com, bob@company.com",
+        "log_format_for_skipped_entries": "Unauthorized sender: {sender_email}, skipped workflow execution.",
+        "known_edge_cases_or_limitations": [
+            "No support for wildcard domains",
+            "Case sensitivity in email addresses",
+            "No rate limiting for unauthorized attempts"
+        ],
+        "report_recorded": {
+            "TASK_CARDS.md": "✅ Updated with TASK-161CS details.",
+            "/postbox/CA/outbox.json": "✅ Logged the report."
+        }
+    }
+}
+
+{
+    "task_id": "TASK-161CU",
+    "status": "completed",
+    "timestamp": "2025-05-26T02:15:00Z",
+    "summary": "CA Reports: Completed Archive Workflow Output Snapshot After Each Run. Archival logic implemented, integration tested, and report recorded.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161CU-ca-run-archiver",
+            "Implemented archival logic at /services/workflow/workflow_archiver.py",
+            "Integrated into post-processing step",
+            "Saved to data/workflows/<workflow>/<run_id>/run_archive.json",
+            "Integration tested with URL and PDF workflows",
+            "Registered task in /TASK_CARDS.md",
+            "Logged report to /postbox/CA/outbox.json"
+        ],
+        "sample_archive_contents": {
+            "run_id": "run_123",
+            "timestamp": "2025-05-26T02:15:00Z",
+            "source": "email",
+            "digest_summary": "Workflow completed successfully",
+            "tags": ["url", "digest"],
+            "recipient": "user@example.com",
+            "workflow_file": "workflows/templates/url_to_digest.yaml",
+            "metadata": {
+                "input": {
+                    "url": "https://example.com"
+                },
+                "output": {
+                    "status": "success",
+                    "duration": "1234ms"
+                }
+            }
+        },
+        "edge_cases_handled": [
+            "Missing metadata fields",
+            "Invalid JSON format",
+            "File path issues"
+        ],
+        "path_confirmation": "Archive saved to data/workflows/<workflow>/<run_id>/run_archive.json",
+        "report_recorded": {
+            "TASK_CARDS.md": "✅ Updated with TASK-161CU details.",
+            "/postbox/CA/outbox.json": "✅ Logged the report."
+        }
+    }
 } 

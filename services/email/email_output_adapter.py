@@ -12,6 +12,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import Dict, Any, Optional
 
+from services.config import get_config
+
 logger = logging.getLogger(__name__)
 
 
@@ -35,12 +37,13 @@ class EmailOutAdapter:
         ... )
     """
     
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
         """
         Initialize the email output adapter.
         
         Args:
-            config: Configuration dictionary containing:
+            config: Optional configuration dictionary. If not provided,
+                    will use Config instance for values:
                 - smtp_server: SMTP server hostname
                 - smtp_port: SMTP server port (default: 587)
                 - smtp_username: SMTP authentication username
@@ -48,6 +51,12 @@ class EmailOutAdapter:
                 - from_email: Sender email address
                 - use_tls: Whether to use TLS (default: True)
         """
+        # If no config provided, use singleton Config instance
+        if config is None:
+            app_config = get_config()
+            config = app_config.get_smtp_config()
+            config['from_email'] = app_config.default_sender_email or 'noreply@localhost'
+        
         self.smtp_server = config.get('smtp_server', 'localhost')
         self.smtp_port = config.get('smtp_port', 587)
         self.smtp_username = config.get('smtp_username')

@@ -372,6 +372,70 @@ Merge all remaining Sprint 1 branches into main, create a clean milestone tag, a
 
 **Time Spent:** 30 minutes
 
+### TASK-161CO: Add HTML Email Formatting Support to EmailOutAdapter
+Status: COMPLETED ✅
+Assigned: WA
+Priority: HIGH
+Created: 2024-05-24
+Completed: 2024-05-24
+
+**Description:**
+Extended the email output formatter to support HTML email generation with proper styling and fallback to plaintext.
+
+**Deliverables:**
+- ✅ Added `format_digest_html()` function to generate email-compatible HTML
+- ✅ Implemented responsive email design with inline styles
+- ✅ Added XSS protection through proper HTML escaping
+- ✅ Included test suite with 4 test cases
+- ✅ Generated sample HTML previews for manual testing
+
+**Key Features:**
+- **Responsive Design**: Works on both desktop and mobile clients
+- **Email Client Compatibility**: Tested in major email clients
+- **Security**: Proper HTML escaping to prevent XSS attacks
+- **Maintainable**: Well-documented and tested code
+- **Fallback Support**: Maintains plaintext fallback for non-HTML clients
+
+**Example HTML Output:**
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Title</title>
+  <style type="text/css">
+    /* Inline styles for email client compatibility */
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    h1 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    /* Additional styles... */
+  </style>
+</head>
+<body>
+  <h1>Document Title</h1>
+  <div class="timestamp">Generated on Saturday, May 24, 2025 at 10:30 AM PDT</div>
+  <div class="content">
+    <h2>Section 1</h2>
+    <p>Content goes here...</p>
+  </div>
+  <div class="source">
+    <div><strong>Source:</strong> <a href="https://example.com">https://example.com</a></div>
+    <div class="tags"><strong>Tags:</strong> <span class="tag">news</span> <span class="tag">update</span></div>
+  </div>
+</body>
+</html>
+```
+
+**Files Created/Modified:**
+- `/services/email/email_output_formatter.py` (updated)
+- `/tests/test_email_output_formatter_html.py` (new)
+- `/TASK_CARDS.md` (updated)
+- `/postbox/WA/outbox.json` (updated)
+
+**Time Spent:** 2.5 hours
+
+---
+
 ### TASK-161CF: Format Workflow Output for Email Delivery
 Status: COMPLETED ✅
 Assigned: WA
@@ -2428,4 +2492,114 @@ Formally close out Sprint 2 of Phase 6.12 with comprehensive documentation, tagg
 - `/docs/devphases/PHASE_6.12/sprints/PHASE_6.12_SPRINT_HISTORY.md`
 - `/docs/system/ARCH_CONTINUITY.md`
 - `/docs/system/CLAUDE_CONTEXT.md`
+- `/TASK_CARDS.md` (this entry)
+
+---
+
+## TASK-161CP: Implement .env-Based Config Loader for Secure Credentials
+
+**Status:** ✅ Completed
+**Date:** 2025-05-27
+**Assignee:** CC
+**Branch:** `dev/TASK-161CP-cc-config-loader-env`
+
+### Objective
+Create a central configuration manager that loads secure runtime values from a `.env` file (or system environment), with optional fallback to static YAML or Python defaults.
+
+### Implementation Details
+
+**Core Implementation:**
+1. **Config Loader Module:**
+   - Created `/services/config/config_loader.py` (225 lines)
+   - Implements `Config` class with environment variable priority
+   - Supports `.env` file auto-loading from project root
+   - Provides singleton pattern via `get_config()`
+
+2. **Configuration Categories:**
+   - Gmail OAuth settings (client ID, secret, user, paths)
+   - SMTP configuration (server, port, credentials, TLS)
+   - Email defaults (sender, recipient)
+   - LLM API keys (OpenAI, Anthropic, Google)
+   - Environment settings (dev/prod, log level)
+   - Data paths (workflows, knowledge base)
+
+3. **Integration Points:**
+   - Updated `GmailInboxWatcher` to use config automatically
+   - Updated `EmailOutAdapter` to use SMTP config
+   - Both services now work with zero configuration
+
+### Key Features
+1. **Priority System:**
+   ```
+   Environment Variable > .env file > Fallback dict > Default value
+   ```
+
+2. **Helper Methods:**
+   - `get_gmail_config()` - Returns Gmail settings as dict
+   - `get_smtp_config()` - Returns SMTP settings as dict
+   - `get_llm_keys()` - Returns all LLM API keys
+   - `is_development()` / `is_production()` - Environment checks
+
+3. **Security Features:**
+   - Never logs sensitive values
+   - Warns about missing required values in production
+   - Sample file provided without real credentials
+
+### Usage Examples
+```python
+# Basic usage
+from services.config import get_config
+config = get_config()
+print(config.gmail_user)
+
+# With fallback
+config = Config(fallback={'smtp_server': 'backup.smtp.com'})
+
+# Integration (automatic)
+watcher = GmailInboxWatcher()  # Uses config
+adapter = EmailOutAdapter()    # Uses config
+```
+
+### Files Created/Modified
+1. **Created:**
+   - `/services/config/config_loader.py` - Main configuration manager
+   - `/services/config/__init__.py` - Module exports
+   - `/config/.env.sample` - Sample environment file
+   - `/services/config/README.md` - Documentation
+   - `/examples/config_usage.py` - Usage examples
+
+2. **Modified:**
+   - `/services/email/email_gateway.py` - Added config support
+   - `/services/email/email_output_adapter.py` - Added config support
+   - `/requirements.txt` - Added python-dotenv dependency
+
+### Supported Configuration Keys
+- **Gmail:** GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_USER, GMAIL_CREDENTIALS_PATH
+- **SMTP:** SMTP_SERVER, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_USE_TLS
+- **Email:** DEFAULT_SENDER_EMAIL, DEFAULT_RECIPIENT_EMAIL
+- **LLM:** OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_API_KEY
+- **Other:** RESEND_API_KEY, ENVIRONMENT, LOG_LEVEL
+- **Paths:** DATA_DIR, WORKFLOW_DIR, KNOWLEDGE_DIR
+
+### Limitations & Deferred Items
+1. **Current Limitations:**
+   - No YAML config file support (only dict fallback)
+   - No automatic validation of required fields
+   - No encryption for sensitive values at rest
+
+2. **Deferred for Future:**
+   - Multi-environment config files (.env.dev, .env.prod)
+   - Encrypted credential storage
+   - Integration with cloud secret managers
+   - Config hot-reloading
+
+**Files Created/Modified:**
+- `/services/config/config_loader.py`
+- `/services/config/__init__.py`
+- `/config/.env.sample`
+- `/services/config/README.md`
+- `/examples/config_usage.py`
+- `/services/email/email_gateway.py`
+- `/services/email/email_output_adapter.py`
+- `/requirements.txt`
 - `/TASK_CARDS.md` (this entry)
