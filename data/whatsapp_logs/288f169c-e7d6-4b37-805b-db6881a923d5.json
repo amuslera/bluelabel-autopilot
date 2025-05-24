@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-05-24T18:39:54.812303",
+  "run_id": "288f169c-e7d6-4b37-805b-db6881a923d5",
+  "workflow": "url_to_digest.yaml",
+  "status": "error",
+  "input": {
+    "type": "url",
+    "value": "https://example.com",
+    "extra": "should be ignored"
+  }
+}

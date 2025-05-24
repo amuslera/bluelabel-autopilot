@@ -53,6 +53,9 @@ class WorkflowEngine:
         # Setup logging
         self.logger = logging.getLogger('workflow_engine')
         
+        # Store initial input if provided
+        self.initial_input: Optional[Dict[str, Any]] = None
+        
     def _load_step_input(self, step: WorkflowStep, step_outputs: Dict[str, StepResult]) -> Dict[str, Any]:
         """Load input data for a workflow step.
         
@@ -109,8 +112,12 @@ class WorkflowEngine:
             
             return input_data
         
+        # Check for initial input (for first step without input_file or input_from)
+        elif self.initial_input and len(step_outputs) == 0:
+            return self.initial_input
+        
         else:
-            raise ValueError("Step must specify either input_file or input_from")
+            raise ValueError("Step must specify either input_file or input_from, or be the first step with initial_input")
     
     async def _execute_step(self, step: WorkflowStep, step_outputs: Dict[str, StepResult]) -> StepResult:
         """Execute a single workflow step.
@@ -188,12 +195,14 @@ class WorkflowEngine:
                 timestamp=start_time
             )
     
-    async def execute_workflow(self, workflow_path: Path, persist: bool = True) -> WorkflowRunResult:
+    async def execute_workflow(self, workflow_path: Path, persist: bool = True, 
+                             initial_input: Optional[Dict[str, Any]] = None) -> WorkflowRunResult:
         """Execute a workflow from a YAML file.
         
         Args:
             workflow_path: Path to workflow YAML file
             persist: Whether to persist outputs to disk
+            initial_input: Optional initial input data for the first step
             
         Returns:
             WorkflowRunResult with execution details
@@ -201,6 +210,8 @@ class WorkflowEngine:
         Raises:
             ValueError: If workflow execution fails
         """
+        # Store initial input
+        self.initial_input = initial_input
         # Start execution
         start_time = datetime.utcnow()
         run_id = str(uuid.uuid4())
@@ -335,7 +346,7 @@ class WorkflowEngine:
 
 # Public API function
 async def run_workflow(path: str, persist: bool = True, storage_path: Optional[str] = None, 
-                      temp_path: Optional[str] = None) -> WorkflowRunResult:
+                      temp_path: Optional[str] = None, initial_input: Optional[Dict[str, Any]] = None) -> WorkflowRunResult:
     """Execute a workflow from a YAML file.
     
     This is the main public API for running workflows.
@@ -345,6 +356,7 @@ async def run_workflow(path: str, persist: bool = True, storage_path: Optional[s
         persist: Whether to persist outputs to disk (default: True)
         storage_path: Optional path to content storage directory
         temp_path: Optional path to temporary files directory
+        initial_input: Optional initial input data for the first step
         
     Returns:
         WorkflowRunResult containing execution details
@@ -363,4 +375,4 @@ async def run_workflow(path: str, persist: bool = True, storage_path: Optional[s
     )
     
     # Execute workflow
-    return await engine.execute_workflow(Path(path), persist=persist)
+    return await engine.execute_workflow(Path(path), persist=persist, initial_input=initial_input)

@@ -1,0 +1,20 @@
+workflow:
+  name: "Circular Dependency Workflow"
+  description: "This workflow has circular dependencies between steps"
+  version: "1.0.0"
+
+steps:
+  - id: step_a
+    name: "Step A"
+    agent: ingestion_agent
+    input_from: step_c  # Creates a circular dependency!
+    
+  - id: step_b
+    name: "Step B"
+    agent: digest_agent
+    input_from: step_a
+    
+  - id: step_c
+    name: "Step C"
+    agent: digest_agent
+    input_from: step_b  # Completes the circle: A -> C -> B -> A

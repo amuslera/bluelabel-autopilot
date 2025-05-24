@@ -1,0 +1,101 @@
+{
+  "timestamp": {
+    "$date": {
+      "$numberLong": "88"
+    }
+  },
+  "test_cases": {
+    "valid_url": {
+      "status": "PASS",
+      "result": {
+        "status": "success",
+        "response": {
+          "status": "success",
+          "run_id": "6f57155e-faea-4da9-8a87-a461354ad6da",
+          "workflow": "url_to_digest.yaml",
+          "log_file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/data/whatsapp_logs/6f57155e-faea-4da9-8a87-a461354ad6da.json"
+        }
+      }
+    },
+    "valid_pdf": {
+      "status": "PASS",
+      "result": {
+        "status": "success",
+        "response": {
+          "status": "success",
+          "run_id": "da761372-ddf2-43ce-a42e-c604b2a76027",
+          "workflow": "pdf_to_digest.yaml",
+          "log_file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/data/whatsapp_logs/da761372-ddf2-43ce-a42e-c604b2a76027.json"
+        }
+      }
+    },
+    "missing_type": {
+      "status": "PASS",
+      "result": {
+        "status": "success",
+        "response": {
+          "status": "error",
+          "message": "Missing required fields: 'type' and 'value' are required"
+        }
+      }
+    },
+    "missing_value": {
+      "status": "PASS",
+      "result": {
+        "status": "success",
+        "response": {
+          "status": "error",
+          "message": "Missing required fields: 'type' and 'value' are required"
+        }
+      }
+    },
+    "invalid_type": {
+      "status": "PASS",
+      "result": {
+        "status": "success",
+        "response": {
+          "status": "error",
+          "message": "No workflow found for type: unsupported_type"
+        }
+      }
+    },
+    "empty_value": {
+      "status": "PASS",
+      "result": {
+        "status": "success",
+        "response": {
+          "status": "error",
+          "message": "Missing required fields: 'type' and 'value' are required"
+        }
+      }
+    },
+    "null_value": {
+      "status": "PASS",
+      "result": {
+        "status": "success",
+        "response": {
+          "status": "error",
+          "message": "Missing required fields: 'type' and 'value' are required"
+        }
+      }
+    },
+    "extra_fields": {
+      "status": "PASS",
+      "result": {
+        "status": "success",
+        "response": {
+          "status": "success",
+          "run_id": "288f169c-e7d6-4b37-805b-db6881a923d5",
+          "workflow": "url_to_digest.yaml",
+          "log_file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/data/whatsapp_logs/288f169c-e7d6-4b37-805b-db6881a923d5.json"
+        }
+      }
+    }
+  },
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "success_rate": 100.0
+  }
+}

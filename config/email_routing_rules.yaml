@@ -1,0 +1,104 @@
+# Email Workflow Routing Configuration
+# This file defines rules for mapping incoming emails to workflow YAML files
+
+# Base directory for workflow files (relative paths will be resolved from here)
+workflows_dir: workflows
+
+# Default workflow to use when no rules match
+default_workflow: generic_email_handler.yaml
+
+# Routing rules (evaluated in priority order, highest first)
+rules:
+  # AI/ML Newsletter Processing
+  - name: ai_newsletter_digest
+    workflow_path: email/ai_newsletter_digest.yaml
+    priority: 20
+    from_domain:
+      - aiweekly.com
+      - mlnews.org
+      - deeplearning.ai
+    subject_contains:
+      - AI
+      - machine learning
+      - ML
+      - digest
+      - newsletter
+    all_conditions: false  # Match if ANY condition is true
+
+  # PDF Report Processing
+  - name: pdf_report_processor
+    workflow_path: email/pdf_report_processor.yaml
+    priority: 15
+    subject_contains:
+      - report
+      - analysis
+      - summary
+    has_attachment: true
+    attachment_type:
+      - application/pdf
+      - application/x-pdf
+    all_conditions: true  # ALL conditions must match
+
+  # Customer Feedback Handling
+  - name: customer_feedback
+    workflow_path: email/customer_feedback.yaml
+    priority: 10
+    from_email:
+      - feedback@
+      - support@
+      - help@
+    subject_regex: "(feedback|review|complaint|issue|problem)"
+    all_conditions: false
+
+  # URL/Link Processing
+  - name: url_article_processor
+    workflow_path: email/url_ingestion.yaml
+    priority: 8
+    subject_contains:
+      - "check this out"
+      - "interesting article"
+      - "link:"
+      - "url:"
+      - "http"
+    all_conditions: false
+
+  # Research Paper Processing
+  - name: research_paper
+    workflow_path: email/research_paper_analyzer.yaml
+    priority: 12
+    from_domain:
+      - arxiv.org
+      - acm.org
+      - ieee.org
+    has_attachment: true
+    attachment_type: application/pdf
+    all_conditions: false
+
+  # Daily Summary Emails
+  - name: daily_summary
+    workflow_path: email/daily_summary_digest.yaml
+    priority: 5
+    subject_regex: "daily\\s+(summary|digest|update|briefing)"
+    all_conditions: true
+
+  # Invoice Processing
+  - name: invoice_processor
+    workflow_path: email/invoice_processor.yaml
+    priority: 18
+    subject_contains:
+      - invoice
+      - bill
+      - payment
+      - receipt
+    attachment_type:
+      - application/pdf
+      - image/png
+      - image/jpeg
+    all_conditions: false
+
+  # Disabled rule example
+  - name: legacy_processor
+    workflow_path: email/legacy_processor.yaml
+    priority: 0
+    enabled: false  # This rule won't be evaluated
+    from_domain: oldservice.com

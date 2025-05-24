@@ -1,5 +1,72 @@
 [
   {
+    "task_id": "TASK-161BD",
+    "timestamp": "2025-05-24T11:45:00-07:00",
+    "status": "complete",
+    "details": {
+      "test_cases": [
+        {
+          "name": "valid_url",
+          "status": "PASS",
+          "result": "Successfully triggered url_to_digest workflow"
+        },
+        {
+          "name": "valid_pdf",
+          "status": "PASS",
+          "result": "Successfully triggered pdf_to_digest workflow"
+        },
+        {
+          "name": "missing_type",
+          "status": "PASS",
+          "result": "Correctly rejected with error: Missing required fields"
+        },
+        {
+          "name": "missing_value",
+          "status": "PASS",
+          "result": "Correctly rejected with error: Missing required fields"
+        },
+        {
+          "name": "invalid_type",
+          "status": "PASS",
+          "result": "Correctly rejected with error: No workflow found for type"
+        },
+        {
+          "name": "empty_value",
+          "status": "PASS",
+          "result": "Correctly rejected with error: Missing required fields"
+        },
+        {
+          "name": "null_value",
+          "status": "PASS",
+          "result": "Correctly rejected with error: Missing required fields"
+        },
+        {
+          "name": "extra_fields",
+          "status": "PASS",
+          "result": "Successfully processed with extra fields ignored"
+        }
+      ],
+      "success_rate": 100.0,
+      "log_files_created": [
+        "/data/whatsapp_logs/6f57155e-faea-4da9-8a87-a461354ad6da.json",
+        "/data/whatsapp_logs/da761372-ddf2-43ce-a42e-c604b2a76027.json",
+        "/data/whatsapp_logs/288f169c-e7d6-4b37-805b-db6881a923d5.json"
+      ]
+    },
+    "issues_found": [
+      "Missing import for 'asyncio' in whatsapp_adapter.py causing workflow execution to fail"
+    ],
+    "recommendations": [
+      "Add 'import asyncio' to whatsapp_adapter.py",
+      "Add more detailed error handling for workflow execution failures"
+    ],
+    "next_steps": [
+      "Fix the asyncio import issue",
+      "Add more test cases for edge cases",
+      "Add integration tests with actual workflow execution"
+    ]
+  },
+  {
     "task_id": "TASK-161AX",
     "timestamp": "2025-05-24T10:55:00-07:00",
     "status": "complete",

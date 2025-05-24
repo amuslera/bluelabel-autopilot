@@ -1,0 +1,17 @@
+steps:
+- agent: ingestion_agent
+  id: step1
+  input_file: tests/sample_pdf_input.json
+  name: Valid Step
+- agent: nonexistent_agent
+  id: step2
+  input_from: step1
+  name: Invalid Agent Step
+- agent: fantasy_agent
+  id: step3
+  input_from: step2
+  name: Another Invalid Agent
+workflow:
+  description: This workflow uses agent names that don't exist
+  name: Invalid Agent Workflow
+  version: 1.0.0

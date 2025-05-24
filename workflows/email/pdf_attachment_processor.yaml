@@ -1,0 +1,23 @@
+workflow:
+  name: "PDF Attachment Processor"
+  description: "Process emails with PDF attachments by extracting and summarizing content"
+  version: "1.0.0"
+  
+steps:
+  - id: pdf_ingestion
+    name: "Extract PDF Content"
+    agent: ingestion_agent
+    description: "Extract text and metadata from PDF attachments"
+    
+  - id: pdf_digest
+    name: "Generate PDF Summary"
+    agent: digest_agent
+    input_from: pdf_ingestion
+    config:
+      format: markdown
+      sections:
+        - executive_summary
+        - key_findings
+        - recommendations
+        - metadata
+    description: "Create a comprehensive digest of the PDF content"

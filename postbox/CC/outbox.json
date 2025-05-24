@@ -989,6 +989,320 @@
         },
         "status": "completed"
       }
+    },
+    {
+      "task_id": "TASK-161BM",
+      "timestamp": "2025-05-24T23:00:00Z",
+      "agent": "CC",
+      "message_type": "task_completion",
+      "content": {
+        "summary": "Completed targeted audit of bluelabel-AIOS-V2 for email workflow trigger components",
+        "components_found": [
+          {
+            "module": "services/gateway/email_gateway.py",
+            "purpose": "Basic IMAP/SMTP email gateway with inbox polling",
+            "features": [
+              "IMAP inbox polling with configurable intervals",
+              "Codeword-based trigger detection in subject line",
+              "Event bus integration for workflow triggering",
+              "Threaded listener for continuous monitoring"
+            ],
+            "compatibility": "medium",
+            "modernization_needs": [
+              "Replace threading with asyncio",
+              "Add structured logging",
+              "Update to use MCP models",
+              "Add authentication token management"
+            ],
+            "reuse_effort": "medium"
+          },
+          {
+            "module": "services/gateway/gmail_complete_gateway.py",
+            "purpose": "Full Gmail API integration with OAuth 2.0",
+            "features": [
+              "OAuth 2.0 authentication flow",
+              "Gmail API for reading/sending",
+              "Token persistence and refresh",
+              "Backend token sharing capability"
+            ],
+            "compatibility": "high",
+            "modernization_needs": [
+              "Update Pydantic models to v2",
+              "Integrate with new AgentInput/Output models",
+              "Add webhook support for real-time"
+            ],
+            "reuse_effort": "low"
+          },
+          {
+            "module": "core/event_patterns.py",
+            "purpose": "Event-driven architecture patterns",
+            "features": [
+              "Message patterns and priorities",
+              "Event metadata tracking",
+              "Dead letter queue support",
+              "Correlation ID tracking"
+            ],
+            "compatibility": "high",
+            "modernization_needs": [
+              "Simplify for file-based approach",
+              "Remove Redis dependencies"
+            ],
+            "reuse_effort": "low"
+          },
+          {
+            "module": "services/workflow/models.py",
+            "purpose": "Workflow trigger and execution models",
+            "features": [
+              "triggered_by field for email/schedule/manual",
+              "Input/output mapping system",
+              "Conditional execution support",
+              "Retry and timeout handling"
+            ],
+            "compatibility": "medium",
+            "modernization_needs": [
+              "Align with current YAML workflow structure",
+              "Simplify mapping system"
+            ],
+            "reuse_effort": "medium"
+          }
+        ],
+        "delivery_components": [
+          {
+            "module": "apps/api/routers/email.py",
+            "purpose": "Email sending API endpoints",
+            "features": [
+              "REST API for email operations",
+              "Gateway abstraction layer",
+              "Attachment support"
+            ],
+            "compatibility": "low",
+            "modernization_needs": [
+              "Convert to CLI command structure",
+              "Remove FastAPI dependencies"
+            ],
+            "reuse_effort": "high"
+          }
+        ],
+        "recommendations": {
+          "primary": "Adapt gmail_complete_gateway.py for email listening",
+          "rationale": "Most complete implementation with OAuth 2.0 and Gmail API",
+          "migration_path": [
+            "Extract Gmail OAuth logic to standalone module",
+            "Create EmailTriggerService using Gmail API watch/push",
+            "Integrate with current workflow_executor.py",
+            "Add email→workflow mapping configuration"
+          ],
+          "alternative": "Use simpler email_gateway.py for IMAP polling",
+          "delivery": "Reuse Gmail sending logic for digest delivery"
+        },
+        "implementation_suggestions": [
+          "Create services/email_trigger.py based on Gmail gateway",
+          "Add email_to_workflow.yaml mapping configuration",
+          "Extend workflow YAML with 'triggers' section",
+          "Create EmailDeliveryAgent for sending digests"
+        ],
+        "promising_code_snippets": {
+          "email_listener": "services/gateway/email_gateway.py:198-244",
+          "gmail_oauth": "services/gateway/gmail_complete_gateway.py:89-147",
+          "event_publishing": "services/gateway/email_gateway.py:189-196",
+          "workflow_trigger": "services/workflow/models.py:149"
+        },
+        "status": "completed"
+      }
+    },
+    {
+      "task_id": "TASK-161CN",
+      "timestamp": "2025-05-24T23:30:00Z",
+      "agent": "CC",
+      "message_type": "task_completion",
+      "content": {
+        "summary": "Completed audit of bluelabel-AIOS-V2 multi-LLM routing infrastructure",
+        "routing_system_found": true,
+        "primary_implementation": {
+          "module": "services/model_router/",
+          "purpose": "Complete multi-provider LLM routing system",
+          "features": [
+            "Multiple routing strategies (cheapest, fastest, best_quality, fallback)",
+            "Async provider interface with standardized I/O",
+            "Dynamic provider registration and removal",
+            "Provider capability tracking",
+            "Token counting and limits per model",
+            "Retry and fallback logic",
+            "Preferred provider support per request"
+          ],
+          "providers_supported": [
+            "OpenAI (GPT-3.5, GPT-4)",
+            "Anthropic (Claude 2, Claude 3)",
+            "Google Gemini",
+            "Ollama (local models)"
+          ],
+          "compatibility": "high",
+          "modernization_needs": [
+            "Update to latest provider SDKs",
+            "Add streaming response support",
+            "Integrate with current AgentInput/Output models"
+          ],
+          "reuse_effort": "low"
+        },
+        "secondary_implementation": {
+          "module": "services/llm_router.py",
+          "purpose": "Simpler LLM routing service",
+          "features": [
+            "Basic provider registry",
+            "Cost tracking per model",
+            "Default fallback preferences",
+            "Simpler message format"
+          ],
+          "compatibility": "medium",
+          "reuse_effort": "low"
+        },
+        "integration_points": [
+          {
+            "location": "agents/content_mind_llm.py",
+            "pattern": "Agents receive router via dependency injection",
+            "example": "self.model_router = model_router"
+          },
+          {
+            "location": "services/model_router/factory.py",
+            "pattern": "Factory creates router with env-based config",
+            "example": "router = await create_default_router(strategy=RouterStrategy.FALLBACK)"
+          }
+        ],
+        "key_components": {
+          "base_interface": {
+            "file": "services/model_router/base.py",
+            "classes": [
+              "LLMProvider (abstract base)",
+              "LLMProviderConfig",
+              "LLMResponse",
+              "LLMMessage"
+            ],
+            "features": [
+              "Standardized message format",
+              "Unified response structure",
+              "Provider capability declaration"
+            ]
+          },
+          "router_core": {
+            "file": "services/model_router/router.py",
+            "class": "ModelRouter",
+            "methods": [
+              "chat() - primary interface",
+              "complete() - simple prompts",
+              "embed() - embeddings",
+              "_get_providers_by_strategy()"
+            ]
+          },
+          "provider_examples": {
+            "anthropic": "Full async implementation with model mapping",
+            "openai": "Supports GPT-3.5/4 with function calling",
+            "ollama": "Local model support"
+          }
+        },
+        "recommendations": {
+          "primary": "Adapt services/model_router/ wholesale",
+          "rationale": "Most complete, well-architected solution with minimal changes needed",
+          "migration_path": [
+            "Copy model_router/ directory to bluelabel-autopilot",
+            "Update provider SDKs to latest versions",
+            "Add router initialization to BaseAgent",
+            "Configure via agent capabilities or env vars"
+          ],
+          "integration_proposal": {
+            "base_agent_changes": [
+              "Add optional model_router parameter to __init__",
+              "Add preferred_model to AgentCapability",
+              "Add routing_strategy to agent config"
+            ],
+            "usage_pattern": "agent.model_router.chat(messages, strategy='best_quality')"
+          }
+        },
+        "reusable_code": {
+          "router_strategies": "router.py:144-193 (strategy implementation)",
+          "provider_base": "base.py:61-110 (abstract interface)",
+          "factory_pattern": "factory.py:13-91 (env-based setup)",
+          "anthropic_example": "anthropic_provider.py (complete provider)"
+        },
+        "benefits_of_reuse": [
+          "Mature fallback and retry logic",
+          "Provider-agnostic interface",
+          "Easy to add new providers",
+          "Built-in cost/speed/quality optimization",
+          "Async-first design matches current architecture"
+        ],
+        "status": "completed"
+      }
+    },
+    {
+      "task_id": "TASK-161CA",
+      "timestamp": "2025-05-24T23:45:00Z",
+      "agent": "CC",
+      "message_type": "task_completion",
+      "content": {
+        "summary": "Successfully extracted and ported Gmail gateway from legacy system",
+        "files_created": [
+          {
+            "path": "/services/email/email_gateway.py",
+            "purpose": "Core Gmail inbox watcher implementation",
+            "lines": 433
+          },
+          {
+            "path": "/services/email/__init__.py",
+            "purpose": "Module initialization",
+            "lines": 4
+          }
+        ],
+        "refactoring_performed": [
+          "Removed EventBus dependency",
+          "Removed Celery integration",
+          "Removed FastAPI router dependencies",
+          "Simplified to pure async/await patterns",
+          "Extracted only inbox monitoring functionality"
+        ],
+        "key_components": {
+          "GmailInboxWatcher": {
+            "methods": [
+              "authenticate() - OAuth 2.0 flow with token management",
+              "watch() - Async blocking method returns EmailEvent",
+              "_check_for_new_messages() - History API for efficiency",
+              "_process_message() - Email parsing and event creation"
+            ],
+            "features": [
+              "Token persistence and auto-refresh",
+              "Configurable poll interval",
+              "Attachment detection",
+              "Efficient message tracking"
+            ]
+          },
+          "EmailEvent": {
+            "fields": [
+              "message_id", "sender", "subject", "body",
+              "attachments", "received_at", "raw_data"
+            ],
+            "purpose": "Structured email data for workflow triggering"
+          }
+        },
+        "compatibility_notes": {
+          "dependencies": [
+            "google-api-python-client",
+            "google-auth-httplib2",
+            "google-auth-oauthlib"
+          ],
+          "requirements": [
+            "OAuth2 credentials.json file",
+            "Gmail API enabled in Google Cloud Console"
+          ],
+          "integration": "Fully async, ready for workflow executor"
+        },
+        "todos": [
+          "Add exponential backoff for API errors",
+          "Implement Gmail push notifications support",
+          "Add email filtering/rules configuration",
+          "Make token path fully configurable"
+        ],
+        "branch": "dev/TASK-161CA-cc-gmail-listener",
+        "status": "completed"
+      }
     }
   ]
 }

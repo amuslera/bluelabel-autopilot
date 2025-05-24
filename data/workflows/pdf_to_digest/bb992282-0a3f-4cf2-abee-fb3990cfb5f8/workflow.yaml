@@ -1,0 +1,66 @@
+input:
+  file_path:
+    description: Path to the PDF file to process
+    example: /path/to/document.pdf
+    required: true
+    type: string
+  title_override:
+    description: Optional title to use instead of the PDF's title
+    required: false
+    type: string
+metadata:
+  dependencies:
+  - ingestion_agent
+  - digest_agent
+  - PyPDF2>=3.0.0
+  estimated_runtime: 45s
+  tags:
+  - ingestion
+  - digest
+  - pdf
+output:
+  fields:
+  - description: The generated digest content
+    name: digest
+    path: digest_output.content
+  - description: Path to the processed PDF file
+    name: source_file
+    path: ingested_pdf.metadata.source_file
+  - description: Number of pages in the PDF
+    name: page_count
+    path: ingested_pdf.metadata.page_count
+  - description: Author from PDF metadata (if available)
+    name: author
+    path: ingested_pdf.metadata.author
+  file: pdf_digest_output.md
+  format: markdown
+steps:
+- agent: ingestion
+  description: Extract text and metadata from the PDF file
+  id: ingest_pdf
+  input_file: tests/sample.pdf
+  name: ingest_pdf
+  output: ingested_pdf
+  parameters:
+    extract_metadata: true
+    file_path: tests/sample.pdf
+  type: pdf
+- agent: digest
+  description: Generate a structured digest from the PDF content
+  id: generate_digest
+  input_from: ingest_pdf
+  name: generate_digest
+  output: digest_output
+  parameters:
+    format: markdown
+    include_metadata: true
+    title: "{% if input.title_override %}\n  {{ input.title_override }}\n{% else %}\n\
+      \  {{ ingested_pdf.metadata.title | default('Document Digest') }}\n{% endif\
+      \ %}\n"
+  type: generate
+workflow:
+  author: Bluelabel Autopilot Team
+  created: '2024-05-24'
+  description: Process a PDF file and generate a digest of its content
+  name: pdf_to_digest
+  version: 1.0.0

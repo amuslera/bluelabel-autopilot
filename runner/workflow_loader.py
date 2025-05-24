@@ -72,8 +72,13 @@ class WorkflowLoader:
         if 'workflow' not in self.workflow_data:
             raise ValueError("Workflow file must contain a 'workflow' section")
             
-        if 'steps' not in self.workflow_data:
-            raise ValueError("Workflow file must contain a 'steps' section")
+        # Check for steps or tasks section
+        if 'steps' not in self.workflow_data and 'tasks' not in self.workflow_data:
+            raise ValueError("Workflow file must contain either a 'steps' or 'tasks' section")
+            
+        # If using tasks, convert to steps for backward compatibility
+        if 'tasks' in self.workflow_data and 'steps' not in self.workflow_data:
+            self.workflow_data['steps'] = self.workflow_data.pop('tasks')
             
         return self.workflow_data
         
@@ -213,46 +218,46 @@ class WorkflowLoader:
 
 
 def main():
-    """Main entry point for the workflow loader CLI."""
+    """Main CLI entry point."""
     parser = argparse.ArgumentParser(
-        description='Load and validate workflow YAML files'
+        description='Bluelabel Autopilot Workflow Loader',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Example Workflow YAML:
+  workflow:
+    name: "Sample Workflow"
+    description: "Process content through multiple agents"
+    version: "1.0.0"
+  
+  steps:
+    - id: step1
+      name: "First Step"
+      agent: ingestion_agent
+      input_file: tests/sample_input.json
+    
+    - id: step2
+      name: "Second Step"
+      agent: digest_agent
+      input_from: step1
+      config:
+        format: markdown
+"""
     )
-    parser.add_argument(
-        '--workflow',
-        type=Path,
-        required=True,
-        help='Path to the workflow YAML file'
-    )
+    
+    parser.add_argument('workflow_file', type=Path,
+                       help='Path to workflow YAML file')
     
     args = parser.parse_args()
     
     try:
-        # Create loader
-        loader = WorkflowLoader(args.workflow)
-        
-        # Load workflow
-        print(f"Loading workflow from: {args.workflow}")
+        loader = WorkflowLoader(args.workflow_file)
         loader.load()
-        
-        # Parse and validate steps
-        print("Parsing and validating steps...")
         loader.parse_steps()
-        
-        # Print the workflow
         loader.print_workflow()
-        
-        print("\n✅ Workflow loaded and validated successfully!")
-        
-    except FileNotFoundError as e:
-        print(f"❌ Error: {e}")
-        sys.exit(1)
-    except (ValueError, yaml.YAMLError) as e:
-        print(f"❌ Validation Error: {e}")
-        sys.exit(1)
     except Exception as e:
-        print(f"❌ Unexpected Error: {e}")
+        print(f"Error: {e}")
         sys.exit(1)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

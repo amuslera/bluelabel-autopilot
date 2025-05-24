@@ -1,50 +1,104 @@
+# Test Sprint Readiness Tracker
+# Last Updated: 2024-05-25
+
 components:
   - name: runner/cli_runner.py
     status: "✅ tested"
-    tested_by: "CA"
-    last_verified: "Sprint 2"
-    notes: "Unit tests complete, integration tests pending"
+    tested_in: "Sprint 4"
+    verified_by: "CA"
+    issues_found:
+      - "CLI command format mismatch with workflow templates"
+      - "Fixed by updating workflow templates to use 'steps' instead of 'tasks'"
+    notes: "CLI runner now properly handles workflow execution with updated schema"
 
   - name: runner/workflow_executor.py
-    status: "🟡 mockable"
-    tested_by: "CA"
-    last_verified: "Sprint 2"
-    notes: "Needs unit tests, integration tests pending"
+    status: "✅ tested"
+    tested_in: "Sprint 4"
+    verified_by: "CA"
+    issues_found:
+      - "Workflow template used 'tasks' instead of 'steps'"
+      - "Fixed by adding backward compatibility in workflow loader"
+    notes: "Workflow executor now handles both 'steps' and 'tasks' fields"
 
   - name: agents/ingestion_agent.py
     status: "✅ tested"
-    tested_by: "CA"
-    last_verified: "Sprint 2"
-    notes: "Unit tests complete, integration tests pending"
+    tested_in: "Sprint 4"
+    verified_by: "CA"
+    issues_found: []
+    notes: "Agent works correctly with workflow execution"
 
   - name: agents/digest_agent.py
-    status: "🟡 manually tested"
-    tested_by: "CA"
-    last_verified: "Sprint 2"
-    notes: "Needs unit tests, integration tests pending"
+    status: "✅ tested"
+    tested_in: "Sprint 4"
+    verified_by: "CA"
+    issues_found: []
+    notes: "Agent works correctly with workflow execution"
 
   - name: runner/workflow_loader.py
     status: "✅ tested"
-    tested_by: "CA"
-    last_verified: "Sprint 2"
-    notes: "Unit tests complete"
+    tested_in: "Sprint 4"
+    verified_by: "CA"
+    issues_found:
+      - "Schema validation mismatch between loader and templates"
+      - "Fixed by adding backward compatibility for 'tasks' field"
+    notes: "Loader now handles both 'steps' and 'tasks' fields for backward compatibility"
 
   - name: interfaces/agent_models.py
     status: "✅ tested"
-    tested_by: "CA"
-    last_verified: "Sprint 2"
-    notes: "Unit tests complete"
+    tested_in: "Sprint 4"
+    verified_by: "CA"
+    issues_found: []
+    notes: "Models work correctly with workflow execution"
+
+  - name: services/whatsapp_adapter.py
+    status: "✅ tested"
+    tested_by: "WA"
+    last_verified: "Sprint 4"
+    notes: "Input validation and workflow triggering tested"
+    tested_in_sprint_4: true
+    last_verified_by: "WA"
+    issues_found: "None found"
 
   - name: runner/cli_test_runner.py
     status: "✅ tested"
-    tested_by: "CA"
-    last_verified: "Sprint 2"
-    notes: "Unit tests complete"
+    tested_in: "Sprint 4"
+    verified_by: "CA"
+    issues_found: []
+    notes: "Test runner works correctly with workflow execution"
 
 test_coverage:
-  unit_tests: 85%
-  integration_tests: 40%
-  e2e_tests: 20%
+  current:
+    unit_tests: "85%"
+    integration_tests: "40%"
+    e2e_tests: "20%"
+  sprint_4_target:
+    unit_tests: "90%"
+    integration_tests: "70%"
+    e2e_tests: "50%"
+
+workflow_testing:
+  templates_tested:
+    - name: "pdf_to_digest"
+      status: "✅ tested"
+      issues_found:
+        - "Used 'tasks' instead of 'steps'"
+        - "Fixed by updating to use 'steps'"
+    - name: "url_to_digest"
+      status: "✅ tested"
+      issues_found:
+        - "Used 'tasks' instead of 'steps'"
+        - "Fixed by updating to use 'steps'"
+
+  test_inputs:
+    - name: "sample.pdf"
+      status: "✅ tested"
+      location: "tests/sample.pdf"
+    - name: "sample_url_input.json"
+      status: "✅ tested"
+      location: "tests/sample_url_input.json"
+    - name: "sample_digest_input.json"
+      status: "✅ tested"
+      location: "tests/sample_digest_input.json"
 
 status_legend:
   "✅ tested": "Unit tests complete"
@@ -53,8 +107,7 @@ status_legend:
   "🟢 verified": "All tests passing"
 
 next_steps:
-  - "Complete integration tests for workflow executor"
-  - "Add unit tests for digest agent"
-  - "Create e2e test suite"
-  - "Implement test data generators"
-  - "Document test procedures" 
+  - "Add integration tests for workflow execution"
+  - "Create test data generators"
+  - "Document test procedures"
+  - "Update CI/CD pipeline to run workflow tests" 

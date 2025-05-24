@@ -1,0 +1,8 @@
+{
+  "step_id": "ingest_pdf",
+  "status": "error",
+  "timestamp": "2025-05-24T18:57:20.450587",
+  "result": null,
+  "error": "Expecting value: line 1 column 1 (char 0)",
+  "duration_ms": 0
+}

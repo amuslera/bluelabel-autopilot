@@ -1,0 +1,20 @@
+workflow:
+  name: "Bad Reference Workflow"
+  description: "This workflow references a step that doesn't exist"
+  version: "1.0.0"
+
+steps:
+  - id: step1
+    name: "First Step"
+    agent: ingestion_agent
+    input_file: tests/sample_pdf_input.json
+    
+  - id: step2
+    name: "Second Step"
+    agent: digest_agent
+    input_from: nonexistent_step  # This step doesn't exist!
+    
+  - id: step3
+    name: "Third Step"
+    agent: digest_agent
+    input_from: step2

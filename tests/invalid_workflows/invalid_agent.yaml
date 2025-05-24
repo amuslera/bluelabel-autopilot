@@ -1,0 +1,20 @@
+workflow:
+  name: "Invalid Agent Workflow"
+  description: "This workflow uses agent names that don't exist"
+  version: "1.0.0"
+
+steps:
+  - id: step1
+    name: "Valid Step"
+    agent: ingestion_agent
+    input_file: tests/sample_pdf_input.json
+    
+  - id: step2
+    name: "Invalid Agent Step"
+    agent: nonexistent_agent  # This agent doesn't exist!
+    input_from: step1
+    
+  - id: step3
+    name: "Another Invalid Agent"
+    agent: fantasy_agent  # Also doesn't exist!
+    input_from: step2

@@ -916,4 +916,515 @@
         "Consider creating additional sprint templates",
         "Plan for future phase organization"
     ]
+}
+
+{
+    "task_id": "TASK-161BB",
+    "status": "completed",
+    "timestamp": "2025-05-25T13:00:00Z",
+    "summary": "Successfully launched Sprint 4 with comprehensive test planning and documentation restructuring",
+    "details": {
+        "template_relocation": {
+            "source": "docs/sprints/SPRINT_KICKOFF_TEMPLATE.md",
+            "destination": "docs/system/templates/SPRINT_KICKOFF_TEMPLATE.md",
+            "status": "completed"
+        },
+        "sprint_plan_creation": {
+            "file": "docs/devphases/PHASE_6.11/sprints/SPRINT_4_PLAN.md",
+            "content": {
+                "title": "Phase 6.11 — Sprint 4: The Test Sprint",
+                "milestone": "v0.6.11-alpha5",
+                "theme": "System-Wide Validation",
+                "tasks": [
+                    "TASK-161BC to TASK-161BK"
+                ]
+            }
+        },
+        "sprint_history_migration": {
+            "source": "docs/system/SPRINT_HISTORY.md",
+            "destination": "docs/devphases/PHASE_6.11/PHASE_6.11_SPRINT_HISTORY.md",
+            "status": "completed"
+        },
+        "test_readiness_updates": {
+            "file": "docs/test/TEST_SPRINT_READINESS.yaml",
+            "components_updated": [
+                "runner/cli_runner.py",
+                "runner/workflow_executor.py",
+                "agents/ingestion_agent.py",
+                "agents/digest_agent.py"
+            ],
+            "coverage_targets": {
+                "unit_tests": "90%",
+                "integration_tests": "70%",
+                "e2e_tests": "50%"
+            }
+        },
+        "folder_cleanup": {
+            "removed": [
+                "docs/sprints/"
+            ],
+            "created": [
+                "docs/system/templates/",
+                "docs/devphases/PHASE_6.11/sprints/"
+            ]
+        }
+    },
+    "verification": {
+        "template_moved": true,
+        "sprint_plan_created": true,
+        "history_migrated": true,
+        "readiness_updated": true,
+        "folders_cleaned": true
+    },
+    "next_steps": [
+        "Monitor test coverage progress",
+        "Track sprint metrics",
+        "Prepare for sprint review"
+    ]
+}
+
+{
+    "task_id": "TASK-161BC",
+    "status": "completed",
+    "timestamp": "2025-05-25T14:00:00Z",
+    "summary": "Successfully validated workflow execution and identified schema mismatches",
+    "details": {
+        "workflows_tested": {
+            "pdf_to_digest": {
+                "file": "workflows/templates/pdf_to_digest.yaml",
+                "status": "failed",
+                "issues": [
+                    "Template uses 'tasks' instead of 'steps' section",
+                    "CLI command format mismatch"
+                ]
+            },
+            "url_to_digest": {
+                "file": "workflows/templates/url_to_digest.yaml",
+                "status": "not_tested",
+                "reason": "Blocked by schema issues"
+            }
+        },
+        "test_inputs_used": {
+            "pdf": "tests/sample.pdf",
+            "url": "tests/sample_url_input.json",
+            "digest": "tests/sample_digest_input.json"
+        },
+        "issues_found": {
+            "schema_mismatch": {
+                "description": "Workflow templates use 'tasks' section but executor expects 'steps'",
+                "impact": "Workflow execution fails with validation error",
+                "components_affected": [
+                    "workflow_executor.py",
+                    "workflow_loader.py"
+                ]
+            },
+            "cli_format": {
+                "description": "CLI runner command format doesn't match workflow template usage",
+                "impact": "Cannot execute workflows via CLI",
+                "components_affected": [
+                    "cli_runner.py"
+                ]
+            }
+        },
+        "directory_structure": {
+            "workflows": {
+                "templates": [
+                    "pdf_to_digest.yaml",
+                    "url_to_digest.yaml",
+                    "multi_step_example.yaml"
+                ]
+            },
+            "tests": {
+                "inputs": [
+                    "sample.pdf",
+                    "sample_url_input.json",
+                    "sample_pdf_input.json",
+                    "sample_digest_input.json"
+                ]
+            }
+        }
+    },
+    "verification": {
+        "workflow_templates": "Validated structure and content",
+        "test_inputs": "Verified availability and format",
+        "execution": "Tested with workflow executor",
+        "readiness_tracker": "Updated with findings"
+    },
+    "next_steps": [
+        "Fix workflow template schema to match executor",
+        "Update CLI runner for workflow support",
+        "Add integration tests for workflow execution",
+        "Create test data generators"
+    ]
+}
+
+{
+    "task_id": "TASK-161BK",
+    "status": "completed",
+    "timestamp": "2024-05-25T16:00:00Z",
+    "summary": "Successfully updated ARCH-AI continuity documentation with feedback reporting policy",
+    "details": {
+        "changes_made": [
+            {
+                "file": "docs/system/ARCH_CONTINUITY.md",
+                "changes": [
+                    "Added new 'Feedback Reporting Policy' section",
+                    "Specified dual reporting requirement (printed output + outbox.json)",
+                    "Added context about mailbox automation"
+                ]
+            },
+            {
+                "file": "docs/system/ARCH_CONTINUITY_PROMPT.md",
+                "changes": [
+                    "Added reminder about feedback reporting policy",
+                    "Ensured alignment with continuity file"
+                ]
+            },
+            {
+                "file": "TASK_CARDS.md",
+                "changes": [
+                    "Added task card for TASK-161BK",
+                    "Documented changes and verification steps"
+                ]
+            }
+        ],
+        "verification": {
+            "continuity_file": "✅ Updated with new policy section",
+            "prompt_template": "✅ Updated with reminder",
+            "task_card": "✅ Added with complete details"
+        },
+        "next_steps": [
+            "Monitor agent compliance with feedback reporting",
+            "Plan for mailbox automation implementation",
+            "Update documentation when automation is complete"
+        ]
+    }
+}
+
+{
+    "task_id": "TASK-161BH",
+    "status": "completed",
+    "timestamp": "2025-05-24T19:30:00Z",
+    "summary": "CA Reports: Finalized TEST_SPRINT_READINESS tracker for Sprint 4. All components tested, issues documented, and suggestions for improvement provided.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161BH-ca-finalize-readiness-tracker",
+            "Updated TEST_SPRINT_READINESS.yaml with Sprint 4 test results",
+            "Added header block with sprint reference and coverage goals",
+            "Documented issues and suggestions"
+        ],
+        "updated_entries": [
+            {
+                "name": "CLI Runner",
+                "tested_in_sprint_4": true,
+                "last_verified_by": "CA",
+                "issues_found": "CLI command format mismatch with workflow templates."
+            },
+            {
+                "name": "Workflow Loader",
+                "tested_in_sprint_4": true,
+                "last_verified_by": "CA",
+                "issues_found": "Schema validation mismatch; backward compatibility added for 'tasks'."
+            },
+            {
+                "name": "Storage Protocol",
+                "tested_in_sprint_4": true,
+                "last_verified_by": "CA",
+                "issues_found": "None. Storage structure and metadata are robust."
+            }
+        ],
+        "suggestions": [
+            "Add a 'next_steps' field to each component to track planned fixes or improvements.",
+            "Include a 'test_coverage' field with percentage or status.",
+            "Define clear criteria for 'tested' status (e.g., unit tests, integration tests, e2e tests).",
+            "Link to detailed test reports or logs for each component.",
+            "Include a summary of test environments or configurations used."
+        ]
+    }
+}
+
+{
+    "task_id": "TASK-161BL",
+    "status": "completed",
+    "timestamp": "2025-05-25T20:00:00Z",
+    "summary": "CA Reports: Completed final phase summary, follow-up tracker, and documentation audit for Phase 6.11. All broken paths fixed, and suggestions for file discoverability provided.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161BL-ca-phase-wrap-tracker-audit",
+            "Wrote PHASE_6.11_SUMMARY.md using ARCH-AI's structured summary",
+            "Created FOLLOW_UP_TRACKER.yaml with entries from Sprint 4 and Phase postmortems",
+            "Audited and fixed documentation paths in continuity and context files"
+        ],
+        "updated_entries": [
+            {
+                "id": "FU-001",
+                "title": "Streaming PDF Processing",
+                "source": "TASK-161BG",
+                "priority": "high",
+                "effort": "medium",
+                "sprint_target": "Phase 6.12"
+            },
+            {
+                "id": "FU-002",
+                "title": "CLI Usability Improvements",
+                "source": "TASK-161R",
+                "priority": "medium",
+                "effort": "low",
+                "sprint_target": "Phase 6.12"
+            },
+            {
+                "id": "FU-003",
+                "title": "Workflow Storage Compression",
+                "source": "TASK-161AM",
+                "priority": "low",
+                "effort": "high",
+                "sprint_target": "Phase 6.13"
+            }
+        ],
+        "broken_paths_fixed": [
+            "Updated references to sprint templates in ARCH_CONTINUITY.md",
+            "Fixed links to sprint history in AGENT_ORCHESTRATION_GUIDE.md",
+            "Removed outdated references to /docs/sprints/ in CLAUDE_CONTEXT.md"
+        ],
+        "suggestions": [
+            "Add a README.md in /docs/followups/ to explain the purpose and structure of the follow-up tracker.",
+            "Add a table of contents (TOC) in /docs/devphases/PHASE_6.11/ to list all phase-related documents.",
+            "Use consistent naming conventions for phase and sprint documents to improve searchability."
+        ]
+    }
+}
+
+{
+    "task_id": "TASK-161CO",
+    "status": "completed",
+    "timestamp": "2025-05-25T21:00:00Z",
+    "summary": "CA Reports: Added UI follow-up entry to tracker and archived Phase 7 planning draft.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161CO-ca-add-ui-tracker-and-notes",
+            "Added entry to FOLLOW_UP_TRACKER.yaml",
+            "Created PHASE_7_DRAFT_NOTES.md"
+        ],
+        "tracker_entry": {
+            "id": "FU-011",
+            "title": "Web UI for Agent + Workflow Management",
+            "source": "Strategic Planning – Phase 7 Entry",
+            "priority": "high",
+            "effort": "high",
+            "sprint_target": "Phase 7",
+            "description": "Build a modular, extensible web UI for managing agents, prompts, workflows, and run logs. Includes registry views, editable prompts, YAML workflow editor, and execution dashboards."
+        },
+        "phase_7_draft": {
+            "filename": "/docs/devphases/PHASE_7/PHASE_7_DRAFT_NOTES.md"
+        }
+    }
+}
+
+{
+    "task_id": "TASK-161CP",
+    "status": "completed",
+    "timestamp": "2025-05-25T22:00:00Z",
+    "summary": "CA Reports: Initialized Phase 6.12 with sprint plan, milestone tracker, and phase docs. All files created and continuity updated.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161CP-ca-phase612-kickoff",
+            "Created Phase 6.12 folder and planning file",
+            "Created Sprint 1 plan",
+            "Updated ARCH continuity with Phase 6.12 launch details"
+        ],
+        "file_paths": {
+            "phase_plan": "/docs/devphases/PHASE_6.12/PHASE_6.12_PLAN.md",
+            "sprint_plan": "/docs/devphases/PHASE_6.12/sprints/SPRINT_1_PLAN.md"
+        },
+        "continuity_updates": {
+            "phase_6_11": "Marked as completed",
+            "phase_6_12": "Added launch section with goals and sprint pattern"
+        }
+    }
+}
+
+{
+    "task_id": "TASK-161CB",
+    "status": "completed",
+    "timestamp": "2025-05-25T22:30:00Z",
+    "summary": "CA Reports: Implemented EmailInAdapter for Ingestion Workflows. Function signature, sample AgentInput, and known limitations provided.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161CB-ca-email-in-adapter",
+            "Created services/email/email_input_adapter.py",
+            "Implemented parse_email_to_input function",
+            "Generated sample AgentInput from mocked payload"
+        ],
+        "function_signature": "def parse_email_to_input(message: dict) -> AgentInput:",
+        "sample_agent_input": {
+            "task_id": "email-2025-05-25T22:30:00Z",
+            "task_type": "ingest_url",
+            "source": "email",
+            "content": {"url": "https://example.com"},
+            "metadata": {"from": "user@example.com", "subject": "Test URL", "timestamp": "2025-05-25T22:30:00Z"},
+            "context": {}
+        },
+        "known_limitations": [
+            "PDF download is stubbed (not implemented).",
+            "No validation for URL format or accessibility.",
+            "No handling for multiple attachments or URLs."
+        ]
+    }
+}
+
+{
+    "task_id": "TASK-161CD",
+    "status": "completed",
+    "timestamp": "2025-05-25T23:00:00Z",
+    "summary": "CA Reports: Executed Full Email → Workflow Test. Live email triggered the workflow, executed YAML path, output snippet, and report recorded.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161CD-ca-real-email-trigger-test",
+            "Sent test email (URL) to monitored Gmail address",
+            "Ensured GmailInboxWatcher picked up the email",
+            "Parsed email payload into AgentInput",
+            "Mapped metadata to YAML workflow",
+            "Executed workflow using WorkflowEngine",
+            "Verified output storage in data/workflows/<workflow_id>/<run_id>/"
+        ],
+        "live_email_trigger": "✅ Confirmed a live email triggered the workflow.",
+        "executed_yaml_path": "workflows/templates/url_to_digest.yaml",
+        "output_snippet": {
+            "workflow_name": "URL to Digest",
+            "version": "1.0.0",
+            "timestamp": "2025-05-25T23:00:00Z",
+            "config": {
+                "input": {
+                    "url": "https://example.com"
+                }
+            }
+        },
+        "report_recorded": {
+            "TASK_CARDS.md": "✅ Updated with TASK-161CD details.",
+            "/postbox/CA/outbox.json": "✅ Logged the report."
+        }
+    }
+}
+
+{
+    "task_id": "TASK-161CQ",
+    "status": "completed",
+    "timestamp": "2025-05-25T23:30:00Z",
+    "summary": "CA Reports: Implemented Task Metadata System Upgrade + Follow-Up Tracker Sync. Optional task dependencies, structured validation criteria, review expectations, and basic task metrics logging added.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161CQ-ca-task-metadata-upgrade",
+            "Updated task metadata format in /TASK_CARDS.md",
+            "Added structured validation criteria",
+            "Added review expectations",
+            "Extended task outbox format for metrics",
+            "Updated context files",
+            "Archived deferred suggestions in FOLLOW_UP_TRACKER.yaml"
+        ],
+        "implemented_improvements": [
+            "Optional Task Dependencies",
+            "Structured Validation Criteria",
+            "Review Expectations",
+            "Basic Task Metrics Logging"
+        ],
+        "context_files_updated": [
+            "/docs/system/ARCH_CONTINUITY.md",
+            "/docs/system/ARCH_CONTINUITY_PROMPT.md",
+            "/docs/system/AGENT_ORCHESTRATION_GUIDE.md",
+            "/docs/system/CURSOR_CONTEXT.md"
+        ],
+        "example_task_metadata": {
+            "task_id": "TASK-161CQ",
+            "dependencies": [
+                "TASK-161CB",
+                "TASK-161CC"
+            ],
+            "validation_criteria": [
+                "Gmail message is parsed into valid AgentInput",
+                "Output stored in correct folder"
+            ],
+            "review": {
+                "required_approvals": [
+                    "ARCH",
+                    "CC"
+                ],
+                "criteria": [
+                    "Code quality",
+                    "Output report presence",
+                    "Testability"
+                ]
+            },
+            "metrics": {
+                "implementation_time": "3h",
+                "test_coverage": 85
+            }
+        },
+        "follow_up_tracker_update": {
+            "id": "FU-012",
+            "title": "Advanced Task Management Infrastructure",
+            "source": "CA suggestions, TASK-161CQ",
+            "priority": "medium",
+            "effort": "high",
+            "sprint_target": "Phase 7",
+            "description": "Implement state machine for task lifecycle, file-based task folders, rollback logic, and automated dashboards."
+        }
+    }
+}
+
+{
+    "task_id": "TASK-161CR",
+    "status": "completed",
+    "timestamp": "2025-05-25T23:45:00Z",
+    "summary": "CA Reports: Created Standard Task Metadata Template + Reference Integration. Template created, documentation updated, and metadata snippet preview provided.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161CR-ca-task-template-reference",
+            "Created /docs/templates/TASK_METADATA_TEMPLATE.yaml",
+            "Updated documentation files to reference the template"
+        ],
+        "file_created": {
+            "path": "/docs/templates/TASK_METADATA_TEMPLATE.yaml",
+            "valid": true
+        },
+        "documentation_updated": [
+            "/docs/system/ARCH_CONTINUITY.md",
+            "/docs/system/ARCH_CONTINUITY_PROMPT.md",
+            "/docs/system/AGENT_ORCHESTRATION_GUIDE.md",
+            "/docs/system/CURSOR_CONTEXT.md"
+        ],
+        "metadata_snippet_preview": {
+            "task_id": "TASK-XXXX",
+            "status": {
+                "state": "planned",
+                "progress": 0,
+                "blockers": []
+            },
+            "dependencies": [
+                "TASK-YYYY"
+            ],
+            "validation_criteria": [
+                "Step 1 processes input file",
+                "Summary file created"
+            ],
+            "review": {
+                "required_approvals": [
+                    "ARCH",
+                    "CC"
+                ],
+                "criteria": [
+                    "Code quality",
+                    "Output report presence",
+                    "Testability"
+                ]
+            },
+            "metrics": {
+                "implementation_time": "2h",
+                "test_coverage": 85
+            }
+        },
+        "report_recorded": {
+            "TASK_CARDS.md": "✅ Updated with TASK-161CR details.",
+            "/postbox/CA/outbox.json": "✅ Logged the report."
+        }
+    }
 } 

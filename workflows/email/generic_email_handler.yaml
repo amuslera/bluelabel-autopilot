@@ -1,0 +1,22 @@
+workflow:
+  name: "Generic Email Handler"
+  description: "Process generic emails by extracting content and generating a digest"
+  version: "1.0.0"
+  
+steps:
+  - id: email_ingestion
+    name: "Ingest Email Content"
+    agent: ingestion_agent
+    description: "Extract and process email content including text and links"
+    
+  - id: email_digest
+    name: "Generate Email Summary"
+    agent: digest_agent
+    input_from: email_ingestion
+    config:
+      format: markdown
+      sections:
+        - summary
+        - key_points
+        - action_items
+    description: "Create a structured digest of the email content"

@@ -1,0 +1,10 @@
+{
+  "timestamp": "2025-05-24T18:39:54.810834",
+  "run_id": "da761372-ddf2-43ce-a42e-c604b2a76027",
+  "workflow": "pdf_to_digest.yaml",
+  "status": "error",
+  "input": {
+    "type": "pdf",
+    "value": "/tmp/test.pdf"
+  }
+}

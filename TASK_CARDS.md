@@ -1973,3 +1973,162 @@ Close out Sprint 4 and Phase 6.11 by writing both postmortems, tagging the final
 - `/docs/system/CLAUDE_CONTEXT.md`
 - `/docs/devphases/PHASE_6.11/PHASE_6.11_SPRINT_HISTORY.md`
 - `/TASK_CARDS.md` (this entry)
+
+---
+
+## TASK-161CA: Extract and Port Gmail Gateway from Legacy System
+
+**Status:** ✅ Completed
+**Date:** 2025-05-24
+**Assignee:** CC
+**Branch:** `dev/TASK-161CA-cc-gmail-listener`
+
+### Objective
+Migrate and refactor the Gmail-based email listener from bluelabel-AIOS-V2 to enable Gmail inbox monitoring for triggering workflows in Phase 6.12.
+
+### Implementation Details
+
+**Files Created:**
+- `/services/email/email_gateway.py` - Core Gmail inbox watcher implementation
+- `/services/email/__init__.py` - Module initialization
+
+**Key Components:**
+1. **GmailInboxWatcher Class**:
+   - OAuth 2.0 authentication with token refresh
+   - Async inbox polling with configurable interval
+   - History API for efficient new message detection
+   - Email parsing with body and attachment extraction
+
+2. **EmailEvent NamedTuple**:
+   - Structured representation of email events
+   - Contains all necessary fields for workflow triggering
+
+3. **Key Methods**:
+   - `authenticate()` - OAuth flow with token persistence
+   - `watch()` - Async blocking method that returns new emails
+   - `_check_for_new_messages()` - Efficient history-based checking
+   - `_process_message()` - Email parsing and event creation
+
+### Refactoring Summary
+- Removed legacy dependencies (EventBus, Celery, FastAPI)
+- Simplified to focus on inbox monitoring only
+- Made fully async with modern Python patterns
+- Added proper token persistence and refresh logic
+- Stubbed event triggering for future integration
+
+### Function Signature
+```python
+class GmailInboxWatcher:
+    async def watch(self) -> EmailEvent:
+        """Blocks until a new email is detected and parsed"""
+```
+
+### TODOs and Warnings
+- Implement exponential backoff for API errors
+- Add support for Gmail push notifications (webhooks)
+- Consider adding email filtering/rules support
+- Token file path should be configurable via env
+
+### Compatibility Notes
+- Uses google-api-python-client (needs to be added to requirements)
+- Requires OAuth2 credentials.json file
+- Token stored in data/gmail_token.json by default
+- Fully async implementation compatible with workflow executor
+
+**Files Created/Modified:**
+- `/services/email/email_gateway.py`
+- `/services/email/__init__.py`
+- `/TASK_CARDS.md` (this entry)
+
+---
+
+## TASK-161CC: Configure Email → Workflow Mapping Engine
+
+**Status:** ✅ Completed
+**Date:** 2025-05-25
+**Assignee:** CC
+**Branch:** `dev/TASK-161CC-cc-email-routing`
+
+### Objective
+Create a lightweight rule-based mapping engine that receives parsed email metadata and selects the appropriate YAML workflow file to execute.
+
+### Implementation Details
+
+**Files Created:**
+- `/services/email/email_workflow_router.py` - Core routing engine (337 lines)
+- `/config/email_routing_rules.yaml` - Sample configuration (90 lines)
+- Updated `/services/email/__init__.py` - Added new exports
+
+**Key Components:**
+
+1. **EmailWorkflowRouter Class**:
+   - Rule-based workflow selection
+   - Priority-based rule evaluation
+   - Flexible matching criteria
+   - Default workflow fallback
+
+2. **WorkflowRule Dataclass**:
+   - Multiple matching criteria types
+   - Configurable AND/OR logic
+   - Priority ordering
+   - Enable/disable support
+
+3. **Matching Criteria**:
+   - `from_email` - Exact or partial email match
+   - `from_domain` - Domain-based matching
+   - `subject_contains` - Keyword matching
+   - `subject_regex` - Pattern matching
+   - `has_attachment` - Attachment presence
+   - `attachment_type` - MIME type matching
+
+### Function Signature
+```python
+class EmailWorkflowRouter:
+    def __init__(self, config: dict):
+        """Initialize with rules configuration"""
+    
+    def select_workflow(self, metadata: dict) -> str:
+        """Returns path to YAML workflow file"""
+```
+
+### Example Usage
+```python
+config = {
+    "rules": [{
+        "name": "newsletter_digest",
+        "workflow_path": "workflows/newsletter_digest.yaml",
+        "from_domain": "newsletter.example.com",
+        "subject_contains": ["digest", "newsletter"],
+        "priority": 10
+    }],
+    "default_workflow": "workflows/generic_email.yaml"
+}
+
+router = EmailWorkflowRouter(config)
+workflow = router.select_workflow({
+    "from": "updates@newsletter.example.com",
+    "subject": "Weekly Digest: Tech News"
+})
+# Returns: workflows/newsletter_digest.yaml
+```
+
+### Configuration Format
+- YAML or Python dict configuration
+- Rule priority system (higher = evaluated first)
+- Flexible matching with AND/OR logic
+- Support for regex patterns
+- Default workflow fallback
+
+### Testing
+The module includes built-in test examples demonstrating:
+- Newsletter routing by domain
+- PDF attachment detection
+- Customer feedback by subject regex
+- URL processing by keywords
+- Default fallback behavior
+
+**Files Created/Modified:**
+- `/services/email/email_workflow_router.py`
+- `/config/email_routing_rules.yaml`
+- `/services/email/__init__.py`
+- `/TASK_CARDS.md` (this entry)

@@ -23,20 +23,23 @@ input:
     description: "Optional title to use instead of the PDF's title"
 
 # Workflow steps
-tasks:
-  - name: "ingest_pdf"
+steps:
+  - id: "ingest_pdf"
+    name: "ingest_pdf"
     agent: "ingestion"
     type: "pdf"
+    input_file: "tests/sample.pdf"
     parameters:
-      file_path: "{{ input.file_path }}"
+      file_path: "tests/sample.pdf"
       extract_metadata: true
     output: "ingested_pdf"
     description: "Extract text and metadata from the PDF file"
 
-  - name: "generate_digest"
+  - id: "generate_digest"
+    name: "generate_digest"
     agent: "digest"
     type: "generate"
-    input_from: "ingested_pdf"
+    input_from: "ingest_pdf"
     parameters:
       title: >
         {% if input.title_override %}

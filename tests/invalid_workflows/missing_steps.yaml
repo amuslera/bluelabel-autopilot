@@ -1,0 +1,11 @@
+workflow:
+  name: "Missing Steps Workflow"
+  description: "This workflow is missing the required 'steps' section"
+  version: "1.0.0"
+
+metadata:
+  author: "Test Suite"
+  created: "2025-05-24"
+  tags: ["invalid", "test"]
+
+# Missing required 'steps' section entirely

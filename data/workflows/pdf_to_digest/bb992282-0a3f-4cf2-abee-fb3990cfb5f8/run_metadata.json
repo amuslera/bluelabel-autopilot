@@ -1,0 +1,11 @@
+{
+  "workflow_name": "pdf_to_digest",
+  "version": "1.0.0",
+  "timestamp": "2025-05-24T18:57:20.450758",
+  "completed_at": "2025-05-24T18:57:20.450748",
+  "status": "failed",
+  "duration_ms": 6,
+  "steps_completed": 0,
+  "steps_failed": 1,
+  "run_id": "52fd6001-531e-4fb7-9b29-37ac37b4e991"
+}

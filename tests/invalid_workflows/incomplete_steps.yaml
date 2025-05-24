@@ -1,0 +1,20 @@
+workflow:
+  name: "Incomplete Steps Workflow"
+  description: "This workflow has steps missing required fields"
+  version: "1.0.0"
+
+steps:
+  - id: step1
+    name: "Missing Agent"
+    # Missing required 'agent' field!
+    input_file: tests/sample_pdf_input.json
+    
+  - # Missing required 'id' field!
+    name: "Missing ID"
+    agent: digest_agent
+    input_from: step1
+    
+  - id: step3
+    name: "No Input Source"
+    agent: digest_agent
+    # Missing both input_file and input_from!

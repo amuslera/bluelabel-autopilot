@@ -9,54 +9,63 @@ workflow:
   created: "2024-05-24"
   author: "Bluelabel Autopilot Team"
 
-# Input parameters with descriptions and default values
+# Input parameters
 input:
   url:
     type: string
     required: true
-    description: "URL of the content to process"
+    description: "URL to process"
     example: "https://example.com/article"
   
   digest_title:
     type: string
     required: false
-    default: "Content Digest"
-    description: "Title for the generated digest"
+    description: "Optional title for the digest"
 
 # Workflow steps
-tasks:
+steps:
   - name: "ingest_url"
     agent: "ingestion"
     type: "url"
     parameters:
       url: "{{ input.url }}"
-    output: "ingested_content"
-    description: "Fetch and process content from the provided URL"
+      extract_metadata: true
+    output: "ingested_url"
+    description: "Extract content and metadata from the URL"
 
   - name: "generate_digest"
     agent: "digest"
     type: "generate"
-    input_from: "ingested_content"
+    input_from: "ingested_url"
     parameters:
-      title: "{{ input.digest_title }}"
+      title: >
+        {% if input.digest_title %}
+          {{ input.digest_title }}
+        {% else %}
+          {{ ingested_url.metadata.title | default('URL Content Digest') }}
+        {% endif %}
       format: "markdown"
+      include_metadata: true
     output: "digest_output"
-    description: "Generate a digest from the ingested content"
+    description: "Generate a structured digest from the URL content"
 
 # Output configuration
 output:
   format: "markdown"
-  file: "digest_output.md"
+  file: "url_digest_output.md"
   fields:
     - name: "digest"
       path: "digest_output.content"
       description: "The generated digest content"
     - name: "source_url"
-      path: "ingested_content.metadata.source_url"
-      description: "Original URL of the content"
-    - name: "word_count"
-      path: "ingested_content.metadata.word_count"
-      description: "Word count of the processed content"
+      path: "ingested_url.metadata.source_url"
+      description: "URL that was processed"
+    - name: "title"
+      path: "ingested_url.metadata.title"
+      description: "Title from the webpage (if available)"
+    - name: "author"
+      path: "ingested_url.metadata.author"
+      description: "Author from webpage metadata (if available)"
 
 # Metadata for tracking and documentation
 metadata:
@@ -65,6 +74,8 @@ metadata:
   dependencies:
     - "ingestion_agent"
     - "digest_agent"
+    - "requests>=2.31.0"
+    - "beautifulsoup4>=4.12.0"
 
 # Example usage
-# Run with: python runner/cli_runner.py run_workflow workflows/templates/url_to_digest.yaml --input.url "https://example.com"
+# Run with: python runner/cli_runner.py run_workflow workflows/templates/url_to_digest.yaml --input.url "https://example.com/article"

@@ -1,0 +1,11 @@
+{
+  "workflow_name": "Invalid Agent Workflow",
+  "version": "1.0.0",
+  "timestamp": "2025-05-24T18:41:10.841995",
+  "completed_at": "2025-05-24T18:41:10.841986",
+  "status": "failed",
+  "duration_ms": 4,
+  "steps_completed": 1,
+  "steps_failed": 1,
+  "run_id": "056ea0ad-6c59-4c63-9080-c42761888863"
+}
