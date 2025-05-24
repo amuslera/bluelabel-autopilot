@@ -1,0 +1,79 @@
+- id: FU-001
+  title: "Streaming PDF Processing"
+  source: "TASK-161BG"
+  tags: [performance, content]
+  priority: high
+  status: queued
+  sprint_target: Phase 6.13
+
+- id: FU-002
+  title: "CLI Usability Improvements"
+  source: "TASK-161R"
+  tags: [cli, usability]
+  priority: medium
+  status: queued
+  sprint_target: Phase 6.12
+
+- id: FU-003
+  title: "Workflow Storage Compression"
+  source: "TASK-161AM"
+  tags: [storage, performance]
+  priority: low
+  status: queued
+  sprint_target: Phase 6.13
+
+- id: FU-004
+  title: "Advanced Task Management Infrastructure"
+  source: "TASK-161CQ"
+  tags: [infrastructure, task-management]
+  priority: medium
+  status: queued
+  sprint_target: Phase 7
+
+- id: FU-005
+  title: "Web UI for Agent + Workflow Management"
+  source: "Strategic Planning – Phase 7 Entry"
+  tags: [ui, workflow-management]
+  priority: high
+  status: queued
+  sprint_target: Phase 7
+
+- id: FU-006
+  title: "Secure Config Management for Gmail, LLMs, and Output Services"
+  source: "TASK-161CM"
+  tags: [infra, secrets, security]
+  priority: high
+  status: queued
+  sprint_target: Phase 6.13
+
+- id: FU-007
+  title: "Workflow Run History Visualization"
+  source: "TASK-161AM"
+  tags: [ui, workflow-management]
+  priority: medium
+  status: queued
+  sprint_target: Phase 7
+
+- id: FU-008
+  title: "Concurrent Access Handling for Workflow Storage"
+  source: "TASK-161AM"
+  tags: [storage, performance]
+  priority: medium
+  status: queued
+  sprint_target: Phase 6.13
+
+- id: FU-009
+  title: "Workflow Run Statistics Dashboard"
+  source: "TASK-161AM"
+  tags: [ui, analytics]
+  priority: low
+  status: queued
+  sprint_target: Phase 7
+
+- id: FU-010
+  title: "Automated Test Coverage Reporting"
+  source: "TASK-161BH"
+  tags: [testing, automation]
+  priority: medium
+  status: queued
+  sprint_target: Phase 6.13 

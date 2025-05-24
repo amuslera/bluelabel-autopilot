@@ -2499,3 +2499,113 @@ Formally close out Sprint 2 of Phase 6.12 with comprehensive documentation, tagg
 - `/docs/system/ARCH_CONTINUITY.md`
 - `/docs/system/CLAUDE_CONTEXT.md`
 - `/TASK_CARDS.md` (this entry)
+
+---
+
+## TASK-161CP: Implement .env-Based Config Loader for Secure Credentials
+
+**Status:** ✅ Completed
+**Date:** 2025-05-27
+**Assignee:** CC
+**Branch:** `dev/TASK-161CP-cc-config-loader-env`
+
+### Objective
+Create a central configuration manager that loads secure runtime values from a `.env` file (or system environment), with optional fallback to static YAML or Python defaults.
+
+### Implementation Details
+
+**Core Implementation:**
+1. **Config Loader Module:**
+   - Created `/services/config/config_loader.py` (225 lines)
+   - Implements `Config` class with environment variable priority
+   - Supports `.env` file auto-loading from project root
+   - Provides singleton pattern via `get_config()`
+
+2. **Configuration Categories:**
+   - Gmail OAuth settings (client ID, secret, user, paths)
+   - SMTP configuration (server, port, credentials, TLS)
+   - Email defaults (sender, recipient)
+   - LLM API keys (OpenAI, Anthropic, Google)
+   - Environment settings (dev/prod, log level)
+   - Data paths (workflows, knowledge base)
+
+3. **Integration Points:**
+   - Updated `GmailInboxWatcher` to use config automatically
+   - Updated `EmailOutAdapter` to use SMTP config
+   - Both services now work with zero configuration
+
+### Key Features
+1. **Priority System:**
+   ```
+   Environment Variable > .env file > Fallback dict > Default value
+   ```
+
+2. **Helper Methods:**
+   - `get_gmail_config()` - Returns Gmail settings as dict
+   - `get_smtp_config()` - Returns SMTP settings as dict
+   - `get_llm_keys()` - Returns all LLM API keys
+   - `is_development()` / `is_production()` - Environment checks
+
+3. **Security Features:**
+   - Never logs sensitive values
+   - Warns about missing required values in production
+   - Sample file provided without real credentials
+
+### Usage Examples
+```python
+# Basic usage
+from services.config import get_config
+config = get_config()
+print(config.gmail_user)
+
+# With fallback
+config = Config(fallback={'smtp_server': 'backup.smtp.com'})
+
+# Integration (automatic)
+watcher = GmailInboxWatcher()  # Uses config
+adapter = EmailOutAdapter()    # Uses config
+```
+
+### Files Created/Modified
+1. **Created:**
+   - `/services/config/config_loader.py` - Main configuration manager
+   - `/services/config/__init__.py` - Module exports
+   - `/config/.env.sample` - Sample environment file
+   - `/services/config/README.md` - Documentation
+   - `/examples/config_usage.py` - Usage examples
+
+2. **Modified:**
+   - `/services/email/email_gateway.py` - Added config support
+   - `/services/email/email_output_adapter.py` - Added config support
+   - `/requirements.txt` - Added python-dotenv dependency
+
+### Supported Configuration Keys
+- **Gmail:** GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_USER, GMAIL_CREDENTIALS_PATH
+- **SMTP:** SMTP_SERVER, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_USE_TLS
+- **Email:** DEFAULT_SENDER_EMAIL, DEFAULT_RECIPIENT_EMAIL
+- **LLM:** OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_API_KEY
+- **Other:** RESEND_API_KEY, ENVIRONMENT, LOG_LEVEL
+- **Paths:** DATA_DIR, WORKFLOW_DIR, KNOWLEDGE_DIR
+
+### Limitations & Deferred Items
+1. **Current Limitations:**
+   - No YAML config file support (only dict fallback)
+   - No automatic validation of required fields
+   - No encryption for sensitive values at rest
+
+2. **Deferred for Future:**
+   - Multi-environment config files (.env.dev, .env.prod)
+   - Encrypted credential storage
+   - Integration with cloud secret managers
+   - Config hot-reloading
+
+**Files Created/Modified:**
+- `/services/config/config_loader.py`
+- `/services/config/__init__.py`
+- `/config/.env.sample`
+- `/services/config/README.md`
+- `/examples/config_usage.py`
+- `/services/email/email_gateway.py`
+- `/services/email/email_output_adapter.py`
+- `/requirements.txt`
+- `/TASK_CARDS.md` (this entry)
