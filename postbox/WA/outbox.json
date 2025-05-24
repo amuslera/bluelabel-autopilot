@@ -1,5 +1,58 @@
 [
   {
+    "task_id": "TASK-161CF",
+    "timestamp": "2025-05-24T14:15:00-07:00",
+    "status": "complete",
+    "details": {
+      "files_created": [
+        "/services/email/email_output_formatter.py",
+        "/tests/test_email_output_formatter.py",
+        "/tests/__init__.py"
+      ],
+      "test_results": {
+        "total_tests": 4,
+        "passed": 4,
+        "failed": 0,
+        "coverage": [
+          "Markdown formatting with summary data",
+          "Plaintext formatting with digest data",
+          "Minimal input data handling",
+          "Line wrapping in plaintext output"
+        ]
+      }
+    },
+    "formatter_signatures": {
+      "format_digest_markdown": "def format_digest_markdown(digest_data: Dict[str, Any]) -> str",
+      "format_digest_plaintext": "def format_digest_plaintext(digest_data: Dict[str, Any], line_width: int = 72) -> str"
+    },
+    "sample_output": {
+      "markdown": {
+        "title": "Document Title",
+        "timestamp": "*Generated on Saturday, May 24, 2025 at 10:30 AM PDT*",
+        "content": "This is a summary of the document content...",
+        "source": {
+          "url": "https://example.com",
+          "tags": ["news", "update"]
+        }
+      },
+      "plaintext": {
+        "title": "Document Title",
+        "divider": "==============",
+        "timestamp": "Generated on Saturday, May 24, 2025 at 10:30 AM PDT",
+        "sections": [
+          {"name": "SUMMARY", "divider": "-------", "content": "This is a summary of the document content..."},
+          {"name": "SOURCE", "divider": "-----", "content": "Source: https://example.com\nTags: news, update"}
+        ]
+      }
+    },
+    "notes": "Successfully implemented and tested the email output formatter. The module provides consistent formatting for both markdown and plaintext email output, with proper handling of various input types and edge cases.",
+    "next_steps": [
+      "Integrate with the EmailOutAdapter",
+      "Add support for custom templates",
+      "Consider adding HTML email support in the future"
+    ]
+  },
+  {
     "task_id": "TASK-161BD",
     "timestamp": "2025-05-24T11:45:00-07:00",
     "status": "complete",

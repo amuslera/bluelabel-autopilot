@@ -372,6 +372,79 @@ Merge all remaining Sprint 1 branches into main, create a clean milestone tag, a
 
 **Time Spent:** 30 minutes
 
+### TASK-161CF: Format Workflow Output for Email Delivery
+Status: COMPLETED ✅
+Assigned: WA
+Priority: HIGH
+Created: 2024-05-24
+Completed: 2024-05-24
+
+**Description:**
+Designed and implemented a formatting module that renders workflow output into clean plaintext and markdown formats for email delivery.
+
+**Deliverables:**
+- ✅ Created `/services/email/email_output_formatter.py` with:
+  - `format_digest_markdown()` - For rich markdown output
+  - `format_digest_plaintext()` - For plaintext email compatibility
+  - Comprehensive docstrings and type hints
+
+- ✅ Added test suite with 4 test cases:
+  - Markdown formatting with summary data
+  - Plaintext formatting with digest data
+  - Minimal input data handling
+  - Line wrapping in plaintext output
+
+**Key Features:**
+- **Flexible Input Handling**: Works with both minimal and complete input data
+- **Consistent Formatting**: Maintains consistent structure across output formats
+- **Email Optimization**: Line wrapping and proper formatting for email clients
+- **Source Attribution**: Includes source URLs and tags when available
+- **Time Zone Support**: Proper handling of timestamps with timezone information
+
+**Example Outputs:**
+
+**Markdown:**
+```markdown
+# Document Title
+
+*Generated on Saturday, May 24, 2025 at 10:30 AM PDT*
+
+## Summary
+This is a summary of the document content...
+
+### Source
+[Source](https://example.com)  
+Tags: `news` `update`
+```
+
+**Plaintext:**
+```
+Document Title
+=============
+
+Generated on Saturday, May 24, 2025 at 10:30 AM PDT
+
+SUMMARY
+-------
+This is a summary of the document content...
+
+SOURCE
+------
+Source: https://example.com
+Tags: news, update
+```
+
+**Files Created/Modified:**
+- `/services/email/email_output_formatter.py` (NEW)
+- `/tests/test_email_output_formatter.py` (NEW)
+- `/tests/__init__.py` (NEW)
+- `/TASK_CARDS.md` (updated)
+- `/postbox/WA/outbox.json` (updated)
+
+**Time Spent:** 2 hours
+
+---
+
 ### TASK-161BD: Validate WhatsApp Payload Input (Positive + Negative)
 Status: COMPLETED ✅
 Assigned: WA
@@ -2198,4 +2271,102 @@ Perform the formal closeout of Sprint 1 of Phase 6.12, following the latest spri
 - `/docs/devphases/PHASE_6.12/PHASE_6.12_SPRINT_HISTORY.md`
 - `/docs/system/ARCH_CONTINUITY.md`
 - `/docs/system/CLAUDE_CONTEXT.md`
+- `/TASK_CARDS.md` (this entry)
+
+---
+
+## TASK-161CG: Integrate Email Delivery into Workflow Execution
+
+**Status:** ✅ Completed
+**Date:** 2025-05-26
+**Assignee:** CC
+**Branch:** `dev/TASK-161CG-cc-email-dag-integration`
+
+### Objective
+Connect the EmailOutAdapter into the DAG engine so that when a workflow completes successfully, an output summary is emailed to a configured recipient.
+
+### Implementation Details
+
+**Core Changes:**
+1. **WorkflowEngine Enhancement:**
+   - Added `on_complete` callback parameter to `execute_workflow()`
+   - Callback executes after successful workflow completion
+   - Errors in callback are logged but don't fail workflow
+
+2. **EmailWorkflowOrchestrator Integration:**
+   - Added email delivery configuration support
+   - Automatically creates callback when delivery is enabled
+   - Extracts output from final successful step
+   - Formats output using EmailOutputFormatter
+
+3. **Configuration Structure:**
+   ```yaml
+   delivery:
+     enabled: true
+     smtp:
+       smtp_server: smtp.gmail.com
+       smtp_port: 587
+       smtp_username: email@gmail.com
+       smtp_password: app-password
+       from_email: email@gmail.com
+     default_recipient: null  # Replies to sender
+     default_subject: "Workflow Processing Complete"
+     format: markdown  # or plaintext
+   ```
+
+### Files Created/Modified
+1. **Created:**
+   - `/services/email/email_output_adapter.py` - SMTP email adapter
+   - `/tests/test_email_dag_integration.py` - Integration test
+   - `/runner/workflow_executor_with_email.py` - CLI with email support
+
+2. **Modified:**
+   - `/core/workflow_engine.py` - Added on_complete callback support
+   - `/services/email/email_workflow_orchestrator.py` - Integrated email delivery
+
+### Key Features
+- **Post-execution Hook:** Clean separation via callback pattern
+- **Graceful Error Handling:** Email failures logged but don't block workflow
+- **Flexible Configuration:** Per-workflow or default settings
+- **Format Support:** Markdown and plaintext output
+
+### Usage Example
+```python
+# Direct API usage
+await run_workflow(
+    path='workflow.yaml',
+    on_complete=async_email_callback
+)
+
+# CLI usage
+python runner/workflow_executor_with_email.py \
+    workflow.yaml \
+    --email-config email_config.yaml \
+    --email-recipient user@example.com
+```
+
+### Validation Criteria Met
+- ✅ EmailOutAdapter invoked after successful DAG completion
+- ✅ Formatted output passed from DigestAgent or final step
+- ✅ Errors logged but don't block DAG completion
+- ✅ Configuration support for recipients and subjects
+
+### Limitations & Follow-up
+1. **Current Limitations:**
+   - No HTML email template support (uses raw markdown)
+   - No retry logic for failed sends
+   - No attachment support
+
+2. **Suggested Improvements:**
+   - Add email template system
+   - Implement retry with exponential backoff
+   - Add support for multiple recipients
+   - Create email delivery queue for reliability
+
+**Files Created/Modified:**
+- `/services/email/email_output_adapter.py`
+- `/core/workflow_engine.py`
+- `/services/email/email_workflow_orchestrator.py`
+- `/tests/test_email_dag_integration.py`
+- `/runner/workflow_executor_with_email.py`
 - `/TASK_CARDS.md` (this entry)

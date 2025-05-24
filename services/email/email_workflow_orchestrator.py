@@ -21,6 +21,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from services.email.email_gateway import GmailInboxWatcher, EmailEvent
 from services.email.email_workflow_router import EmailWorkflowRouter
+from services.email.email_output_adapter import EmailOutAdapter
+from services.email.email_output_formatter import format_digest_markdown, format_digest_plaintext
 from core.workflow_engine import WorkflowEngine, run_workflow
 from interfaces.run_models import WorkflowRunResult
 
@@ -97,6 +99,18 @@ class EmailWorkflowOrchestrator:
         engine_config = config.get('engine', {})
         self.storage_path = Path(engine_config.get('storage_path', './data/knowledge'))
         self.temp_path = Path(engine_config.get('temp_path', './data/temp'))
+        
+        # Initialize email output adapter if configured
+        delivery_config = config.get('delivery', {})
+        self.email_adapter = None
+        self.delivery_enabled = delivery_config.get('enabled', False)
+        
+        if self.delivery_enabled and delivery_config.get('smtp'):
+            self.email_adapter = EmailOutAdapter(delivery_config['smtp'])
+            self.default_recipient = delivery_config.get('default_recipient')
+            self.default_subject = delivery_config.get('default_subject', 'Workflow Result')
+            self.output_format = delivery_config.get('format', 'markdown')  # 'markdown' or 'plaintext'
+            logger.info(f"Email delivery enabled with format: {self.output_format}")
         
         # Processing options
         processing_config = config.get('processing', {})
@@ -196,6 +210,20 @@ class EmailWorkflowOrchestrator:
             with open(input_file, 'w') as f:
                 json.dump(workflow_input, f, indent=2)
             
+            # Create email delivery callback if enabled
+            on_complete = None
+            if self.delivery_enabled and self.email_adapter:
+                # Determine recipient
+                recipient = self.default_recipient or email_event.sender
+                subject = f"{self.default_subject} - {email_event.subject}"
+                
+                async def send_workflow_output(result: WorkflowRunResult):
+                    await self._send_workflow_output(
+                        result, recipient, subject, email_event
+                    )
+                
+                on_complete = send_workflow_output
+            
             # Execute workflow
             logger.info(f"Executing workflow: {workflow_path}")
             workflow_result = await run_workflow(
@@ -203,7 +231,8 @@ class EmailWorkflowOrchestrator:
                 persist=True,
                 storage_path=str(self.storage_path),
                 temp_path=str(self.temp_path),
-                initial_input=workflow_input
+                initial_input=workflow_input,
+                on_complete=on_complete
             )
             
             # Update result
@@ -306,6 +335,63 @@ class EmailWorkflowOrchestrator:
         
         return workflow_input
     
+    async def _send_workflow_output(self, workflow_result: WorkflowRunResult,
+                                   recipient: str, subject: str, 
+                                   email_event: EmailEvent):
+        """Send workflow output via email"""
+        try:
+            # Extract output from the last successful step
+            output_data = None
+            final_step_id = None
+            
+            # Find the last successful step in execution order
+            if workflow_result.execution_order:
+                for step_id in reversed(workflow_result.execution_order):
+                    step_result = workflow_result.step_outputs.get(step_id)
+                    if step_result and step_result.status == "success" and step_result.result:
+                        output_data = step_result.result
+                        final_step_id = step_id
+                        break
+            
+            if not output_data:
+                logger.warning("No output data found in workflow result")
+                return
+            
+            # Prepare digest data for formatting
+            digest_data = {
+                'title': f"Workflow Result: {email_event.subject}",
+                'content': output_data.get('digest', output_data.get('summary', str(output_data))),
+                'source': {
+                    'url': email_event.sender,
+                    'tags': ['email-triggered', workflow_result.workflow_name]
+                },
+                'timestamp': workflow_result.completed_at.isoformat() if workflow_result.completed_at else None
+            }
+            
+            # Select formatter based on configuration
+            if self.output_format == 'plaintext':
+                formatted_content = format_digest_plaintext(digest_data)
+                content_type = 'plain'
+            else:
+                formatted_content = format_digest_markdown(digest_data)
+                content_type = 'html'
+            
+            # Send the email
+            success = await self.email_adapter.send_output(
+                content=formatted_content,
+                subject=subject,
+                recipient=recipient,
+                content_type=content_type
+            )
+            
+            if success:
+                logger.info(f"Successfully sent workflow output to {recipient}")
+            else:
+                logger.error(f"Failed to send workflow output to {recipient}")
+                
+        except Exception as e:
+            logger.error(f"Error sending workflow output: {e}")
+    
     async def _mark_email_processed(self, email_event: EmailEvent, success: bool):
         """Mark email as processed in Gmail"""
         try:
@@ -385,6 +471,19 @@ EXAMPLE_CONFIG = {
         "add_label": "Processed",
         "error_label": "ProcessingError",
         "save_attachments": True
+    },
+    "delivery": {
+        "enabled": True,
+        "smtp": {
+            "smtp_server": "smtp.gmail.com",
+            "smtp_port": 587,
+            "smtp_username": "your-email@gmail.com",
+            "smtp_password": "your-app-password",
+            "from_email": "your-email@gmail.com"
+        },
+        "default_recipient": None,  # If None, replies to sender
+        "default_subject": "Workflow Processing Complete",
+        "format": "markdown"  # or "plaintext"
     }
 }
 

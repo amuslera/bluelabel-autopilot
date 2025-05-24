@@ -196,13 +196,15 @@ class WorkflowEngine:
             )
     
     async def execute_workflow(self, workflow_path: Path, persist: bool = True, 
-                             initial_input: Optional[Dict[str, Any]] = None) -> WorkflowRunResult:
+                             initial_input: Optional[Dict[str, Any]] = None,
+                             on_complete: Optional[callable] = None) -> WorkflowRunResult:
         """Execute a workflow from a YAML file.
         
         Args:
             workflow_path: Path to workflow YAML file
             persist: Whether to persist outputs to disk
             initial_input: Optional initial input data for the first step
+            on_complete: Optional async callback function to call after successful completion
             
         Returns:
             WorkflowRunResult with execution details
@@ -324,6 +326,16 @@ class WorkflowEngine:
                 )
             
             self.logger.info(f"Workflow completed with status: {result.status.value}")
+            
+            # Call post-execution hook if provided and workflow succeeded
+            if on_complete and result.status == WorkflowStatus.SUCCESS:
+                try:
+                    await on_complete(result)
+                    self.logger.info("Post-execution hook completed successfully")
+                except Exception as e:
+                    # Log error but don't fail the workflow
+                    self.logger.error(f"Post-execution hook failed: {e}")
+            
             return result
             
         except Exception as e:
@@ -346,7 +358,8 @@ class WorkflowEngine:
 
 # Public API function
 async def run_workflow(path: str, persist: bool = True, storage_path: Optional[str] = None, 
-                      temp_path: Optional[str] = None, initial_input: Optional[Dict[str, Any]] = None) -> WorkflowRunResult:
+                      temp_path: Optional[str] = None, initial_input: Optional[Dict[str, Any]] = None,
+                      on_complete: Optional[callable] = None) -> WorkflowRunResult:
     """Execute a workflow from a YAML file.
     
     This is the main public API for running workflows.
@@ -357,6 +370,7 @@ async def run_workflow(path: str, persist: bool = True, storage_path: Optional[s
         storage_path: Optional path to content storage directory
         temp_path: Optional path to temporary files directory
         initial_input: Optional initial input data for the first step
+        on_complete: Optional async callback function to call after successful completion
         
     Returns:
         WorkflowRunResult containing execution details
@@ -375,4 +389,4 @@ async def run_workflow(path: str, persist: bool = True, storage_path: Optional[s
     )
     
     # Execute workflow
-    return await engine.execute_workflow(Path(path), persist=persist, initial_input=initial_input)
+    return await engine.execute_workflow(Path(path), persist=persist, initial_input=initial_input, on_complete=on_complete)
