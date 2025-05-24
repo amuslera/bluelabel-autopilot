@@ -919,3 +919,107 @@ tests/test_workflow_runner.py ......                                  [100%]
 - Add more edge cases
 - Consider adding test coverage reporting
 - Add test documentation
+
+### TASK-161AA: Close Sprint 2: Merge, Tag, Update Docs, and Write Postmortem
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-24
+Completed: 2025-05-24
+
+**Description:**
+Finalize Phase 6.11 Sprint 2 by merging all open branches, tagging the new milestone, updating system context files, and writing a brief sprint postmortem.
+
+**Deliverables:**
+- ✅ Reviewed and improved TASK-161X DAG execution implementation
+- ✅ Merged all Sprint 2 branches (161X, 161Y, 161Z)
+- ✅ Created annotated tag v0.6.11-alpha3
+- ✅ Updated all context documentation files
+- ✅ Wrote comprehensive Sprint 2 postmortem
+
+**Code Review of TASK-161X:**
+- Fixed Pydantic deprecation: `parse_obj` → `model_validate`
+- Added agent initialization check before execution
+- Improved PDF data handling for file inputs
+- Added agent name validation
+
+**Branches Merged:**
+- dev/TASK-161X-cc-dag-execution (with improvements)
+- dev/TASK-161Y-ca-cli-tests (already merged)
+- dev/TASK-161Z-wa-workflow-templates (already merged)
+
+**Documentation Updated:**
+- /docs/system/ARCH_CONTINUITY.md - Sprint 2 completion
+- /docs/system/CLAUDE_CONTEXT.md - Updated to v0.6.11-alpha3
+- /docs/system/SPRINT_HISTORY.md - Added Sprint 2 summary
+- /docs/release_notes/PHASE_6.11_SPRINT_2_POSTMORTEM.md - Created
+
+**Key Improvements to TASK-161X:**
+```python
+# Fixed Pydantic deprecation
+agent_input = AgentInput.model_validate(input_data)
+
+# Added agent initialization
+if hasattr(agent, 'initialize') and not getattr(agent, '_initialized', False):
+    await agent.initialize()
+
+# Improved PDF handling
+if step.agent == 'ingestion_agent' and input_data.get('task_type') == 'pdf':
+    # Special PDF data loading logic
+```
+
+**Sprint 2 Summary:**
+- 11 tasks completed in one day
+- YAML workflow engine fully operational
+- Comprehensive test suite implemented
+- Developer experience significantly improved
+- Ready for WhatsApp integration in Sprint 3
+
+**Time Spent:** 1 hour
+
+### TASK-161AB: Update Sprint SOP Files + Create ARCH-AI Continuity Prompt File
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-24
+Completed: 2025-05-24
+
+**Description:**
+Update sprint and orchestration documentation with latest SOPs and create a canonical onboarding prompt file for all future ARCH-AI instances.
+
+**Deliverables:**
+- ✅ Updated ARCH_CONTINUITY.md with new sprint completion requirements
+- ✅ Added tag format convention documentation
+- ✅ Updated AGENT_ORCHESTRATION_GUIDE.md with sprint management rules
+- ✅ Updated SPRINT_HISTORY.md with Sprint 2 information
+- ✅ Created ARCH_CONTINUITY_PROMPT.md (v1.0.0)
+
+**Files Created/Modified:**
+- docs/system/ARCH_CONTINUITY.md (Updated)
+- docs/system/AGENT_ORCHESTRATION_GUIDE.md (Updated)
+- docs/sprints/SPRINT_HISTORY.md (Updated)
+- docs/system/ARCH_CONTINUITY_PROMPT.md (NEW)
+
+**Key Updates:**
+1. Sprint Completion:
+   - Added postmortem document requirement
+   - Added SPRINT_HISTORY.md update requirements
+   - Added tag format convention
+
+2. Sprint Management:
+   - Added clear sprint start/end procedures
+   - Added task assignment rules
+   - Added progress reporting requirements
+
+3. ARCH-AI Continuity:
+   - Created versioned prompt file
+   - Added context rebuilding requirements
+   - Added role clarification
+
+**Time Spent:** 1 hour
+
+**Next Steps:**
+- Monitor effectiveness of new procedures
+- Consider adding more detailed sprint metrics
+- Consider adding sprint retrospective templates
+- Consider adding sprint planning templates

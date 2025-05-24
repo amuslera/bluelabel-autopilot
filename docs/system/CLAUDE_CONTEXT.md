@@ -118,17 +118,79 @@ Bluelabel Autopilot - Content Intelligence Workflow MVP with multi-agent orchest
    - Import structure validation
    - Mock external dependencies
 
-## Last Known State (v0.6.11-alpha2)
-- **Current Tag**: v0.6.11-alpha2 (Sprint 1 complete)
+## Sprint 2 Completed Tasks
+**TASK-161Q: Launch Sprint 2** ✅ COMPLETED
+- Created comprehensive sprint plan document
+- Updated continuity files with sprint procedures
+- Established clear success criteria for Sprint 2
+
+**TASK-161R: Improve CLI Help + Sample Clarity** ✅ COMPLETED
+- Enhanced CLI help messages and examples
+- Created missing sample files
+- Added file path support for JSON input
+- Improved error messages
+
+**TASK-161S: Add CLI Input Schema Validation** ✅ COMPLETED
+- Implemented Pydantic-based validation
+- Added agent-specific validation rules
+- Enhanced error handling with examples
+- Added file existence checks
+
+**TASK-161T: WhatsApp API Research + Sandbox Validation** ✅ COMPLETED
+- Researched official WhatsApp Business API
+- Documented vendor options and requirements
+- Created implementation roadmap
+- Identified rate limits and constraints
+
+**TASK-161U: Create Sample Workflow YAML + Loader Scaffold** ✅ COMPLETED
+- Established YAML workflow structure
+- Implemented WorkflowLoader with DAG validation
+- Added circular dependency detection
+- Created topological sort for execution order
+
+**TASK-161W: Implement CLI Test Runner for Agent Workflows** ✅ COMPLETED
+- Created workflow test runner
+- Added comprehensive logging
+- Implemented execution summaries
+- Added documentation
+
+**TASK-161X: Implement Executable DAG Runner for YAML Workflows** ✅ COMPLETED
+- Built workflow execution engine
+- Added output storage system
+- Implemented step-by-step orchestration
+- Created workflow metadata tracking
+
+**TASK-161Y: Add Unit Tests for CLI + Workflow Execution** ✅ COMPLETED
+- Created comprehensive test suites
+- Added async test support
+- Implemented test fixtures and mocks
+- Achieved good test coverage
+
+**TASK-161Z: Create Workflow YAML Templates + Guide** ✅ COMPLETED
+- Created reusable workflow templates
+- Built comprehensive guide
+- Added conditional execution examples
+- Documented best practices
+
+**TASK-161AB: Update Sprint SOP Files + Create ARCH-AI Continuity Prompt** ✅ COMPLETED
+- Updated sprint procedures
+- Added postmortem requirements
+- Created ARCH-AI handoff prompt
+- Formalized tag conventions
+
+## Last Known State (v0.6.11-alpha3)
+- **Current Tag**: v0.6.11-alpha3 (Sprint 2 complete)
 - **Branch Status**: main branch, all work merged
 - **Repository**: bluelabel-autopilot (separate from agent-comms-mvp)
-- **System State**: Foundation complete, ready for workflow implementation
+- **System State**: Workflow engine operational, ready for advanced features
 - **Key Features Active**:
   - MCP-compliant agent framework
   - URL/PDF ingestion capability
   - File-based digest generation
-  - CLI runner with both agents
-  - Standardized model definitions
+  - CLI runner with validation and help
+  - YAML workflow definitions and execution
+  - Unit test coverage
+  - Sprint procedures formalized
 
 ## Reinitialization Protocol
 When restarting mid-task:

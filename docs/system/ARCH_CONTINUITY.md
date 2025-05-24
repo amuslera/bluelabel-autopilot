@@ -10,10 +10,10 @@ The **Human Tech Lead** is Ariel Muslera. ARCH-AI assists Ariel by managing task
 
 **Current Phase:** Phase 6.11 (Content Intelligence Workflow MVP)
 **Previous Phase:** Phase 6.10 (Automation + Agent Intelligence)
-**Last Completed Tag:** `v0.6.11-alpha2`
-**Last known Task:** `TASK-161P` — Repository Cleanup & v0.6.11-alpha2
+**Last Completed Tag:** `v0.6.11-alpha3`
+**Last known Task:** `TASK-161AB` — Update Sprint SOP Files + Create ARCH-AI Continuity Prompt File
 **Sprint 1 Status:** COMPLETED
-**Sprint 2 Status:** NOT STARTED
+**Sprint 2 Status:** COMPLETED
 
 ---
 
@@ -157,17 +157,25 @@ Each new sprint begins with a kickoff task assigned to an agent other than CC (w
 - Backlog review and prioritization
 
 ### Sprint Completion
-Each sprint must end with a task (typically assigned to CC) that:
-1. Merges all active branches
-2. Tags the milestone (e.g., v0.x.x-alphaN)
-3. Updates all continuity documents:
-   - ARCH_CONTINUITY.md
-   - CLAUDE_CONTEXT.md
-   - SPRINT_HISTORY.md
-   - TASK_CARDS.md
-   - /postbox/CC/outbox.json
+1. All active branches must be merged into main
+2. Create annotated tag with comprehensive notes
+3. Update all continuity documentation
+4. Create a sprint postmortem document:
+   - Path: /docs/release_notes/PHASE_X.YY_SPRINT_Z_POSTMORTEM.md
+   - Written by CC as part of final closeout task
+   - Must include: What went well, what slowed us down, lessons learned, and recommendations.
+5. Update SPRINT_HISTORY.md with:
+   - Sprint tag
+   - Summary of tasks and deliverables
+   - Postmortem link
+   - Key learnings
 
-This ensures versioning, traceability, and a clean transition to the next sprint.
+### Tag Format Convention
+Tag format: v<major>.<minor>.<patch>-alpha<N>
+- Major: Significant architectural changes
+- Minor: New features or capabilities
+- Patch: Internal changes or non-code updates
+- Alpha: Sprint number within the phase
 
 ### Best Practices
 1. **Task Documentation**
@@ -193,6 +201,41 @@ This ensures versioning, traceability, and a clean transition to the next sprint
    - Clear branch naming convention
    - Regular updates from main
    - Clean merge history
+
+---
+
+## 📋 Sprint 2 Completion Summary
+
+**Sprint Dates:** Phase 6.11 Sprint 2
+**Tag:** v0.6.11-alpha3
+
+### Completed Tasks:
+- TASK-161Q: Launch Sprint 2: Create Sprint Plan + Context SOP Updates
+- TASK-161R: Improve CLI Help + Sample Clarity
+- TASK-161S: Add CLI Input Schema Validation
+- TASK-161T: WhatsApp API Research + Sandbox Validation
+- TASK-161U: Create Sample Workflow YAML + Loader Scaffold
+- TASK-161W: Implement CLI Test Runner for Agent Workflows
+- TASK-161X: Implement Executable DAG Runner for YAML Workflows
+- TASK-161Y: Add Unit Tests for CLI + Workflow Execution
+- TASK-161Z: Create Workflow YAML Templates + Guide
+- TASK-161AB: Update Sprint SOP Files + Create ARCH-AI Continuity Prompt File
+
+### Current System State:
+- Full workflow execution pipeline operational
+- YAML-based workflow definitions working
+- CLI improvements implemented
+- Unit tests added for core components
+- WhatsApp API research documented
+- Sprint procedures formalized
+
+### Known Backlog for Sprint 3:
+- Implement WhatsApp integration
+- Add workflow visualization
+- Performance optimization for large workflows
+- Enhanced error recovery mechanisms
+- API endpoint implementation
+- Advanced workflow features (conditionals, parallel execution)
 
 ---
 

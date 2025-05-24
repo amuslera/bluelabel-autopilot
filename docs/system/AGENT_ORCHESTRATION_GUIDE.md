@@ -80,3 +80,10 @@ See also:
 ---
 
 Keep this file updated as processes evolve.
+
+### Sprint Management
+- Each sprint begins with a kickoff task (assigned to an agent other than CC)
+- All sprints end with merge, tag, postmortem, and full doc update (usually by CC)
+- Sprint tasks are assigned one per agent per cycle
+- Task cards must be updated with completion status
+- All agents must report progress in their outbox
