@@ -81,9 +81,49 @@ See also:
 
 Keep this file updated as processes evolve.
 
-### Sprint Management
-- Each sprint begins with a kickoff task (assigned to an agent other than CC)
-- All sprints end with merge, tag, postmortem, and full doc update (usually by CC)
-- Sprint tasks are assigned one per agent per cycle
-- Task cards must be updated with completion status
-- All agents must report progress in their outbox
+## Sprint Management
+
+### Sprint Closeout
+The sprint closeout process is now standardized and checklist-based. It can be triggered by ARCH-AI or Human Tech Lead using the phrase "perform the Sprint Closeout routine". This will initiate a series of verification steps and documentation updates.
+
+### Sprint Documentation
+Sprint documentation is organized by phase in the following structure:
+```
+docs/devphases/
+└── PHASE_6.11/
+    └── sprints/
+        ├── SPRINT_1_PLAN.md
+        ├── SPRINT_2_PLAN.md
+        └── SPRINT_3_PLAN.md
+```
+
+### Sprint History
+The SPRINT_HISTORY.md file maintains a chronological record of all sprints, including:
+- Sprint tag
+- Summary of tasks and deliverables
+- Postmortem link
+- Key learnings
+
+### Sprint Metrics
+Each sprint should track and report:
+- Number of tasks completed
+- Test coverage percentage
+- Documentation updates
+- Code quality metrics
+- Performance improvements
+
+### Sprint Planning
+Sprint planning should include:
+- Clear sprint goals
+- Task breakdown
+- Success criteria
+- Risk assessment
+- Resource allocation
+
+### Sprint Review
+Sprint reviews should cover:
+- Goal achievement
+- Task completion
+- Quality metrics
+- Lessons learned
+- Next sprint preparation

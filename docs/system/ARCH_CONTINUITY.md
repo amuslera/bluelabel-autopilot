@@ -10,10 +10,11 @@ The **Human Tech Lead** is Ariel Muslera. ARCH-AI assists Ariel by managing task
 
 **Current Phase:** Phase 6.11 (Content Intelligence Workflow MVP)
 **Previous Phase:** Phase 6.10 (Automation + Agent Intelligence)
-**Last Completed Tag:** `v0.6.11-alpha3`
-**Last known Task:** `TASK-161AB` — Update Sprint SOP Files + Create ARCH-AI Continuity Prompt File
+**Last Completed Tag:** `v0.6.11-alpha4`
+**Last known Task:** `TASK-161AZ` — Sprint 3 Closeout (Checklist-Based Execution)
 **Sprint 1 Status:** COMPLETED
 **Sprint 2 Status:** COMPLETED
+**Sprint 3 Status:** COMPLETED (2025-05-24)
 
 ---
 
@@ -157,18 +158,65 @@ Each new sprint begins with a kickoff task assigned to an agent other than CC (w
 - Backlog review and prioritization
 
 ### Sprint Completion
-1. All active branches must be merged into main
-2. Create annotated tag with comprehensive notes
-3. Update all continuity documentation
-4. Create a sprint postmortem document:
-   - Path: /docs/release_notes/PHASE_X.YY_SPRINT_Z_POSTMORTEM.md
-   - Written by CC as part of final closeout task
-   - Must include: What went well, what slowed us down, lessons learned, and recommendations.
-5. Update SPRINT_HISTORY.md with:
-   - Sprint tag
-   - Summary of tasks and deliverables
-   - Postmortem link
-   - Key learnings
+
+#### Pre-Tag Activities
+1. Verify all tasks are completed and documented in TASK_CARDS.md
+2. Ensure all tests are passing
+3. Update all documentation files
+4. Review code changes
+5. Sync local and remote repositories
+6. Update version numbers
+7. Update changelog
+
+#### Post-Tag Activities
+1. Create and push tag
+2. Publish release notes
+3. Collect sprint metrics
+4. Complete postmortem
+5. Initiate next sprint planning
+
+#### Sprint Closeout Routine
+The sprint closeout process is now checklist-based and can be triggered by ARCH-AI or Human Tech Lead using the phrase "perform the Sprint Closeout routine". This will initiate the following steps:
+
+1. **Pre-Closeout Verification**
+   - [ ] All tasks completed and documented
+   - [ ] All tests passing
+   - [ ] Documentation updated
+   - [ ] Code reviewed
+   - [ ] Local and remote repos synced
+   - [ ] Version numbers updated
+   - [ ] Changelog updated
+
+2. **Branch Management**
+   - [ ] All sprint branches merged
+   - [ ] No merge conflicts
+   - [ ] Branch cleanup completed
+
+3. **Documentation Updates**
+   - [ ] ARCH_CONTINUITY.md updated
+   - [ ] CLAUDE_CONTEXT.md updated
+   - [ ] SPRINT_HISTORY.md updated
+   - [ ] Release notes published
+   - [ ] Postmortem completed
+
+4. **Repository Management**
+   - [ ] Tag created and pushed
+   - [ ] Sprint metrics collected
+   - [ ] Next sprint planning initiated
+
+#### Sprint Documentation Structure
+Sprint documentation is now organized by phase:
+
+```
+docs/devphases/
+└── PHASE_6.11/
+    └── sprints/
+        ├── SPRINT_1_PLAN.md
+        ├── SPRINT_2_PLAN.md
+        └── SPRINT_3_PLAN.md
+```
+
+This structure allows for better organization and scalability as the project grows.
 
 ### Tag Format Convention
 Tag format: v<major>.<minor>.<patch>-alpha<N>

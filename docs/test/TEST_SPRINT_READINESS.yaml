@@ -1,0 +1,60 @@
+components:
+  - name: runner/cli_runner.py
+    status: "✅ tested"
+    tested_by: "CA"
+    last_verified: "Sprint 2"
+    notes: "Unit tests complete, integration tests pending"
+
+  - name: runner/workflow_executor.py
+    status: "🟡 mockable"
+    tested_by: "CA"
+    last_verified: "Sprint 2"
+    notes: "Needs unit tests, integration tests pending"
+
+  - name: agents/ingestion_agent.py
+    status: "✅ tested"
+    tested_by: "CA"
+    last_verified: "Sprint 2"
+    notes: "Unit tests complete, integration tests pending"
+
+  - name: agents/digest_agent.py
+    status: "🟡 manually tested"
+    tested_by: "CA"
+    last_verified: "Sprint 2"
+    notes: "Needs unit tests, integration tests pending"
+
+  - name: runner/workflow_loader.py
+    status: "✅ tested"
+    tested_by: "CA"
+    last_verified: "Sprint 2"
+    notes: "Unit tests complete"
+
+  - name: interfaces/agent_models.py
+    status: "✅ tested"
+    tested_by: "CA"
+    last_verified: "Sprint 2"
+    notes: "Unit tests complete"
+
+  - name: runner/cli_test_runner.py
+    status: "✅ tested"
+    tested_by: "CA"
+    last_verified: "Sprint 2"
+    notes: "Unit tests complete"
+
+test_coverage:
+  unit_tests: 85%
+  integration_tests: 40%
+  e2e_tests: 20%
+
+status_legend:
+  "✅ tested": "Unit tests complete"
+  "🟡 mockable": "Needs unit tests"
+  "🔴 untested": "No tests implemented"
+  "🟢 verified": "All tests passing"
+
+next_steps:
+  - "Complete integration tests for workflow executor"
+  - "Add unit tests for digest agent"
+  - "Create e2e test suite"
+  - "Implement test data generators"
+  - "Document test procedures" 

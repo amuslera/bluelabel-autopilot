@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Workflow Executor for Bluelabel Autopilot
-Executes agent workflows defined in YAML files, with proper output storage and error handling.
+Workflow Executor CLI for Bluelabel Autopilot
+CLI wrapper around the core workflow engine service.
 
 Usage:
     python runner/workflow_executor.py --workflow workflows/sample_ingestion_digest.yaml
@@ -10,298 +10,115 @@ Usage:
 import asyncio
 import json
 import sys
-import yaml
 import logging
-import uuid
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Optional
 import argparse
-from datetime import datetime
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-# Import models and agents
-from interfaces.agent_models import AgentInput, AgentOutput
-from agents.digest_agent import DigestAgent
-from agents.ingestion_agent import IngestionAgent
-from runner.workflow_loader import WorkflowLoader, WorkflowStep
+# Import the workflow engine service
+from core.workflow_engine import run_workflow
+from interfaces.run_models import WorkflowStatus
 
 
-class WorkflowExecutor:
-    """Executes agent workflows defined in YAML files."""
+# Setup logging
+def setup_logging(log_file: Optional[Path] = None, verbose: bool = False) -> logging.Logger:
+    """Setup logging configuration.
     
-    def __init__(self, storage_path: Optional[Path] = None, temp_path: Optional[Path] = None):
-        """Initialize the workflow executor.
+    Args:
+        log_file: Path to log file
+        verbose: Enable verbose logging
         
-        Args:
-            storage_path: Path to content storage directory
-            temp_path: Path to temporary files directory
-        """
-        self.storage_path = storage_path or Path("./data/knowledge")
-        self.temp_path = temp_path or Path("./data/temp")
-        self.workflow_output_path = Path("./data/workflows")
-        
-        # Initialize agents
-        self.agents = {
-            'ingestion_agent': IngestionAgent(
-                storage_path=self.storage_path,
-                temp_path=self.temp_path
-            ),
-            'digest_agent': DigestAgent()
-        }
-        
-        # Setup logging
-        self.logger = logging.getLogger('workflow_executor')
-        self.logger.setLevel(logging.INFO)
-        
-        # Add console handler
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(logging.Formatter(
+    Returns:
+        Configured logger
+    """
+    logger = logging.getLogger('workflow_executor_cli')
+    logger.setLevel(logging.DEBUG if verbose else logging.INFO)
+    
+    # Remove existing handlers
+    logger.handlers = []
+    
+    # Add console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    ))
+    logger.addHandler(console_handler)
+    
+    if log_file:
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setFormatter(logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         ))
-        self.logger.addHandler(console_handler)
+        logger.addHandler(file_handler)
     
-    def setup_logging(self, log_file: Optional[Path] = None, verbose: bool = False):
-        """Setup logging configuration.
-        
-        Args:
-            log_file: Path to log file
-            verbose: Enable verbose logging
-        """
-        if verbose:
-            self.logger.setLevel(logging.DEBUG)
-        
-        if log_file:
-            file_handler = logging.FileHandler(log_file)
-            file_handler.setFormatter(logging.Formatter(
-                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-            ))
-            self.logger.addHandler(file_handler)
+    return logger
+
+
+async def run_workflow_cli(workflow_file: Path, storage_path: Optional[Path] = None, 
+                          temp_path: Optional[Path] = None, logger: Optional[logging.Logger] = None) -> None:
+    """Run workflow with CLI output formatting.
     
-    def _create_workflow_dir(self, workflow_id: str) -> Path:
-        """Create directory for workflow outputs.
-        
-        Args:
-            workflow_id: Unique workflow identifier
-            
-        Returns:
-            Path to workflow output directory
-        """
-        workflow_dir = self.workflow_output_path / workflow_id
-        workflow_dir.mkdir(parents=True, exist_ok=True)
-        return workflow_dir
+    Args:
+        workflow_file: Path to workflow YAML file
+        storage_path: Path to content storage directory
+        temp_path: Path to temporary files directory
+        logger: Logger instance
+    """
+    if not logger:
+        logger = logging.getLogger('workflow_executor_cli')
     
-    def _save_step_output(self, workflow_dir: Path, step_id: str, output: Dict[str, Any]):
-        """Save step output to file.
+    try:
+        # Run workflow using the service
+        logger.info(f"Starting workflow execution: {workflow_file}")
         
-        Args:
-            workflow_dir: Path to workflow output directory
-            step_id: Step identifier
-            output: Step output data
-        """
-        output_file = workflow_dir / f"{step_id}.json"
-        with open(output_file, 'w') as f:
-            json.dump(output, f, indent=2)
-    
-    def _load_step_input(self, step: WorkflowStep, step_outputs: Dict[str, Any]) -> Dict[str, Any]:
-        """Load input data for a workflow step.
+        result = await run_workflow(
+            path=str(workflow_file),
+            persist=True,
+            storage_path=str(storage_path) if storage_path else None,
+            temp_path=str(temp_path) if temp_path else None
+        )
         
-        Args:
-            step: Step definition
-            step_outputs: Outputs from previous steps
-            
-        Returns:
-            Input data dictionary
-            
-        Raises:
-            ValueError: If input data is invalid
-        """
-        # Check for input file
-        if step.input_file:
-            input_file = Path(step.input_file)
-            if not input_file.exists():
-                raise ValueError(f"Input file not found: {input_file}")
-            
-            with open(input_file) as f:
-                input_data = json.load(f)
-                
-            # Special handling for PDF inputs
-            if step.agent == 'ingestion_agent' and input_data.get('task_type') == 'pdf':
-                pdf_path = input_data.get('content', {}).get('file_path')
-                if pdf_path and Path(pdf_path).exists():
-                    with open(pdf_path, 'rb') as pdf_file:
-                        input_data['content']['pdf_data'] = pdf_file.read()
-                        input_data['content']['filename'] = Path(pdf_path).name
-                        
-            return input_data
+        # Print execution summary
+        logger.info(f"\nWorkflow: {result.workflow_name} (v{result.workflow_version})")
+        logger.info(f"Run ID: {result.run_id}")
+        logger.info(f"Status: {result.status.value}")
         
-        # Check for input from previous step
-        elif step.input_from:
-            source_step = step.input_from
-            if source_step not in step_outputs:
-                raise ValueError(f"Source step output not found: {source_step}")
-            
-            # Create input from previous step's output
-            source_output = step_outputs[source_step]
-            input_data = {
-                'task_id': f"workflow-{step.id}",
-                'source': 'workflow',
-                'content': source_output.get('result', {}),
-                'metadata': source_output.get('metadata', {})
-            }
-            
-            # Add any additional configuration
-            if step.config:
-                input_data['content'].update(step.config)
-            
-            return input_data
+        if result.started_at and result.completed_at:
+            duration = (result.completed_at - result.started_at).total_seconds()
+            logger.info(f"Duration: {duration:.2f}s")
         
+        # Print step details
+        logger.info("\nStep Results:")
+        logger.info("-------------")
+        for step_id, step_result in result.step_outputs.items():
+            logger.info(f"\nStep: {step_result.step_name} ({step_id})")
+            logger.info(f"  Status: {step_result.status}")
+            logger.info(f"  Duration: {step_result.duration_ms}ms")
+            
+            if step_result.status == "failed" and step_result.error:
+                logger.error(f"  Error: {step_result.error}")
+            elif step_result.status == "success" and step_result.result:
+                # Show key outputs if specified
+                for key, value in step_result.result.items():
+                    if isinstance(value, (str, int, float, bool)):
+                        logger.info(f"  {key}: {value}")
+        
+        # Overall status
+        if result.status == WorkflowStatus.SUCCESS:
+            logger.info("\nWorkflow completed successfully!")
         else:
-            raise ValueError("Step must specify either input_file or input_from")
-    
-    async def execute_step(self, step: WorkflowStep, step_outputs: Dict[str, Any]) -> AgentOutput:
-        """Execute a single workflow step.
-        
-        Args:
-            step: Step definition
-            step_outputs: Outputs from previous steps
+            logger.error(f"\nWorkflow failed with status: {result.status.value}")
+            if result.errors:
+                for error in result.errors:
+                    logger.error(f"Error: {error}")
+            sys.exit(1)
             
-        Returns:
-            Agent output
-            
-        Raises:
-            ValueError: If step execution fails
-        """
-        try:
-            # Load input data
-            input_data = self._load_step_input(step, step_outputs)
-            
-            # Get agent
-            if step.agent not in self.agents:
-                raise ValueError(f"Unknown agent: {step.agent}")
-            agent = self.agents[step.agent]
-            
-            # Create agent input
-            agent_input = AgentInput.model_validate(input_data)
-            
-            # Initialize agent if needed
-            if hasattr(agent, 'initialize') and not getattr(agent, '_initialized', False):
-                await agent.initialize()
-            
-            # Execute step
-            self.logger.info(f"Executing step: {step.name} ({step.id})")
-            result = await agent.process(agent_input)
-            
-            # Log result
-            if result.status == "success":
-                self.logger.info(f"Step completed successfully: {step.name}")
-            else:
-                self.logger.error(f"Step failed: {step.name} - {result.error}")
-            
-            return result
-            
-        except Exception as e:
-            self.logger.error(f"Error executing step {step.id}: {e}")
-            raise ValueError(f"Step execution failed: {e}")
-    
-    async def run_workflow(self, workflow_file: Path) -> Dict[str, Any]:
-        """Run a complete workflow.
-        
-        Args:
-            workflow_file: Path to workflow YAML file
-            
-        Returns:
-            Dictionary of step outputs
-            
-        Raises:
-            ValueError: If workflow execution fails
-        """
-        try:
-            # Load and validate workflow
-            loader = WorkflowLoader(workflow_file)
-            workflow_data = loader.load()
-            steps = loader.parse_steps()
-            
-            # Get workflow info
-            workflow_info = workflow_data['workflow']
-            workflow_id = str(uuid.uuid4())
-            
-            # Create workflow output directory
-            workflow_dir = self._create_workflow_dir(workflow_id)
-            
-            # Save workflow definition
-            with open(workflow_dir / "workflow.yaml", 'w') as f:
-                yaml.dump(workflow_data, f)
-            
-            self.logger.info(f"Running workflow: {workflow_info['name']} (v{workflow_info['version']})")
-            self.logger.info(f"Description: {workflow_info['description']}")
-            self.logger.info(f"Workflow ID: {workflow_id}")
-            
-            # Get execution order
-            execution_order = loader.get_execution_order()
-            
-            # Execute steps in order
-            step_outputs = {}
-            for step_id in execution_order:
-                step = loader.step_map[step_id]
-                result = await self.execute_step(step, step_outputs)
-                
-                # Save step output
-                output_data = {
-                    'status': result.status,
-                    'result': result.result,
-                    'metadata': result.metadata,
-                    'error': result.error,
-                    'duration_ms': result.duration_ms,
-                    'timestamp': datetime.utcnow().isoformat()
-                }
-                self._save_step_output(workflow_dir, step_id, output_data)
-                step_outputs[step_id] = output_data
-            
-            # Print summary
-            self.logger.info("\nWorkflow Execution Summary:")
-            self.logger.info("-------------------------")
-            for step_id in execution_order:
-                step = loader.step_map[step_id]
-                output = step_outputs[step_id]
-                self.logger.info(f"\nStep: {step.name} ({step.id})")
-                self.logger.info(f"Status: {output['status']}")
-                self.logger.info(f"Duration: {output['duration_ms']}ms")
-                
-                if output['status'] == "success":
-                    if step.outputs:
-                        for output_field in step.outputs:
-                            if output_field in output['result']:
-                                self.logger.info(f"{output_field}: {output['result'][output_field]}")
-                else:
-                    self.logger.error(f"Error: {output['error']}")
-            
-            # Save workflow summary
-            summary = {
-                'workflow_id': workflow_id,
-                'name': workflow_info['name'],
-                'version': workflow_info['version'],
-                'description': workflow_info['description'],
-                'status': 'success' if all(o['status'] == 'success' for o in step_outputs.values()) else 'failed',
-                'steps': {
-                    step_id: {
-                        'name': loader.step_map[step_id].name,
-                        'status': output['status'],
-                        'duration_ms': output['duration_ms']
-                    }
-                    for step_id, output in step_outputs.items()
-                },
-                'timestamp': datetime.utcnow().isoformat()
-            }
-            with open(workflow_dir / "summary.json", 'w') as f:
-                json.dump(summary, f, indent=2)
-            
-            return step_outputs
-            
-        except Exception as e:
-            self.logger.error(f"Workflow execution failed: {e}")
-            raise ValueError(f"Workflow execution failed: {e}")
+    except Exception as e:
+        logger.error(f"\nWorkflow execution failed: {e}")
+        sys.exit(1)
 
 
 def main():
@@ -344,24 +161,25 @@ Example Workflow YAML:
     
     args = parser.parse_args()
     
-    # Create executor
-    executor = WorkflowExecutor(
-        storage_path=args.storage_path,
-        temp_path=args.temp_path
-    )
+    # Validate workflow file exists
+    if not args.workflow_file.exists():
+        print(f"Error: Workflow file not found: {args.workflow_file}")
+        sys.exit(1)
     
     # Setup logging
-    executor.setup_logging(
+    logger = setup_logging(
         log_file=args.log_file,
         verbose=args.verbose
     )
     
     # Run workflow
     try:
-        asyncio.run(executor.run_workflow(args.workflow_file))
-    except ValueError as e:
-        print(f"\nError: {e}")
-        sys.exit(1)
+        asyncio.run(run_workflow_cli(
+            workflow_file=args.workflow_file,
+            storage_path=args.storage_path,
+            temp_path=args.temp_path,
+            logger=logger
+        ))
     except KeyboardInterrupt:
         print("\nWorkflow execution interrupted")
         sys.exit(1)

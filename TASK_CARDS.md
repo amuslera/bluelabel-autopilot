@@ -372,6 +372,336 @@ Merge all remaining Sprint 1 branches into main, create a clean milestone tag, a
 
 **Time Spent:** 30 minutes
 
+### TASK-161AX: Document Simulation and Validation Practices
+Status: COMPLETED ✅
+Assigned: WA
+Priority: HIGH
+Created: 2024-05-24
+Completed: 2024-05-24
+
+**Description:**
+Document existing simulation practices and validation patterns for WhatsApp webhook processing and YAML workflows.
+
+**Deliverables:**
+- ✅ Created `/docs/dev/SIMULATION_PRACTICES.md`
+  - Documented usage of `simulate_whatsapp.py`
+  - Described supported payload structures
+  - Included CLI usage examples
+  - Added logging information
+  - Provided testing tips
+
+- ✅ Created `/docs/dev/VALIDATION_PATTERNS.md`
+  - Documented WhatsApp input validation
+  - Outlined YAML workflow structure
+  - Included common error patterns
+  - Added draft proposal for JSON schema validation
+
+**Key Features Documented:**
+1. **Simulation Practices**
+   - Supported payload types (URL, PDF, invalid)
+   - CLI usage and options
+   - Log file locations and formats
+   - Testing best practices
+
+2. **Validation Patterns**
+   - Input validation rules
+   - Workflow YAML structure
+   - Common error cases
+   - Future improvement ideas
+
+**Files Created/Modified:**
+- `/docs/dev/SIMULATION_PRACTICES.md` (NEW)
+- `/docs/dev/VALIDATION_PATTERNS.md` (NEW)
+- `/TASK_CARDS.md` (updated)
+- `/postbox/WA/outbox.json` (updated)
+
+**Time Spent:** 2 hours
+
+---
+
+### TASK-161AV: Review and Update Continuity for Windsurf AI
+Status: COMPLETED ✅
+Assigned: WA
+Priority: HIGH
+Created: 2024-05-24
+Completed: 2024-05-24
+
+**Description:**
+Ensure that WA role documentation is fully accurate for future instances, including generating a reboot prompt and suggesting improvements to the continuity process.
+
+**Deliverables:**
+- ✅ Updated `WINDSURF_CONTEXT.md` with current role definition
+- ✅ Updated `WA_CHECKLIST.md` with latest responsibilities
+- ✅ Added Windsurf AI Handoff Prompt
+- ✅ Documented suggestions for improvement
+
+**Key Updates:**
+1. **Role Definition**:
+   - Frontend/UI component development
+   - YAML template creation
+   - Integration research (e.g., WhatsApp)
+   - Simulation tools and adapters
+
+2. **Handoff Prompt**:
+   - Clear role responsibilities
+   - Required actions for new instances
+   - Compliance requirements
+
+**Suggestions for Improvement:**
+1. **Task Handoff**:
+   - Add a handoff checklist for complex tasks
+   - Include required context for continuation
+   - Document known issues and workarounds
+
+2. **Frontend Testing**:
+   - Add visual regression testing
+   - Include accessibility checks
+   - Document browser compatibility requirements
+
+3. **Input Validation**:
+   - Standardize validation patterns
+   - Add schema validation for API inputs
+   - Document expected formats
+
+4. **Simulation Practices**:
+   - Create a simulation library
+   - Document common simulation scenarios
+   - Add performance benchmarks
+
+**Files Updated:**
+- `/docs/system/WINDSURF_CONTEXT.md`
+- `/docs/system/WA_CHECKLIST.md`
+- `/TASK_CARDS.md`
+- `/postbox/WA/outbox.json`
+
+---
+
+## TASK-161AL: Refactor DAG Executor into Service Module
+
+**Status:** ✅ Completed
+**Date:** 2025-05-24
+**Assignee:** CC
+**Branch:** `dev/TASK-161AL-cc-refactor-dag-engine`
+
+### Objective
+Refactor the existing DAG executor implementation from runner/workflow_executor.py into a reusable service module that can be imported from CLI, tests, or API layers.
+
+### Requirements
+1. **Create Service Module**:
+   - Extract workflow execution logic to `core/workflow_engine.py`
+   - Create clean API with `run_workflow()` function
+   - Return structured results using Pydantic models
+
+2. **Define Result Models**:
+   - Create `WorkflowRunResult` and `StepResult` in `interfaces/run_models.py`
+   - Include all necessary fields for workflow tracking
+   - Support serialization for API responses
+
+3. **Preserve CLI Functionality**:
+   - Update `runner/workflow_executor.py` to use refactored service
+   - Maintain exact same CLI interface and behavior
+   - Keep all logging and output formatting
+
+### Implementation Details
+
+**Created Files:**
+1. **`interfaces/run_models.py`**:
+   - `WorkflowStatus` enum for workflow states
+   - `StepResult` model for individual step results
+   - `WorkflowRunResult` model for complete workflow execution
+
+2. **`core/workflow_engine.py`**:
+   - `WorkflowEngine` class with execution logic
+   - `run_workflow()` public API function
+   - Full async/await support
+   - Proper error handling and logging
+
+**Modified Files:**
+1. **`runner/workflow_executor.py`**:
+   - Refactored to be a thin CLI wrapper
+   - Calls the core workflow engine service
+   - Maintains all original CLI arguments and output formatting
+
+### Key Features
+- Clean separation of concerns between CLI and core logic
+- Reusable service that can be imported anywhere
+- Structured result objects for programmatic access
+- Maintains backward compatibility with existing CLI
+- Full async/await support throughout
+- Comprehensive error handling and logging
+
+### Testing
+Successfully tested with sample workflow:
+```bash
+python3 runner/workflow_executor.py workflows/sample_ingestion_digest.yaml
+```
+
+All outputs are correctly saved to `data/workflows/` directory with proper structure.
+
+**Files Updated:**
+- `/interfaces/run_models.py` (new)
+- `/core/workflow_engine.py` (new)
+- `/runner/workflow_executor.py` (refactored)
+- `/TASK_CARDS.md`
+
+**Time Spent:** 1.5 hours
+
+---
+
+## TASK-161AT: Review and Update Continuity for Claude Code
+
+**Status:** ✅ Completed
+**Date:** 2025-05-24
+**Assignee:** CC
+**Branch:** `dev/TASK-161AT-cc-context-review`
+
+### Objective
+Review and update Claude Code continuity documentation to accurately reflect current architecture and system integration role, then generate a clean reboot prompt.
+
+### Implementation Details
+
+**File Updated:** `/docs/system/CLAUDE_CONTEXT.md`
+
+**Added/Updated Sections:**
+1. **Sprint 3 Progress**:
+   - Added TASK-161AL completion details
+   - Updated current state to reflect Sprint 3 active status
+
+2. **Core Ownership & Responsibilities**:
+   - Explicitly documented ownership of `/core/workflow_engine.py`
+   - Added `/interfaces/run_models.py` to owned files
+   - Clarified sprint management responsibilities
+   - Documented special case handling (e.g., TASK-161X review)
+
+3. **Claude Code Handoff Prompt**:
+   - Created comprehensive handoff section
+   - Listed core responsibilities
+   - Documented key owned files
+   - Included workflow rules and quality standards
+   - Added reinitialization steps
+
+### Improvement Suggestions
+
+1. **Sprint Closeout Process**:
+   - Consider creating a sprint closeout checklist template
+   - Add automated tag verification script
+   - Document rollback procedures for failed merges
+
+2. **Code Review Protocol**:
+   - Formalize the process for CC reviewing other agents' work
+   - Create review criteria specific to MCP compliance
+   - Add performance benchmarking requirements
+
+3. **Documentation Structure**:
+   - Consider separating task history into archive files
+   - Add version numbers to context files
+   - Create a quick reference card for common operations
+
+4. **Handoff Enhancement**:
+   - Add common troubleshooting scenarios
+   - Include performance metrics expectations
+   - Document known technical debt items
+
+### Key Insights
+- The context file was mostly accurate but missing explicit ownership details
+- Sprint 3 progress needed to be reflected
+- The handoff prompt provides clear onboarding for future instances
+
+**Files Updated:**
+- `/docs/system/CLAUDE_CONTEXT.md`
+- `/TASK_CARDS.md`
+
+---
+
+### TASK-161AO: Implement WhatsApp Sandbox Workflow Trigger Adapter
+Status: COMPLETED ✅
+Assigned: WA
+Priority: HIGH
+Created: 2024-05-24
+Completed: 2024-05-24
+
+**Description:**
+Implement a Python adapter that can receive a WhatsApp webhook event and trigger a workflow based on the input type (URL or PDF).
+
+**Deliverables:**
+- ✅ Created `services/whatsapp_adapter.py` for handling webhook events
+- ✅ Added support for URL and PDF content types
+- ✅ Implemented logging to `data/whatsapp_logs/`
+- ✅ Created `runner/simulate_whatsapp.py` for local testing
+- ✅ Added sample payloads for testing
+
+**Key Features:**
+- Asynchronous webhook processing
+- Dynamic workflow selection based on content type
+- Comprehensive logging
+- CLI simulation tool
+- Error handling and validation
+
+**Example Usage:**
+
+1. **Run the simulator with a sample URL payload:**
+   ```bash
+   python runner/simulate_whatsapp.py --type url
+   ```
+
+2. **Run with a custom payload:**
+   ```bash
+   python runner/simulate_whatsapp.py --custom '{"type": "url", "value": "https://example.com"}'
+   ```
+
+3. **Save output to a file:**
+   ```bash
+   python runner/simulate_whatsapp.py --type pdf --output response.json
+   ```
+
+**Logs Directory Structure:**
+```
+data/whatsapp_logs/
+├── whatsapp_20240524.log    # General log file
+└── <run_id>.json           # Individual run logs
+```
+
+**Sample Log Entry:**
+```json
+{
+  "timestamp": "2024-05-24T17:45:30.123456",
+  "run_id": "abc123def456",
+  "workflow": "url_to_digest.yaml",
+  "status": "started",
+  "input": {
+    "type": "url",
+    "value": "https://example.com"
+  }
+}
+```
+
+**Files Created/Modified:**
+- `/services/whatsapp_adapter.py` (NEW)
+- `/runner/simulate_whatsapp.py` (NEW)
+- `/TASK_CARDS.md` (this update)
+- `/postbox/WA/outbox.json` (updated)
+
+**Dependencies:**
+- Python 3.8+
+- asyncio
+- aiohttp (for webhook server, if implemented)
+
+**Testing:**
+```bash
+# Test URL processing
+python runner/simulate_whatsapp.py --type url
+
+# Test PDF processing
+python runner/simulate_whatsapp.py --type pdf
+
+# Test with invalid type
+python runner/simulate_whatsapp.py --type invalid
+```
+
+**Time Spent:** 3 hours
+
+---
+
 ### TASK-161Z: Create Workflow YAML Templates + Guide
 Status: COMPLETED ✅
 Assigned: WA
@@ -1023,3 +1353,376 @@ Update sprint and orchestration documentation with latest SOPs and create a cano
 - Consider adding more detailed sprint metrics
 - Consider adding sprint retrospective templates
 - Consider adding sprint planning templates
+
+### TASK-161AK: Launch Sprint 3: Create Plan + Test Sprint Tracker + SOP Updates
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-25
+Completed: 2025-05-25
+
+**Description:**
+Formally launch Sprint 3 by creating the official plan document, initiating a test readiness tracker, and updating sprint continuity SOPs with the latest improvements.
+
+**Deliverables:**
+- ✅ Created /docs/sprints/SPRINT_3_PLAN.md with comprehensive sprint details
+- ✅ Created /docs/test/TEST_SPRINT_READINESS.yaml with component status
+- ✅ Updated ARCH_CONTINUITY.md with sync requirements
+- ✅ Added test coverage metrics and next steps
+
+**Files Created/Modified:**
+- docs/sprints/SPRINT_3_PLAN.md (NEW)
+- docs/test/TEST_SPRINT_READINESS.yaml (NEW)
+- docs/system/ARCH_CONTINUITY.md (Updated)
+
+**Key Updates:**
+1. Sprint Plan:
+   - Added service-layer refactor goals
+   - Added WhatsApp integration tasks
+   - Added workflow enhancements
+   - Added test sprint preparation
+
+2. Test Tracker:
+   - Added component status tracking
+   - Added test coverage metrics
+   - Added next steps for testing
+   - Added status legend
+
+3. SOP Updates:
+   - Added repo sync requirements
+   - Added pre/post tag checks
+   - Added test coverage tracking
+
+**Time Spent:** 1 hour
+
+**Next Steps:**
+- Begin TASK-161AL (API endpoint structure)
+- Monitor test coverage improvements
+- Track sprint metrics
+- Update test procedures
+
+### TASK-161AM: Implement Workflow Output Persistence by Run ID
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-25
+Completed: 2025-05-25
+
+**Description:**
+Implement a robust system for persisting workflow outputs and metadata under versioned directories using workflow_id and timestamp-based run IDs.
+
+**Deliverables:**
+- ✅ Created WorkflowStorage class for managing output persistence
+- ✅ Implemented timestamp and UUID-based run IDs
+- ✅ Added comprehensive test coverage
+- ✅ Created directory structure for workflow outputs
+- ✅ Added metadata and step output storage
+
+**Files Created/Modified:**
+- runner/workflow_storage.py (NEW)
+- tests/test_workflow_storage.py (NEW)
+
+**Key Features:**
+1. Storage Management:
+   - Timestamp-based run IDs (2024-06-01T12-00-00Z)
+   - UUID-based run IDs (optional)
+   - Hierarchical directory structure
+   - Automatic directory creation
+
+2. Output Storage:
+   - Workflow YAML definition
+   - Run metadata with timestamps
+   - Step outputs as JSON files
+   - Timestamp tracking for all files
+
+3. Retrieval Methods:
+   - List all runs for a workflow
+   - Get run metadata
+   - Get step outputs
+   - Path resolution utilities
+
+**Example Directory Structure:**
+```
+data/workflows/
+└── pdf_ingestion/
+    ├── 2025-05-25T10-00-00Z/
+    │   ├── workflow.yaml
+    │   ├── run_metadata.json
+    │   ├── ingest_output.json
+    │   └── digest_output.json
+    └── 2025-05-25T11-00-00Z/
+        ├── workflow.yaml
+        ├── run_metadata.json
+        ├── ingest_output.json
+        └── digest_output.json
+```
+
+**Example Metadata:**
+```json
+{
+  "workflow_name": "PDF Ingestion and Digest",
+  "version": "1.0.0",
+  "timestamp": "2025-05-25T10:00:00Z",
+  "config": {
+    "use_uuid": false,
+    "max_retries": 3
+  }
+}
+```
+
+**Example Step Output:**
+```json
+{
+  "step_id": "ingest",
+  "status": "success",
+  "timestamp": "2025-05-25T10:00:01Z",
+  "result": {
+    "content_id": "pdf_abc123",
+    "content_type": "pdf",
+    "content_length": 5678
+  }
+}
+```
+
+**Time Spent:** 1 hour
+
+**Next Steps:**
+- Integrate with CC's DAG engine refactor
+- Add cleanup/retention policies
+- Consider adding compression for large outputs
+- Add workflow run history visualization
+
+### TASK-161AU: Review and Update Continuity for Cursor AI
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-25
+Completed: 2025-05-25
+
+**Description:**
+Review and update continuity documentation to reflect current behavior, responsibilities, and test infrastructure, including the generation of an official reboot prompt for future CA instances.
+
+**Deliverables:**
+- ✅ Updated CURSOR_CONTEXT.md with current responsibilities
+- ✅ Added workflow storage implementation details
+- ✅ Updated sprint kickoff responsibilities
+- ✅ Added test coverage tracking requirements
+- ✅ Created official handoff prompt
+
+**Files Modified:**
+- docs/system/CURSOR_CONTEXT.md
+
+**Key Updates:**
+1. Core Responsibilities:
+   - Added test infrastructure ownership
+   - Added workflow storage management
+   - Added sprint kickoff leadership
+   - Added test coverage tracking
+
+2. Recent Contributions:
+   - Added TASK-161AM (Workflow Output Persistence)
+   - Added TASK-161AK (Sprint 3 Kickoff)
+   - Updated version to v0.6.11-alpha4
+
+3. Test Infrastructure:
+   - Added TEST_SPRINT_READINESS.yaml tracking
+   - Added sample input generation
+   - Added test coverage metrics
+   - Added standardized test formats
+
+4. Handoff Prompt:
+   - Added clear role definition
+   - Added specific responsibilities
+   - Added reporting requirements
+   - Added context alignment check
+
+**Time Spent:** 1 hour
+
+**Next Steps:**
+- Monitor effectiveness of new continuity procedures
+- Consider adding more detailed test format standards
+- Consider adding workflow storage best practices
+- Consider adding sprint kickoff templates
+
+### TASK-161AW: Implement Documentation Standards and Sprint Kickoff Template
+
+## Status
+COMPLETED
+
+## Assigned Agent
+CA
+
+## Priority
+HIGH
+
+## Creation Date
+2025-05-25
+
+## Completion Date
+2025-05-25
+
+## Description
+Implement approved documentation standards and create a reusable sprint kickoff template to ensure consistency across the project.
+
+## Deliverables
+1. Created comprehensive testing standards document at `docs/dev/TESTING_STANDARDS.md`
+2. Created reusable sprint kickoff template at `docs/sprints/SPRINT_KICKOFF_TEMPLATE.md`
+
+## Files Modified
+- Created `docs/dev/TESTING_STANDARDS.md`
+- Created `docs/sprints/SPRINT_KICKOFF_TEMPLATE.md`
+
+## Key Updates
+1. Testing Standards Document:
+   - Defined test file organization and naming conventions
+   - Established input/output JSON standards with validation rules
+   - Documented testing approaches for unit, CLI, and async tests
+   - Provided comprehensive examples and best practices
+   - Added sections on test coverage, data, error cases, and performance
+
+2. Sprint Kickoff Template:
+   - Created reusable template with all necessary sections
+   - Included milestone, theme, and duration fields
+   - Added sections for goals, tasks, deliverables, and success criteria
+   - Incorporated tag and postmortem checklists
+   - Added sections for metrics, risks, dependencies, and notes
+
+## Time Spent
+1 hour
+
+## Next Steps
+1. Monitor adoption of new testing standards
+2. Gather feedback on sprint kickoff template
+3. Consider creating additional templates for:
+   - Sprint postmortem
+   - Release notes
+   - Feature documentation
+4. Plan training session for team on new standards
+
+---
+
+## TASK-161AY: Implement Sprint Closeout Checklist + MCP Code Review Protocol
+
+**Status:** ✅ Completed
+**Date:** 2025-05-24
+**Assignee:** CC
+**Branch:** `dev/TASK-161AY-cc-closeout-review-protocols`
+
+### Objective
+Implement two key process improvements identified during continuity review: a sprint closeout checklist and an MCP-compliant code review protocol.
+
+### Implementation Details
+
+**Files Created:**
+
+1. **`/docs/system/TEMPLATE_SPRINT_CLOSEOUT.md`**:
+   - Comprehensive sprint closeout checklist
+   - Pre-closeout verification steps
+   - Branch merge procedures
+   - Required documentation updates (5 key files)
+   - Tag creation instructions
+   - Postmortem requirements
+   - Repository sync steps
+   - Optional test coverage snapshot
+
+2. **`/docs/dev/MCP_CODE_REVIEW_CHECKLIST.md`**:
+   - MCP input/output structure validation
+   - CLI and report formatting standards
+   - Naming convention checks
+   - Performance and memory review points
+   - Agent-specific review criteria (WA/CA)
+   - General code quality checklist
+   - Security considerations
+   - Review process workflow
+
+### Key Features
+
+**Sprint Closeout Template:**
+- Step-by-step checklist format with checkboxes
+- Exact commands for git operations
+- Documentation update requirements for all key files
+- Verification steps to ensure completeness
+- Notes section for customization
+
+**MCP Review Protocol:**
+- Comprehensive coverage of MCP compliance
+- Agent-specific sections for WA and CA reviews
+- Performance and security considerations
+- Clear review process workflow
+- Emphasis on cross-agent integration points
+
+### Future Automation Suggestions
+
+Based on the manual processes documented, consider these automation opportunities:
+
+1. **GitHub PR Templates**:
+   - Create `.github/pull_request_template.md` with MCP checklist
+   - Auto-label PRs based on branch naming
+   - Require checklist completion before merge
+
+2. **Sprint Automation Scripts**:
+   - `scripts/close_sprint.sh` to automate merges and tagging
+   - `scripts/verify_docs.py` to check documentation updates
+   - `scripts/coverage_snapshot.sh` for test metrics
+
+3. **CI/CD Integration**:
+   - Automated MCP compliance checks in CI
+   - Pre-merge validation of documentation updates
+   - Automatic version bumping for tags
+
+These automations would reduce manual effort while maintaining quality standards. However, the manual checklists provide valuable documentation of the process and serve as a foundation for future automation.
+
+**Files Created:**
+- `/docs/system/TEMPLATE_SPRINT_CLOSEOUT.md`
+- `/docs/dev/MCP_CODE_REVIEW_CHECKLIST.md`
+- `/TASK_CARDS.md` (updated)
+
+---
+
+## TASK-161AZ: Sprint 3 Closeout (Checklist-Based Execution)
+
+**Status:** ✅ Completed
+**Date:** 2025-05-24
+**Assignee:** CC
+**Branch:** `dev/TASK-161AZ-cc-sprint3-closeout`
+
+### Objective
+Perform the official closeout for Phase 6.11 Sprint 3 using the new standardized checklist at /docs/system/TEMPLATE_SPRINT_CLOSEOUT.md.
+
+### Implementation Details
+
+**Sprint 3 Summary:**
+- 11 tasks completed successfully
+- All branches already merged to main
+- Service layer refactoring complete
+- WhatsApp adapter implementation ready
+- Process improvements documented and implemented
+
+**Documentation Updated:**
+1. `/docs/system/ARCH_CONTINUITY.md` - Sprint 3 marked complete, tag updated
+2. `/docs/system/CLAUDE_CONTEXT.md` - Updated state to Sprint 3 complete
+3. `/docs/sprints/SPRINT_HISTORY.md` - Added Sprint 3 summary
+4. `/TASK_CARDS.md` - Added this closeout task
+5. `/postbox/CC/outbox.json` - Sprint closeout report
+
+**Tag Created:** v0.6.11-alpha4
+
+**Postmortem Written:** `/docs/release_notes/PHASE_6.11_SPRINT_3_POSTMORTEM.md`
+
+### Sprint 3 Achievements
+- Refactored DAG executor into reusable service layer
+- Implemented workflow output persistence system
+- Created WhatsApp adapter with simulation tools
+- Updated all agent continuity documentation
+- Established standardized processes (closeout checklist, code review)
+- Improved test infrastructure and documentation
+
+### Notes
+- First sprint to use the new standardized closeout checklist
+- All pre-closeout verification passed (tasks complete, branches merged)
+- Minor gap: TASK-161AW missing from CA outbox but marked complete in TASK_CARDS
+
+**Files Created/Updated:**
+- `/docs/release_notes/PHASE_6.11_SPRINT_3_POSTMORTEM.md`
+- All required documentation files per checklist
+- `/TASK_CARDS.md` (this entry)

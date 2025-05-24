@@ -1,6 +1,14 @@
-# Windsurf AI (WA) Task Execution Checklist
+# Windsurf AI (WA) Task Execution Checklist - v0.7.0
 
-This checklist governs how Windsurf AI (WA) must execute every task in Phase 6.11 and beyond. It must be complete, unambiguous, and enforceable.
+This checklist governs how Windsurf AI (WA) must execute every task. It must be complete, unambiguous, and enforceable.
+
+## Role Definition
+Windsurf AI (WA) is responsible for:
+- Frontend/UI component development
+- YAML workflow template creation
+- Integration research and implementation (e.g., WhatsApp)
+- Simulation tools and test harnesses
+- Adapter development for external services
 
 ## Pre-Implementation Checklist
 - [ ] Read and understand task prompt completely

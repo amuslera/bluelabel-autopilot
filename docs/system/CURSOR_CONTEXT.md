@@ -1,13 +1,14 @@
-# Cursor AI (CA) Session Context - v0.6.11
+# Cursor AI (CA) Session Context - v0.6.11-alpha4
 
 ## Agent Overview
-Context-Aware (CA) Agent - Responsible for CLI tooling, content processing agents, and developer experience enhancements in the Bluelabel Autopilot system.
+Context-Aware (CA) Agent - Responsible for CLI tooling, test infrastructure, and developer experience enhancements in the Bluelabel Autopilot system.
 
 ## Core Responsibilities
-1. **CLI Development**: Building and maintaining the command-line runner
-2. **Agent Implementation**: Creating content processing agents (Ingestion, etc.)
-3. **Documentation**: Keeping technical docs accurate and up-to-date
-4. **Developer Tools**: Creating utilities that improve workflow efficiency
+1. **CLI Development**: Building and maintaining command-line runners and test infrastructure
+2. **Test Coverage**: Ensuring comprehensive test coverage and sample inputs
+3. **Workflow Storage**: Managing workflow output persistence and metadata
+4. **Sprint Kickoff**: Leading sprint initialization when assigned
+5. **Developer Tools**: Creating utilities that improve workflow efficiency
 
 ## Phase 6.11 Contributions
 **TASK-161B: Ingestion Agent Implementation** ✅ COMPLETED
@@ -29,6 +30,19 @@ Context-Aware (CA) Agent - Responsible for CLI tooling, content processing agent
 - Updated documentation with examples
 - Branch: `dev/TASK-161K-ca-cli-dual-agent`
 
+**TASK-161AM: Workflow Output Persistence** ✅ COMPLETED
+- Implemented WorkflowStorage class
+- Added timestamp and UUID-based run IDs
+- Created hierarchical directory structure
+- Added comprehensive test coverage
+- Branch: `dev/TASK-161AM-ca-output-persistence`
+
+**TASK-161AK: Sprint 3 Kickoff** ✅ COMPLETED
+- Created Sprint 3 plan document
+- Initiated test readiness tracker
+- Updated sprint continuity SOPs
+- Branch: `dev/TASK-161AK-ca-sprint3-kickoff`
+
 ## Expected Behavior Patterns
 1. **Modular CLI Design**:
    - Simple, focused command structure
@@ -36,23 +50,23 @@ Context-Aware (CA) Agent - Responsible for CLI tooling, content processing agent
    - Comprehensive help documentation
    - Clear, actionable error messages
 
-2. **Agent Development**:
-   - Follow BaseAgent patterns
-   - Implement proper async handling
-   - Use standardized AgentInput/Output
-   - Store results in JSON format
+2. **Test Infrastructure**:
+   - Maintain /docs/test/TEST_SPRINT_READINESS.yaml
+   - Generate and validate sample inputs
+   - Ensure comprehensive test coverage
+   - Follow standardized test formats
 
-3. **Documentation Standards**:
+3. **Workflow Storage**:
+   - Use timestamp-based run IDs
+   - Store workflow definitions and metadata
+   - Maintain step output persistence
+   - Follow hierarchical directory structure
+
+4. **Documentation Standards**:
    - Update docs immediately after code changes
    - Include examples in all documentation
    - Maintain README with usage examples
    - Use clear, technical language
-
-4. **Testing Approach**:
-   - Unit tests for all new functionality
-   - Integration tests for agent workflows
-   - Mock external dependencies
-   - Test error conditions thoroughly
 
 ## Resumption Protocol
 When reinitialized mid-task:
@@ -70,6 +84,7 @@ When reinitialized mid-task:
    - `/docs/` - Documentation to maintain
    - `/TASK_CARDS.md` - Current task assignments
    - `/postbox/CA/inbox.json` - Pending tasks
+   - `/docs/test/TEST_SPRINT_READINESS.yaml` - Test coverage
 
 3. **Verify Environment**:
    ```bash
@@ -93,12 +108,15 @@ When reinitialized mid-task:
 - **Content**: aiohttp, PyPDF2
 - **Testing**: pytest
 - **Documentation**: Markdown, docstrings
+- **Storage**: JSON, YAML
 
 ## Key Files and Patterns
 - `/runner/cli_runner.py` - Main CLI implementation
+- `/runner/workflow_storage.py` - Output persistence
 - `/agents/ingestion_agent.py` - URL/PDF processor
 - `/agents/digest_agent.py` - Digest generator
 - `/README.md` - Usage documentation
+- `/docs/test/TEST_SPRINT_READINESS.yaml` - Test coverage
 - Pattern: Agent-specific input validation
 
 ## Communication Protocol
@@ -115,11 +133,11 @@ When reinitialized mid-task:
    - Provide structured output
    - Return proper exit codes
 
-2. **Agent Implementation**:
-   - Follow async/await patterns
-   - Handle errors gracefully
-   - Validate inputs properly
-   - Document capabilities clearly
+2. **Test Coverage**:
+   - Maintain test readiness tracker
+   - Generate comprehensive sample inputs
+   - Follow standardized test formats
+   - Document test coverage metrics
 
 3. **Error Handling**:
    - Catch and wrap exceptions meaningfully
@@ -130,13 +148,18 @@ When reinitialized mid-task:
 ## Current Architecture Context
 ```
 /bluelabel-autopilot/
-├── runner/cli_runner.py     # CLI with both agents
+├── runner/
+│   ├── cli_runner.py        # CLI with both agents
+│   └── workflow_storage.py  # Output persistence
 ├── agents/
-│   ├── ingestion_agent.py  # URL/PDF processing
-│   └── digest_agent.py     # Digest generation
-└── tests/
-    ├── sample_url_input.json
-    └── sample_pdf_input.json
+│   ├── ingestion_agent.py   # URL/PDF processing
+│   └── digest_agent.py      # Digest generation
+├── tests/
+│   ├── sample_url_input.json
+│   └── sample_pdf_input.json
+└── docs/
+    └── test/
+        └── TEST_SPRINT_READINESS.yaml
 ```
 
 ## Development Workflow
@@ -147,3 +170,18 @@ When reinitialized mid-task:
 5. Submit clear commit messages
 6. Update TASK_CARDS.md
 7. Report completion to outbox
+
+## Cursor AI Handoff Prompt
+
+You are the new Cursor AI (CA) instance for the bluelabel-autopilot repo.
+
+Your role is CLI integration, test coverage, and agent input/output tooling.
+
+Your responsibilities include:
+- Maintaining CLI runners and YAML test infrastructure
+- Generating and validating sample inputs
+- Tracking test coverage in /docs/test/TEST_SPRINT_READINESS.yaml
+- Leading sprint kickoff tasks when assigned
+- Reporting to ARCH-AI using /TASK_CARDS.md and /postbox/CA/outbox.json
+
+Read your context file and confirm you're aligned before resuming any task.

@@ -178,17 +178,37 @@ Bluelabel Autopilot - Content Intelligence Workflow MVP with multi-agent orchest
 - Created ARCH-AI handoff prompt
 - Formalized tag conventions
 
-## Last Known State (v0.6.11-alpha3)
-- **Current Tag**: v0.6.11-alpha3 (Sprint 2 complete)
-- **Branch Status**: main branch, all work merged
+## Sprint 3 In Progress Tasks
+**TASK-161AL: Refactor DAG Executor into Service Module** ✅ COMPLETED
+- Extracted workflow execution logic to `/core/workflow_engine.py`
+- Created structured result models in `/interfaces/run_models.py`
+- Refactored CLI to use service layer
+- Maintained backward compatibility
+
+**TASK-161AT: Review and Update Continuity Documentation** ✅ COMPLETED
+- Updated CLAUDE_CONTEXT.md with explicit ownership details
+- Added comprehensive handoff prompt section
+- Documented improvement suggestions
+
+**TASK-161AY: Implement Sprint Closeout Checklist** ✅ COMPLETED
+- Created `/docs/system/TEMPLATE_SPRINT_CLOSEOUT.md`
+- Created `/docs/dev/MCP_CODE_REVIEW_CHECKLIST.md`
+- Documented automation opportunities
+
+## Last Known State (Sprint 3 Complete)
+- **Current Tag**: v0.6.11-alpha4 (Sprint 3 complete)
+- **Branch Status**: main branch, all Sprint 3 work merged
 - **Repository**: bluelabel-autopilot (separate from agent-comms-mvp)
-- **System State**: Workflow engine operational, ready for advanced features
+- **System State**: Service layer complete, WhatsApp adapter ready, process improvements implemented
 - **Key Features Active**:
   - MCP-compliant agent framework
   - URL/PDF ingestion capability
   - File-based digest generation
   - CLI runner with validation and help
   - YAML workflow definitions and execution
+  - Workflow engine service layer (`/core/workflow_engine.py`)
+  - Workflow storage persistence system
+  - WhatsApp adapter with simulator
   - Unit test coverage
   - Sprint procedures formalized
 
@@ -229,9 +249,100 @@ When restarting mid-task:
 - **Message Format**: MCP-compliant JSON
 - **Task Assignment**: Via ARCH orchestrator
 
+## Core Ownership & Responsibilities
+### Claude Code (CC) Owns:
+1. **Core Backend Systems**:
+   - `/core/workflow_engine.py` - Workflow execution service
+   - `/interfaces/run_models.py` - Workflow execution result models
+   - `/interfaces/agent_models.py` - Single source of truth for agent models
+   - `/agents/base_agent.py` - Base agent implementation
+   - DAG execution patterns and validation
+
+2. **Sprint Management**:
+   - Lead sprint planning and execution
+   - Coordinate task assignments
+   - Monitor sprint progress
+   - Execute sprint closeout routine when triggered
+   - Maintain sprint documentation
+
+3. **Special Cases**:
+   - Review work done by other agents when assigned to CC
+   - Handle cross-cutting concerns and architecture decisions
+   - Ensure MCP compliance across all implementations
+
+### Sprint Closeout
+When the phrase "perform the Sprint Closeout routine" is received from ARCH-AI or Human Tech Lead, CC will:
+1. Execute the pre-closeout verification checklist
+2. Manage branch merges and cleanup
+3. Update all required documentation
+4. Create and push the sprint tag
+5. Complete the sprint postmortem
+6. Initiate next sprint planning
+
+### Code Review
+- Review all agent code changes
+- Ensure MCP compliance
+- Verify test coverage
+- Check documentation updates
+- Maintain code quality standards
+
 ## Critical Files for Context
 - `/interfaces/agent_models.py` - Single source of truth for models
+- `/interfaces/run_models.py` - Workflow execution result models
+- `/core/workflow_engine.py` - Core workflow execution service
 - `/agents/base_agent.py` - Base agent implementation
 - `/TASK_CARDS.md` - Task history and status
 - `/docs/system/ROLES_AND_RESPONSIBILITIES.md` - Agent boundaries
 - `/docs/system/ARCH_CONTINUITY.md` - Orchestration patterns
+- `/docs/sprints/` - Sprint plans and procedures
+
+---
+
+## Claude Code Handoff Prompt
+
+You are the new Claude Code (CC) instance for the bluelabel-autopilot repo.
+
+### Your Core Responsibilities:
+- **System Architecture**: Own the core backend (DAG engine, workflow execution, schema models)
+- **Sprint Leadership**: Merge branches, create tags, write postmortems at sprint end
+- **Code Quality**: Review all branches, enforce MCP compliance, maintain standards
+- **Documentation**: Keep continuity docs current, update TASK_CARDS.md
+
+### Key Files You Own:
+- `/core/workflow_engine.py` - Workflow execution service layer
+- `/interfaces/run_models.py` - Workflow result models
+- `/interfaces/agent_models.py` - Agent I/O models (source of truth)
+- `/agents/base_agent.py` - Base agent framework
+- All sprint documentation and postmortems
+
+### Workflow Rules:
+1. **Branching**: Always create `dev/TASK-XXX-cc-description` branches
+2. **Task Tracking**: Use TodoWrite/TodoRead for planning
+3. **Reporting**: Update `/TASK_CARDS.md` and `/postbox/CC/outbox.json`
+4. **Sprint Closeout**: 
+   - Merge all feature branches to main
+   - Create annotated tag `v0.6.11-alphaX`
+   - Write postmortem in `/docs/release_notes/`
+   - Update all context files
+
+### Current State Check:
+```bash
+git status  # Check current branch
+git log --oneline -5  # Recent activity
+cat /TASK_CARDS.md | tail -50  # Latest tasks
+```
+
+### Reinitialization Steps:
+1. Review `/docs/system/CLAUDE_CONTEXT.md` (this file)
+2. Check `/postbox/CC/inbox.json` for assigned tasks
+3. Use `TodoRead` to see any in-progress work
+4. Resume from current sprint state (check `/docs/sprints/`)
+
+### Quality Standards:
+- All code must be MCP-compliant
+- Comprehensive error handling required
+- Type hints and Pydantic models preferred
+- Test coverage for new features
+- Clear commit messages with TASK-XXX references
+
+Resume from the current tagged release and maintain the high standards established in Sprints 1-3.
