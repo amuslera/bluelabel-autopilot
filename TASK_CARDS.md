@@ -2345,6 +2345,76 @@ python runner/workflow_executor_with_email.py \
     --email-recipient user@example.com
 ```
 
+### TASK-161CT: Log Rendered Email Output Snapshot After Workflow Completion
+Status: COMPLETED ✅
+Assigned: WA
+Priority: HIGH
+Created: 2024-05-24
+Completed: 2024-05-24
+
+**Description:**
+Implemented functionality to save rendered email outputs (markdown/plaintext/HTML) as static file snapshots after every successful workflow run. These files serve as debug logs, history archives, and QA artifacts.
+
+**Deliverables:**
+- ✅ Created `EmailSnapshot` class for managing email output snapshots
+- ✅ Integrated snapshot functionality into `EmailOutAdapter`
+- ✅ Added support for multiple output formats (HTML, markdown, plaintext)
+- ✅ Implemented metadata capture including timestamps and workflow info
+- ✅ Added comprehensive test suite with 100% coverage
+- ✅ Created demo script (`examples/email_snapshot_demo.py`)
+
+**Key Features:**
+- **Structured Storage**: Saves outputs to `data/logs/output_snapshots/<run_id>/`
+- **Multiple Formats**: Captures all available formats (HTML, markdown, plaintext)
+- **Rich Metadata**: Includes workflow info, timestamps, and formatting details
+- **Error Resilience**: Gracefully handles missing formatters or write errors
+- **Configurable**: Can be enabled/disabled per email send
+
+**Example Usage:**
+```python
+# Basic usage with automatic run_id generation
+await email_adapter.send_formatted_output(
+    workflow_result=result,
+    formatter_func=format_digest_markdown,
+    subject="Daily Digest",
+    recipient="user@example.com",
+    save_snapshot=True
+)
+
+# With custom run_id for correlation
+await email_adapter.send_formatted_output(
+    workflow_result=result,
+    formatter_func=format_digest_markdown,
+    subject="Daily Digest",
+    recipient="user@example.com",
+    save_snapshot=True,
+    run_id="workflow_12345"
+)
+```
+
+**Snapshot Directory Structure:**
+```
+data/logs/output_snapshots/
+  ├── run_20240524_143000_abc123/
+  │   ├── email_output.md
+  │   ├── email_output.txt
+  │   ├── email_output.html
+  │   └── metadata.json
+  └── workflow_12345/
+      ├── email_output.md
+      ├── email_output.txt
+      └── metadata.json
+```
+
+**Files Created/Modified:**
+- `/services/email/email_snapshot.py` (new)
+- `/services/email/email_output_adapter.py` (updated)
+- `/tests/test_email_snapshot.py` (new)
+- `/examples/email_snapshot_demo.py` (new)
+- `/TASK_CARDS.md` (this entry)
+
+**Time Spent:** 3 hours
+
 ### Validation Criteria Met
 - ✅ EmailOutAdapter invoked after successful DAG completion
 - ✅ Formatted output passed from DigestAgent or final step
