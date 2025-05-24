@@ -1,0 +1,26 @@
+{
+    "task_id": "test-digest-001",
+    "source": "cli",
+    "content": {
+        "content_id": "digest_abc123",
+        "content_type": "article",
+        "text": "This is a sample text to be digested. It contains multiple sentences that will be processed by the DigestAgent. The agent will analyze the content and generate a concise summary while preserving key information.",
+        "metadata": {
+            "title": "Sample Article for Digest Testing",
+            "author": "Test Author",
+            "created_at": "2025-05-24T12:00:00Z",
+            "word_count": 45,
+            "language": "en"
+        }
+    },
+    "metadata": {
+        "digest_type": "summary",
+        "max_length": 100,
+        "format": "markdown"
+    },
+    "context": {
+        "priority": "normal",
+        "processing_mode": "standard"
+    },
+    "timestamp": "2025-05-24T12:00:00Z"
+} 

@@ -1,0 +1,20 @@
+{
+  "workflow_id": "32655839-b783-451f-a015-365be000e4e8",
+  "name": "PDF Ingestion and Digest",
+  "version": "1.0.0",
+  "description": "Process a PDF file and generate a formatted digest",
+  "status": "failed",
+  "steps": {
+    "ingest": {
+      "name": "Ingest PDF",
+      "status": "error",
+      "duration_ms": 0
+    },
+    "digest": {
+      "name": "Generate Digest",
+      "status": "success",
+      "duration_ms": 1
+    }
+  },
+  "timestamp": "2025-05-24T17:05:17.135420"
+}

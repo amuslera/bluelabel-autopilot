@@ -1,0 +1,132 @@
+# Multi-Step Workflow Example
+# Description: Demonstrates a complex workflow with multiple agents and conditional steps
+# Version: 1.0.0
+
+workflow:
+  name: "multi_step_example"
+  description: "Example of a complex workflow with multiple agents and conditional steps"
+  version: "1.0.0"
+  created: "2024-05-24"
+  author: "Bluelabel Autopilot Team"
+
+# Input parameters with validation
+input:
+  content_source:
+    type: string
+    required: true
+    description: "URL or path to the content source"
+    example: "https://example.com/article"
+  
+  content_type:
+    type: string
+    required: true
+    enum: ["url", "pdf", "text"]
+    description: "Type of content being processed"
+  
+  output_format:
+    type: string
+    default: "markdown"
+    enum: ["markdown", "html", "plaintext"]
+    description: "Desired output format"
+
+# Workflow steps
+tasks:
+  # Step 1: Content Ingestion (conditional based on content_type)
+  - name: "ingest_content"
+    agent: "ingestion"
+    type: "{{ input.content_type }}"
+    parameters:
+      source: "{{ input.content_source }}"
+      extract_metadata: true
+    output: "ingested_content"
+    description: "Ingest content based on the specified type"
+
+  # Step 2: Content Analysis
+  - name: "analyze_content"
+    agent: "analysis"
+    type: "analyze"
+    input_from: "ingested_content"
+    parameters:
+      analyze_sentiment: true
+      extract_key_phrases: true
+      detect_language: true
+    output: "analysis_results"
+    description: "Perform detailed analysis of the content"
+
+  # Step 3: Generate Digest (conditional based on content length)
+  - name: "generate_digest"
+    agent: "digest"
+    type: "generate"
+    input_from: "ingested_content"
+    parameters:
+      title: "{{ ingested_content.metadata.title | default('Content Digest') }}"
+      format: "{{ input.output_format }}"
+      include_summary: true
+      include_key_points: true
+    output: "digest_output"
+    description: "Generate a digest of the content"
+    when: "ingested_content.metadata.word_count | int > 500"
+
+  # Alternative step for short content
+  - name: "summarize_content"
+    agent: "digest"
+    type: "summarize"
+    input_from: "ingested_content"
+    parameters:
+      format: "{{ input.output_format }}"
+    output: "digest_output"
+    description: "Create a simple summary for short content"
+    when: "ingested_content.metadata.word_count | int <= 500"
+
+  # Step 4: Generate Tags (runs in parallel with digest generation)
+  - name: "generate_tags"
+    agent: "tagging"
+    type: "generate"
+    input_from: "ingested_content"
+    parameters:
+      max_tags: 5
+      include_categories: true
+    output: "tags_output"
+    description: "Generate relevant tags for the content"
+
+# Output configuration
+output:
+  format: "{{ input.output_format }}"
+  file: "output/{{ workflow.name }}_{{ timestamp }}.md"
+  fields:
+    - name: "title"
+      path: "digest_output.title"
+      description: "Title of the processed content"
+    - name: "digest"
+      path: "digest_output.content"
+      description: "Generated digest or summary"
+    - name: "tags"
+      path: "tags_output.tags"
+      description: "Generated tags"
+    - name: "sentiment"
+      path: "analysis_results.sentiment"
+      description: "Sentiment analysis results"
+
+# Error handling and retries
+error_handling:
+  max_retries: 3
+  retry_delay: 5s
+  on_failure:
+    - log_error: true
+    - notify: "team@example.com"
+
+# Metadata for tracking and documentation
+metadata:
+  tags: ["example", "workflow", "multi-step"]
+  estimated_runtime: "2m"
+  dependencies:
+    - "ingestion_agent"
+    - "analysis_agent"
+    - "digest_agent"
+    - "tagging_agent"
+
+# Example usage:
+# python runner/cli_runner.py run_workflow workflows/templates/multi_step_example.yaml \
+#   --input.content_source "https://example.com/article" \
+#   --input.content_type "url" \
+#   --input.output_format "markdown"

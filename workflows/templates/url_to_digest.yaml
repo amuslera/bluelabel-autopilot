@@ -1,0 +1,70 @@
+# URL to Digest Workflow
+# Description: Ingests content from a URL and generates a digest
+# Version: 1.0.0
+
+workflow:
+  name: "url_to_digest"
+  description: "Process a URL and generate a digest of its content"
+  version: "1.0.0"
+  created: "2024-05-24"
+  author: "Bluelabel Autopilot Team"
+
+# Input parameters with descriptions and default values
+input:
+  url:
+    type: string
+    required: true
+    description: "URL of the content to process"
+    example: "https://example.com/article"
+  
+  digest_title:
+    type: string
+    required: false
+    default: "Content Digest"
+    description: "Title for the generated digest"
+
+# Workflow steps
+tasks:
+  - name: "ingest_url"
+    agent: "ingestion"
+    type: "url"
+    parameters:
+      url: "{{ input.url }}"
+    output: "ingested_content"
+    description: "Fetch and process content from the provided URL"
+
+  - name: "generate_digest"
+    agent: "digest"
+    type: "generate"
+    input_from: "ingested_content"
+    parameters:
+      title: "{{ input.digest_title }}"
+      format: "markdown"
+    output: "digest_output"
+    description: "Generate a digest from the ingested content"
+
+# Output configuration
+output:
+  format: "markdown"
+  file: "digest_output.md"
+  fields:
+    - name: "digest"
+      path: "digest_output.content"
+      description: "The generated digest content"
+    - name: "source_url"
+      path: "ingested_content.metadata.source_url"
+      description: "Original URL of the content"
+    - name: "word_count"
+      path: "ingested_content.metadata.word_count"
+      description: "Word count of the processed content"
+
+# Metadata for tracking and documentation
+metadata:
+  tags: ["ingestion", "digest", "url"]
+  estimated_runtime: "30s"
+  dependencies:
+    - "ingestion_agent"
+    - "digest_agent"
+
+# Example usage
+# Run with: python runner/cli_runner.py run_workflow workflows/templates/url_to_digest.yaml --input.url "https://example.com"

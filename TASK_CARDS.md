@@ -327,3 +327,595 @@ python scripts/generate_test_input.py --agent digest --output tests/sample_diges
 - Add unit tests for the generator script
 - Consider adding more customization options
 - Add validation against agent models
+
+### TASK-161P: Close Sprint 1, Merge Final Branches, and Tag v0.6.11-alpha2
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-24
+Completed: 2025-05-24
+
+**Description:**
+Merge all remaining Sprint 1 branches into main, create a clean milestone tag, and update all continuity documentation to reflect the completed state of Phase 6.11 Sprint 1.
+
+**Deliverables:**
+- ✅ Merged all Sprint 1 branches into main
+- ✅ Verified all task cards and outbox logs exist
+- ✅ Created annotated tag v0.6.11-alpha2
+- ✅ Updated context documentation files
+- ✅ Created SPRINT_HISTORY.md for sprint tracking
+- ✅ Verified CLI functionality post-merge
+
+**Branches Merged:**
+- dev/TASK-161K-ca-cli-dual-agent (CA CLI extension)
+- dev/TASK-161L-wa-cli-feedback (WA usability feedback)
+- dev/TASK-161M-cc-ingestion-to-digest-integration (already merged)
+
+**Documentation Updated:**
+- /docs/system/CLAUDE_CONTEXT.md - Updated to v0.6.11-alpha2
+- /docs/system/ARCH_CONTINUITY.md - Added Sprint 1 completion
+- /docs/system/SPRINT_HISTORY.md - Created with full sprint summary
+
+**Sprint 1 Summary:**
+- 10 tasks completed across all agents
+- Pipeline from ingestion → digest fully functional
+- CLI and test scaffolding in place
+- All agents operational with defined roles
+- UX/DX issues documented for Sprint 2
+
+**Known Backlog for Sprint 2:**
+- Improve CLI error handling and output
+- Add interactive mode to CLI
+- Create unit tests for all components
+- Update documentation based on feedback
+- Add progress indicators for long operations
+
+**Time Spent:** 30 minutes
+
+### TASK-161Z: Create Workflow YAML Templates + Guide
+Status: COMPLETED ✅
+Assigned: WA
+Priority: HIGH
+Created: 2024-05-24
+Completed: 2024-05-24
+
+**Description:**
+Create a reusable library of workflow YAML examples that follow our structure and demonstrate common agent flows.
+
+**Deliverables:**
+- ✅ Created template files in `/workflows/templates/`:
+  - `url_to_digest.yaml` - For processing URLs into digests
+  - `pdf_to_digest.yaml` - For processing PDFs into digests
+  - `multi_step_example.yaml` - Complex workflow example with conditional steps
+- ✅ Comprehensive guide at `/docs/system/YAML_WORKFLOW_TEMPLATES.md`
+- ✅ Updated task tracking
+
+**Key Features:**
+- Clear YAML structure with validation
+- Input parameter handling
+- Task chaining with `input_from`
+- Conditional execution
+- Error handling and retries
+- Output configuration
+
+**Example YAML Snippet (from url_to_digest.yaml):**
+```yaml
+workflow:
+  name: "url_to_digest"
+  description: "Process a URL and generate a digest"
+
+tasks:
+  - name: "ingest_url"
+    agent: "ingestion"
+    type: "url"
+    parameters:
+      url: "{{ input.url }}"
+    output: "ingested_content"
+```
+
+**Testing:**
+```bash
+# Run URL to Digest workflow
+python runner/cli_runner.py run_workflow workflows/templates/url_to_digest.yaml \
+  --input.url "https://example.com"
+
+# Run PDF to Digest workflow
+python runner/cli_runner.py run_workflow workflows/templates/pdf_to_digest.yaml \
+  --input.file_path "/path/to/document.pdf"
+```
+
+**Files Created/Modified:**
+- `/workflows/templates/url_to_digest.yaml` (NEW)
+- `/workflows/templates/pdf_to_digest.yaml` (NEW)
+- `/workflows/templates/multi_step_example.yaml` (NEW)
+- `/docs/system/YAML_WORKFLOW_TEMPLATES.md` (NEW)
+- `/TASK_CARDS.md` (this update)
+- `/postbox/WA/outbox.json` (updated)
+
+**Time Spent:** 2.5 hours
+
+---
+
+### TASK-161T: WhatsApp API Research + Sandbox Validation
+Status: COMPLETED ✅
+Assigned: WA
+Priority: HIGH
+Created: 2024-05-24
+Completed: 2024-05-24
+
+**Description:**
+Research the official WhatsApp Business API requirements and document a path for future integration, including signup process, sandbox access, and vendor options.
+
+**Deliverables:**
+- ✅ Comprehensive research document created at `/docs/research/WA_WHATSAPP_API_NOTES.md`
+- ✅ Detailed comparison of API providers (Meta, Twilio, MessageBird, 360Dialog)
+- ✅ Webhook implementation guidelines
+- ✅ Template message requirements and examples
+- ✅ Rate limits and scaling considerations
+
+**Key Findings:**
+1. Two main API options: Meta's Cloud API (recommended) and On-Premises API
+2. Signup process takes 2-3 weeks directly with Meta, or 1-2 weeks through solution providers
+3. Sandbox access is immediate but limited to test numbers
+4. Strict message template approval process
+5. Rate limits: 50 messages/second, 1,000 unique contacts/24h (tier 1)
+
+**Files Created/Modified:**
+- `/docs/research/WA_WHATSAPP_API_NOTES.md` (NEW)
+- `/TASK_CARDS.md` (this update)
+- `/postbox/WA/outbox.json` (updated)
+
+**Recommendations:**
+1. Start with Meta's Cloud API for faster implementation
+2. Consider using a solution provider for faster approval
+3. Implement proper webhook verification
+4. Begin template approval process early
+5. Plan for rate limiting and monitoring
+
+**Time Spent:** 2 hours
+
+---
+
+### TASK-161Q: Launch Sprint 2: Create Sprint Plan + Context SOP Updates
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-24
+Completed: 2025-05-24
+
+**Description:**
+Initialize Phase 6.11 Sprint 2 by creating the official sprint plan document and updating continuity files to reflect our evolving sprint procedures and best practices.
+
+**Deliverables:**
+- ✅ Created /docs/sprints/SPRINT_2_PLAN.md with comprehensive sprint details
+- ✅ Updated /docs/system/ARCH_CONTINUITY.md with new sprint procedures
+- ✅ Added sprint kickoff and completion rules
+- ✅ Included best practices for task documentation and code quality
+- ✅ Defined clear success criteria for Sprint 2
+
+**Files Created/Modified:**
+- /docs/sprints/SPRINT_2_PLAN.md (NEW)
+- /docs/system/ARCH_CONTINUITY.md (Updated with sprint procedures)
+
+**Key Updates:**
+1. Sprint Procedures:
+   - Added kickoff task requirements
+   - Defined completion checklist
+   - Established document update requirements
+
+2. Best Practices:
+   - Task Documentation standards
+   - Code Quality guidelines
+   - Communication protocols
+   - Branch Management rules
+
+**Time Spent:** 1 hour
+
+**Next Steps:**
+- Begin TASK-161R (CLI Usability Improvements)
+- Prepare for YAML workflow implementation
+- Start WhatsApp integration planning
+
+### TASK-161R: Improve CLI Help + Sample Clarity
+Status: COMPLETED ✅
+Assigned: CA
+Priority: MEDIUM
+Created: 2025-05-24
+Completed: 2025-05-24
+
+**Description:**
+Polish the CLI user experience by improving help messages, clarifying sample input usage, and correcting documentation inconsistencies.
+
+**Deliverables:**
+- ✅ Added comprehensive examples to CLI help
+- ✅ Created missing sample_digest_input.json
+- ✅ Added file path support for JSON input
+- ✅ Improved error messages with examples
+- ✅ Added PyPDF2 to requirements.txt
+- ✅ Enhanced help text for all commands
+
+**Files Created/Modified:**
+- runner/cli_runner.py (Updated with better help and examples)
+- tests/sample_digest_input.json (Created)
+- requirements.txt (Added PyPDF2)
+
+**Key Improvements:**
+1. CLI Help:
+   - Added detailed examples in docstring
+   - Enhanced command descriptions
+   - Added sample file references
+   - Improved error messages
+
+2. Input Handling:
+   - Added support for JSON file paths
+   - Better JSON validation
+   - Example format on error
+
+3. Documentation:
+   - Created complete sample files
+   - Updated requirements
+   - Added default value hints
+
+**Time Spent:** 45 minutes
+
+**Next Steps:**
+- Add unit tests for new file path handling
+- Consider adding more example workflows
+- Add progress indicators for long operations
+
+### TASK-161S: Add CLI Input Schema Validation
+Status: COMPLETED ✅
+Assigned: CA
+Priority: MEDIUM
+Created: 2025-05-24
+Completed: 2025-05-24
+
+**Description:**
+Ensure the CLI runner fails gracefully when invalid input is provided by adding schema validation for all agent JSON inputs.
+
+**Deliverables:**
+- ✅ Added Pydantic-based schema validation using AgentInput model
+- ✅ Implemented agent-specific validation rules
+- ✅ Added file path validation for PDF processing
+- ✅ Improved error messages with examples
+- ✅ Added source field validation
+- ✅ Enhanced error handling in CLI runner
+
+**Files Modified:**
+- runner/cli_runner.py (Added validation logic and error handling)
+
+**Key Improvements:**
+1. Schema Validation:
+   - Using Pydantic's AgentInput model
+   - Validating all required fields
+   - Checking field types and constraints
+   - Validating file paths for PDFs
+
+2. Error Handling:
+   - Clear error messages with field paths
+   - Example valid input on error
+   - Agent-specific validation rules
+   - File existence checks
+
+3. Input Processing:
+   - Automatic source field addition
+   - Better JSON parsing errors
+   - Structured error output
+   - Example format hints
+
+**Time Spent:** 45 minutes
+
+**Next Steps:**
+- Add unit tests for validation logic
+- Consider adding more validation rules
+- Add support for custom validation rules
+- Consider adding input schema documentation
+
+### TASK-161U: Create Sample Workflow YAML + Loader Scaffold
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-24
+Completed: 2025-05-24
+
+**Description:**
+Establish the foundational YAML structure for agent workflow definitions, and create a minimal loader that can parse and print the workflow steps in order.
+
+**Deliverables:**
+- ✅ Created sample_ingestion_digest.yaml workflow definition
+- ✅ Implemented WorkflowLoader class with YAML parsing
+- ✅ Added validation for DAG structure and references
+- ✅ Circular dependency detection
+- ✅ Topological sort for execution order
+- ✅ CLI interface for loading and validating workflows
+
+**Files Created:**
+- /workflows/sample_ingestion_digest.yaml
+- /runner/workflow_loader.py
+
+**YAML Structure:**
+```yaml
+workflow:
+  name: "PDF Ingestion and Digest"
+  description: "Process a PDF file and generate a formatted digest"
+  version: "1.0.0"
+
+steps:
+  - id: ingest
+    agent: ingestion_agent
+    input_file: tests/sample_pdf_input.json
+  - id: digest
+    agent: digest_agent
+    input_from: ingest
+```
+
+**Key Features:**
+1. DAG Validation:
+   - Validates all step references exist
+   - Detects circular dependencies
+   - Ensures each step has input source
+
+2. Execution Order:
+   - Topological sort determines correct order
+   - Respects dependencies between steps
+   - Prints steps in execution sequence
+
+3. Error Handling:
+   - Clear error messages for missing fields
+   - Validation of YAML structure
+   - File existence checks
+
+**CLI Usage:**
+```bash
+python runner/workflow_loader.py --workflow workflows/sample_ingestion_digest.yaml
+```
+
+**Example Output:**
+```
+Loading workflow from: workflows/sample_ingestion_digest.yaml
+Parsing and validating steps...
+
+=== Workflow Information ===
+Name: PDF Ingestion and Digest
+Description: Process a PDF file and generate a formatted digest
+Version: 1.0.0
+
+=== Workflow Steps (2) ===
+
+Step 1: Ingest PDF (id: ingest)
+  Agent: ingestion_agent
+  Input: tests/sample_pdf_input.json
+  Description: Process PDF content through ingestion agent
+  Outputs: content_id, content_type, metadata, content_length
+
+Step 2: Generate Digest (id: digest)
+  Agent: digest_agent
+  Input from: ingest
+  Description: Generate markdown digest from ingested content
+  Config: {'format': 'markdown', 'limit': 10}
+  Outputs: digest, summary_count, format
+
+✅ Workflow loaded and validated successfully!
+```
+
+**Time Spent:** 45 minutes
+
+**Next Steps:**
+- Implement workflow execution engine
+- Add support for conditional steps
+- Create more complex workflow examples
+- Add workflow visualization
+
+### TASK-161W: Implement CLI Test Runner for Agent Workflows
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-24
+Completed: 2025-05-24
+
+**Description:**
+Develop a CLI test runner that automates the execution of agent workflows defined in YAML files, facilitating testing and validation of agent interactions.
+
+**Deliverables:**
+- ✅ Created runner/cli_test_runner.py with workflow execution capabilities
+- ✅ Implemented YAML workflow parsing and validation
+- ✅ Added support for step input from files or previous steps
+- ✅ Created comprehensive documentation in docs/system/CLI_TEST_RUNNER.md
+- ✅ Added detailed logging and error handling
+- ✅ Implemented workflow execution summary
+
+**Files Created/Modified:**
+- runner/cli_test_runner.py (NEW)
+- docs/system/CLI_TEST_RUNNER.md (NEW)
+
+**Key Features:**
+1. Workflow Execution:
+   - YAML-based workflow definitions
+   - Step-by-step execution
+   - Input validation
+   - Output capture and display
+
+2. Error Handling:
+   - YAML validation
+   - File existence checks
+   - Agent execution errors
+   - Clear error messages
+
+3. Logging and Output:
+   - Detailed execution logs
+   - Step-by-step summaries
+   - Custom log file support
+   - Verbose mode for debugging
+
+**Example Usage:**
+```bash
+# Run workflow with default settings
+python runner/cli_test_runner.py workflows/sample_ingestion_digest.yaml
+
+# Run with verbose logging
+python runner/cli_test_runner.py workflows/sample_ingestion_digest.yaml --verbose
+
+# Run with custom log file
+python runner/cli_test_runner.py workflows/sample_ingestion_digest.yaml --log-file test_run.log
+```
+
+**Time Spent:** 2 hours
+
+**Next Steps:**
+- Add unit tests for workflow execution
+- Implement workflow validation schema
+- Add support for parallel step execution
+- Consider adding workflow templates
+
+### TASK-161X: Implement Executable DAG Runner for YAML Workflows
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-24
+Completed: 2025-05-24
+
+**Description:**
+Turn the parsed YAML workflow into a real, runnable execution engine that orchestrates agents step-by-step using their MCP interfaces.
+
+**Deliverables:**
+- ✅ Created `runner/workflow_executor.py` with robust execution engine
+- ✅ Implemented step-by-step agent orchestration
+- ✅ Added output storage in `data/workflows/<workflow_id>/`
+- ✅ Added workflow summary and step output files
+- ✅ Enhanced error handling and logging
+- ✅ Integrated with existing workflow loader
+
+**Files Created/Modified:**
+- `runner/workflow_executor.py` (NEW)
+- `data/workflows/` (NEW directory structure)
+
+**Key Features:**
+1. Workflow Execution:
+   - Uses WorkflowLoader for YAML parsing and validation
+   - Executes steps in correct order based on dependencies
+   - Handles both file-based and step-based inputs
+   - Supports step configuration and output routing
+
+2. Output Storage:
+   - Creates unique workflow directory for each run
+   - Saves workflow definition and summary
+   - Stores individual step outputs as JSON
+   - Includes timestamps and execution metadata
+
+3. Error Handling:
+   - Validates input files and step references
+   - Provides clear error messages
+   - Handles agent execution failures
+   - Supports graceful interruption
+
+**Example Usage:**
+```bash
+# Run workflow with default settings
+python runner/workflow_executor.py workflows/sample_ingestion_digest.yaml
+
+# Run with verbose logging
+python runner/workflow_executor.py workflows/sample_ingestion_digest.yaml --verbose
+
+# Run with custom log file
+python runner/workflow_executor.py workflows/sample_ingestion_digest.yaml --log-file test_run.log
+```
+
+**Example Output:**
+```
+Running workflow: PDF Ingestion and Digest (v1.0.0)
+Description: Process a PDF file and generate a formatted digest
+Workflow ID: 550e8400-e29b-41d4-a716-446655440000
+
+Executing step: Ingest PDF (ingest)
+Step completed successfully: Ingest PDF
+
+Executing step: Generate Digest (digest)
+Step completed successfully: Generate Digest
+
+Workflow Execution Summary:
+-------------------------
+
+Step: Ingest PDF (ingest)
+Status: success
+Duration: 1234ms
+content_id: pdf_abc123
+content_type: pdf
+content_length: 5678
+
+Step: Generate Digest (digest)
+Status: success
+Duration: 567ms
+digest: # Sample Digest\n\n- Point 1\n- Point 2
+summary_count: 2
+format: markdown
+```
+
+**Time Spent:** 2 hours
+
+**Next Steps:**
+- Add unit tests for workflow execution
+- Implement workflow validation schema
+- Add support for parallel step execution
+- Consider adding workflow templates
+- Add workflow visualization
+
+### TASK-161Y: Add Unit Tests for CLI + Workflow Execution
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-24
+Completed: 2025-05-24
+
+**Description:**
+Add comprehensive unit tests for the CLI runner and workflow execution components to ensure robust functionality and error handling.
+
+**Deliverables:**
+- ✅ Created test_cli_runner.py with CLI test cases
+- ✅ Created test_workflow_runner.py with workflow test cases
+- ✅ Added test fixtures and mocks
+- ✅ Implemented async test support
+- ✅ Added comprehensive error case coverage
+
+**Files Created/Modified:**
+- tests/test_cli_runner.py (NEW)
+- tests/test_workflow_runner.py (NEW)
+
+**Test Coverage:**
+1. CLI Runner Tests:
+   - Valid input validation for both agents
+   - Missing/invalid field handling
+   - PDF file existence checks
+   - JSON parsing errors
+   - Agent execution errors
+   - File path input support
+
+2. Workflow Runner Tests:
+   - YAML loading and validation
+   - Step execution order
+   - Complete workflow execution
+   - Step failure handling
+   - Output storage verification
+   - Circular dependency detection
+
+**Example Test Output:**
+```
+============================= test session starts ==============================
+platform darwin -- Python 3.9.7, pytest-6.2.5, py-1.10.0, pluggy-0.13.1
+rootdir: /Users/arielmuslera/Development/Projects/bluelabel-autopilot
+plugins: hypothesis-6.14.6, asyncio-0.16.0
+collected 14 items
+
+tests/test_cli_runner.py ........                                      [ 57%]
+tests/test_workflow_runner.py ......                                  [100%]
+
+============================== 14 passed in 2.34s ==============================
+```
+
+**Time Spent:** 2 hours
+
+**Next Steps:**
+- Add integration tests
+- Add performance tests
+- Add more edge cases
+- Consider adding test coverage reporting
+- Add test documentation

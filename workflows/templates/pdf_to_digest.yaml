@@ -1,0 +1,80 @@
+# PDF to Digest Workflow
+# Description: Processes a PDF file and generates a digest
+# Version: 1.0.0
+
+workflow:
+  name: "pdf_to_digest"
+  description: "Process a PDF file and generate a digest of its content"
+  version: "1.0.0"
+  created: "2024-05-24"
+  author: "Bluelabel Autopilot Team"
+
+# Input parameters
+input:
+  file_path:
+    type: string
+    required: true
+    description: "Path to the PDF file to process"
+    example: "/path/to/document.pdf"
+  
+  title_override:
+    type: string
+    required: false
+    description: "Optional title to use instead of the PDF's title"
+
+# Workflow steps
+tasks:
+  - name: "ingest_pdf"
+    agent: "ingestion"
+    type: "pdf"
+    parameters:
+      file_path: "{{ input.file_path }}"
+      extract_metadata: true
+    output: "ingested_pdf"
+    description: "Extract text and metadata from the PDF file"
+
+  - name: "generate_digest"
+    agent: "digest"
+    type: "generate"
+    input_from: "ingested_pdf"
+    parameters:
+      title: >
+        {% if input.title_override %}
+          {{ input.title_override }}
+        {% else %}
+          {{ ingested_pdf.metadata.title | default('Document Digest') }}
+        {% endif %}
+      format: "markdown"
+      include_metadata: true
+    output: "digest_output"
+    description: "Generate a structured digest from the PDF content"
+
+# Output configuration
+output:
+  format: "markdown"
+  file: "pdf_digest_output.md"
+  fields:
+    - name: "digest"
+      path: "digest_output.content"
+      description: "The generated digest content"
+    - name: "source_file"
+      path: "ingested_pdf.metadata.source_file"
+      description: "Path to the processed PDF file"
+    - name: "page_count"
+      path: "ingested_pdf.metadata.page_count"
+      description: "Number of pages in the PDF"
+    - name: "author"
+      path: "ingested_pdf.metadata.author"
+      description: "Author from PDF metadata (if available)"
+
+# Metadata for tracking and documentation
+metadata:
+  tags: ["ingestion", "digest", "pdf"]
+  estimated_runtime: "45s"
+  dependencies:
+    - "ingestion_agent"
+    - "digest_agent"
+    - "PyPDF2>=3.0.0"
+
+# Example usage
+# Run with: python runner/cli_runner.py run_workflow workflows/templates/pdf_to_digest.yaml --input.file_path "/path/to/document.pdf"

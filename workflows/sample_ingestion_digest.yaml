@@ -1,0 +1,42 @@
+# Sample Workflow: Ingestion to Digest Pipeline
+# This workflow demonstrates a 2-step DAG that processes a PDF through
+# the ingestion agent and then generates a digest from the results
+
+workflow:
+  name: "PDF Ingestion and Digest"
+  description: "Process a PDF file and generate a formatted digest"
+  version: "1.0.0"
+
+steps:
+  - id: ingest
+    name: "Ingest PDF"
+    agent: ingestion_agent
+    input_file: tests/sample_pdf_input.json
+    description: "Process PDF content through ingestion agent"
+    outputs:
+      - content_id
+      - content_type
+      - metadata
+      - content_length
+
+  - id: digest
+    name: "Generate Digest"
+    agent: digest_agent
+    input_from: ingest
+    description: "Generate markdown digest from ingested content"
+    config:
+      format: markdown
+      limit: 10
+    outputs:
+      - digest
+      - summary_count
+      - format
+
+# Workflow metadata
+metadata:
+  author: "CC"
+  created: "2025-05-24"
+  tags:
+    - ingestion
+    - digest
+    - pdf-processing

@@ -38,7 +38,33 @@ Bluelabel Autopilot - Content Intelligence Workflow MVP with multi-agent orchest
 - Standardized imports across all agents
 - Established interfaces/agent_models.py as source of truth
 
-## Current Architecture (v0.6.11-alpha1)
+**TASK-161K: CLI Runner Integration Tests** ✅ COMPLETED
+- Implemented comprehensive integration tests
+- Added test coverage for both agents
+- Validated postbox and TASK_CARDS updates
+
+**TASK-161L: IngestionAgent PDF Processing** ✅ COMPLETED
+- Fixed PDF extraction logic
+- Implemented proper text cleaning
+- Added page limit handling
+
+**TASK-161M: DigestAgent Generation Fix** ✅ COMPLETED
+- Fixed prompt template loading
+- Standardized generation patterns
+- Improved error handling
+
+**TASK-161N: End-to-End Testing** ✅ COMPLETED
+- Full URL ingestion workflow validated
+- Full PDF processing workflow validated
+- Digest generation confirmed working
+
+**TASK-161P: Repository Cleanup & v0.6.11-alpha2** ✅ COMPLETED
+- Cleaned up test artifacts
+- Removed duplicate files
+- Created v0.6.11-alpha2 tag
+- Sprint 1 complete
+
+## Current Architecture (v0.6.11-alpha2)
 ```
 /bluelabel-autopilot/
 ├── agents/               # Core agent implementations
@@ -92,8 +118,8 @@ Bluelabel Autopilot - Content Intelligence Workflow MVP with multi-agent orchest
    - Import structure validation
    - Mock external dependencies
 
-## Last Known State (v0.6.11-alpha1)
-- **Current Tag**: v0.6.11-alpha1 (Phase 6.11 foundation)
+## Last Known State (v0.6.11-alpha2)
+- **Current Tag**: v0.6.11-alpha2 (Sprint 1 complete)
 - **Branch Status**: main branch, all work merged
 - **Repository**: bluelabel-autopilot (separate from agent-comms-mvp)
 - **System State**: Foundation complete, ready for workflow implementation

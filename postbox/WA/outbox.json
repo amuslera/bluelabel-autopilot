@@ -1,24 +1,55 @@
 {
-  "task_id": "TASK-161L",
-  "timestamp": "2025-05-23T19:07:48-07:00",
+  "task_id": "TASK-161Z",
+  "timestamp": "2025-05-24T09:58:12-07:00",
   "status": "complete",
   "details": {
-    "cli_commands_tested": [
-      "python3 runner/cli_runner.py run ingestion \"$(cat tests/sample_url_input.json)\""
+    "templates_created": [
+      {
+        "file": "url_to_digest.yaml",
+        "description": "Process URL content into a digest",
+        "features": ["URL ingestion", "Digest generation", "Output formatting"]
+      },
+      {
+        "file": "pdf_to_digest.yaml",
+        "description": "Process PDF content into a digest",
+        "features": ["PDF extraction", "Metadata handling", "Structured output"]
+      },
+      {
+        "file": "multi_step_example.yaml",
+        "description": "Complex workflow example with conditional steps",
+        "features": ["Conditional execution", "Task chaining", "Error handling"]
+      }
     ],
-    "findings": [
-      "Missing sample_digest_input.json file",
-      "Incorrect command syntax in documentation",
-      "Unhelpful error messages for 404 responses",
-      "Missing PyPDF2 dependency in requirements.txt"
-    ],
+    "guide_created": {
+      "file": "/docs/system/YAML_WORKFLOW_TEMPLATES.md",
+      "sections": [
+        "YAML Format Basics",
+        "Workflow Structure",
+        "Input Parameters",
+        "Tasks and Agents",
+        "Using input_from",
+        "Testing Workflows"
+      ]
+    },
     "files_created": [
-      "/issues/wa_usability_feedback.md"
+      "/workflows/templates/url_to_digest.yaml",
+      "/workflows/templates/pdf_to_digest.yaml",
+      "/workflows/templates/multi_step_example.yaml",
+      "/docs/system/YAML_WORKFLOW_TEMPLATES.md"
     ],
     "files_modified": [
       "/TASK_CARDS.md",
       "/postbox/WA/outbox.json"
     ]
   },
-  "notes": "Completed CLI usability audit. Detailed feedback and recommendations provided in /issues/wa_usability_feedback.md. The CLI is functional but would benefit from improved error handling and documentation."
+  "example_yaml_snippet": {
+    "file": "url_to_digest.yaml",
+    "content": "workflow:\n  name: \"url_to_digest\"\n  description: \"Process a URL and generate a digest\"\n\ntasks:\n  - name: \"ingest_url\"\n    agent: \"ingestion\"\n    type: \"url\"\n    parameters:\n      url: \"{{ input.url }}\"\n    output: \"ingested_content\""
+  },
+  "testing_commands": [
+    "# Run URL to Digest workflow\npython runner/cli_runner.py run_workflow workflows/templates/url_to_digest.yaml --input.url \"https://example.com\"",
+    "# Run PDF to Digest workflow\npython runner/cli_runner.py run_workflow workflows/templates/pdf_to_digest.yaml --input.file_path \"/path/to/document.pdf\""
+  ],
+  "notes": "Created a comprehensive set of workflow templates and documentation to standardize workflow creation across the project. The templates demonstrate best practices for structuring workflows, handling inputs/outputs, and implementing common patterns like conditional execution and error handling.",
+  "time_spent_minutes": 150
 }

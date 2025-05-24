@@ -8,6 +8,9 @@ aiofiles>=23.0.0
 click>=8.1.0
 rich>=13.0.0
 
+# Content processing
+PyPDF2>=3.0.0  # For PDF processing
+
 # Development dependencies
 pytest>=7.4.0
 pytest-asyncio>=0.21.0
@@ -19,4 +22,3 @@ mypy>=1.5.0
 # Optional dependencies for future features
 # httpx>=0.24.0  # For URL fetching
 # beautifulsoup4>=4.12.0  # For HTML parsing
-# pypdf>=3.0.0  # For PDF processing
