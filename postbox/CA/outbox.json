@@ -1693,4 +1693,47 @@
             "/postbox/CA/outbox.json": "✅ Logged the report."
         }
     }
+}
+
+{
+    "task_id": "TASK-161CM",
+    "status": "completed",
+    "timestamp": "2025-05-26T01:30:00Z",
+    "summary": "CA Reports: Completed Queue Config Management + Draft Production Readiness Tracker. Follow-up entry added, tracker created, and report recorded.",
+    "details": {
+        "actions": [
+            "Checked out dev/TASK-161CM-ca-prod-tracker-draft",
+            "Added follow-up entry to /docs/followups/FOLLOW_UP_TRACKER.yaml",
+            "Created production readiness tracker at /docs/followups/PROD_READINESS_TRACKER.yaml",
+            "Populated tracker with key items",
+            "Updated /TASK_CARDS.md",
+            "Logged report to /postbox/CA/outbox.json"
+        ],
+        "follow_up_entry": {
+            "id": "FU-013",
+            "title": "Secure Config Management for Gmail, LLMs, and Output Services",
+            "tags": ["infra", "secrets", "security"],
+            "priority": "high"
+        },
+        "tracker_preview": {
+            "component": "Email Gateway",
+            "requirement": "Secure OAuth2 via env vars",
+            "status": "not started",
+            "sprint_target": "Phase 6.13"
+        },
+        "sample_config_fields": [
+            "Config .env system",
+            "Retry + delivery queue",
+            "HTML email formatting",
+            "Sender permissions/auth filter",
+            "Dockerization",
+            "Secrets protection",
+            "Workflow audit logging",
+            "Runtime error fallback"
+        ],
+        "report_recorded": {
+            "TASK_CARDS.md": "✅ Updated with TASK-161CM details.",
+            "/postbox/CA/outbox.json": "✅ Logged the report."
+        }
+    }
 } 
