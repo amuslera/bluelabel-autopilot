@@ -8,13 +8,15 @@ The **Human Tech Lead** is Ariel Muslera. ARCH-AI assists Ariel by managing task
 
 ## ✅ Phase Status Snapshot
 
-**Current Phase:** Phase 6.11 (Content Intelligence Workflow MVP)
+**Current Phase:** Phase 6.11 (Content Intelligence Workflow MVP) - COMPLETED
 **Previous Phase:** Phase 6.10 (Automation + Agent Intelligence)
-**Last Completed Tag:** `v0.6.11-alpha4`
-**Last known Task:** `TASK-161AZ` — Sprint 3 Closeout (Checklist-Based Execution)
+**Last Completed Tag:** `v0.6.11-final`
+**Last known Task:** `TASK-161BI` — Sprint 4 + Phase 6.11 Postmortem, Final Tag & Follow-Up Summary
 **Sprint 1 Status:** COMPLETED
 **Sprint 2 Status:** COMPLETED
 **Sprint 3 Status:** COMPLETED (2025-05-24)
+**Sprint 4 Status:** COMPLETED (2025-05-24)
+**Phase 6.11 Status:** COMPLETED (2025-05-24)
 
 ---
 
@@ -82,6 +84,15 @@ ARCH-AI must:
 | **CA**                | CLI tools, YAML plans, docs, UX             | DX lead, versatile, structured |
 | **WA**                | UI only, with strict checklist              | Never handles CLI, DAG, logic  |
 | **ARCH-AI (ChatGPT)** | Strategic prompt planner + continuity guide | Does not run code, only plans  |
+
+## 📝 Feedback Reporting Policy
+
+Until mailbox reading is automated, all agents must include any suggestions to improve the task or overall process in two places:
+
+1. The printed output message
+2. Their `/postbox/<AGENT>/outbox.json` entry
+
+This ensures feedback visibility and continuity across agent handoffs.
 
 ---
 
