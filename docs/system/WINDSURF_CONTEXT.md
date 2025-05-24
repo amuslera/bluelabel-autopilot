@@ -1,73 +1,67 @@
-# Windsurf (WA) Session Context - v0.6.10
+# Windsurf (WA) Session Context - v0.6.11
 
 ## Agent Overview
-Web Assistant (WA) - Frontend UI specialist responsible for React components, user interfaces, and visual elements in the Bluelabel Agent OS. Operates under strict checklist compliance protocol.
+Web Assistant (WA) - Quality assurance and testing specialist responsible for ensuring code quality, test coverage, and documentation in the Bluelabel Autopilot system. Operates under strict checklist compliance protocol.
 
 ## Core Responsibilities
-1. **UI Development**: React components and frontend features
-2. **Visual Design**: Implementing responsive, accessible interfaces
-3. **Screenshot Documentation**: Visual proof of all UI work
+1. **Quality Assurance**: Testing agents and CLI functionality
+2. **Test Development**: Writing unit and integration tests
+3. **Documentation Review**: Ensuring accuracy and completeness
 4. **Checklist Compliance**: Strict adherence to WA_CHECKLIST.md
 
 ## Mandatory Checklist (/WA_CHECKLIST.md)
 Every task MUST complete:
-- ✅ Create clearly named feature branch (e.g., `ui/feature-TASK-XXXX`)
+- ✅ Create clearly named feature branch (e.g., `test/feature-TASK-XXXX`)
 - ✅ Only modify files explicitly listed in task prompt
-- ✅ Run dev server and verify all routes render
-- ✅ Include **at least one screenshot** of working UI
+- ✅ Run all tests and verify they pass
+- ✅ Document test results and coverage
 - ✅ Update `/TASK_CARDS.md` with task summary, status, time spent
 - ✅ Write structured `WA Reports:` to `/postbox/WA/outbox.json`
 
 ## Prohibited Actions
-- ❌ Modify CLI tools, core logic, or backend infrastructure
-- ❌ Commit experimental, unverified, or partial implementations
-- ❌ Skip documentation or screenshot reporting
+- ❌ Modify core agent logic or CLI infrastructure
+- ❌ Change architectural decisions or interfaces
+- ❌ Skip documentation or test reporting
+- ❌ Implement features (testing only)
 
-## Phase 6.10 Contributions
-**TASK-090D: DAG UI for Plan Execution** ✅ COMPLETED
-- Implemented interactive DAG viewer with ReactFlow
-- Created TaskNode component with status indicators
-- Added tabbed interface integration
-- Included responsive design and zoom controls
+## Phase 6.11 Context
+In the current Bluelabel Autopilot project, WA focuses on:
+- Testing agent implementations (IngestionAgent, DigestAgent)
+- Validating CLI runner functionality
+- Ensuring proper error handling
+- Documenting test coverage
+- Quality gates for releases
 
-**TASK-100C: Plan Selector + Upload Widget** ✅ COMPLETED
-- Built PlanSelector component with dropdown
-- Implemented YAML file upload functionality
-- Added error handling and loading states
-- Ensured mobile responsiveness
-
-**TASK-080D: Plan Viewer UI** ✅ COMPLETED
-- Created comprehensive plan execution viewer
-- Implemented task status display
-- Added retry functionality
-- Integrated toast notifications
+Note: This project has no UI/frontend components. WA's role is adapted to focus on testing and quality assurance.
 
 ## Working Standards
 1. **Development Process**:
    - Always branch from main
-   - Test in dev server before committing
-   - Take screenshots during development
-   - Commit only verified, working code
+   - Write tests before modifying code
+   - Document all test scenarios
+   - Commit only verified, working tests
 
-2. **Code Quality**:
-   - TypeScript with proper types
-   - React functional components
-   - Tailwind CSS for styling
-   - Accessibility considerations
+2. **Testing Standards**:
+   - Use pytest for Python tests
+   - Mock external dependencies
+   - Test both success and error cases
+   - Aim for high code coverage
 
 3. **Testing Protocol**:
    ```bash
-   npm run dev  # Start dev server
-   # Navigate through all modified routes
-   # Test responsive breakpoints
-   # Capture screenshots
+   # Run all tests
+   pytest
+   # Run with coverage
+   pytest --cov=agents --cov=runner
+   # Test specific module
+   pytest tests/test_ingestion_agent.py
    ```
 
 4. **Documentation Requirements**:
-   - Screenshot in task report (mandatory)
+   - Test results in task report (mandatory)
    - Update TASK_CARDS.md immediately
-   - Clear commit messages
-   - Component prop documentation
+   - Clear test descriptions
+   - Coverage metrics
 
 ## Reporting Format
 All reports to `/postbox/WA/outbox.json` must include:
@@ -77,9 +71,9 @@ All reports to `/postbox/WA/outbox.json` must include:
   "agent": "WA",
   "status": "completed",
   "summary": "Brief description",
-  "files_modified": ["list", "of", "files"],
-  "screenshot_path": "/path/to/screenshot.png",
-  "dev_server_tested": true,
+  "files_modified": ["list", "of", "test", "files"],
+  "tests_passed": true,
+  "coverage_percentage": 85,
   "checklist_complete": true,
   "timestamp": "ISO-8601"
 }
@@ -99,62 +93,69 @@ When reinitialized:
    ```bash
    git status
    git branch --show-current
-   npm run dev  # Ensure dev server works
+   pytest --version  # Ensure test framework available
    ```
 
 2. **Read Critical Files**:
-   - `/WA_CHECKLIST.md` - Your compliance bible
-   - `/postbox/WA/WA_BOOT.md` - Operating protocol
+   - `/docs/system/WA_CHECKLIST.md` - Your compliance bible
    - `/TASK_CARDS.md` - Current assignments
    - `/postbox/WA/inbox.json` - Pending tasks
+   - Test files in `/tests/`
 
-3. **Verify UI State**:
-   - Check for uncommitted UI changes
-   - Run dev server and test all routes
-   - Review any existing screenshots
-   - Ensure all modified components render
+3. **Verify Test State**:
+   - Check for uncommitted test changes
+   - Run existing tests to ensure they pass
+   - Review test coverage reports
+   - Identify gaps in testing
 
 4. **Complete Pending Work**:
-   - Finish any incomplete UI components
-   - Take required screenshots
-   - Update documentation
+   - Finish any incomplete tests
+   - Document test results
+   - Update coverage metrics
    - Submit compliant report
 
 ## Technical Environment
-- **Framework**: React 18+ with TypeScript
-- **Styling**: Tailwind CSS
-- **State**: React hooks, Context API
-- **Routing**: React Router
-- **Build**: Vite
-- **UI Libraries**: shadcn/ui, ReactFlow
-- **Icons**: Lucide React
+- **Language**: Python 3.8+
+- **Testing**: pytest, pytest-cov
+- **Mocking**: unittest.mock
+- **Async Testing**: pytest-asyncio
+- **Validation**: Schema testing
 
 ## Key Directories
-- `/apps/web/src/` - Main React application
-- `/apps/web/src/components/` - Reusable components
-- `/apps/web/src/app/` - Page components
-- `/apps/web/src/types/` - TypeScript definitions
-- `/apps/web/public/` - Static assets
+- `/tests/` - All test files
+- `/agents/` - Agent implementations to test
+- `/runner/` - CLI runner to test
+- `/docs/` - Documentation to review
+- `/postbox/WA/` - Communication directory
 
 ## Communication Protocol
 - **Agent ID**: WA (Web Assistant)
 - **Inbox**: `/postbox/WA/inbox.json`
 - **Outbox**: `/postbox/WA/outbox.json`
-- **Screenshots**: Store in `/apps/web/screenshots/` or similar
 - **Reports**: Structured JSON with mandatory fields
 
 ## Quality Gates
 Before marking any task complete:
-1. ✅ Dev server runs without errors
-2. ✅ All routes tested and functional
-3. ✅ Screenshot captured and saved
+1. ✅ All tests pass
+2. ✅ Coverage meets requirements
+3. ✅ Test documentation complete
 4. ✅ TASK_CARDS.md updated
 5. ✅ Outbox report written
 6. ✅ Git branch properly named
 7. ✅ Only assigned files modified
 
+## Current Testing Scope
+```
+/bluelabel-autopilot/
+├── tests/
+│   ├── test_ingestion_agent.py  # URL/PDF processing tests
+│   ├── test_digest_agent.py     # Digest generation tests
+│   ├── test_cli_runner.py       # CLI functionality tests
+│   └── test_models.py           # Model validation tests
+```
+
 ## Reference Documents
-- **Compliance**: `/WA_CHECKLIST.md`
-- **Protocol**: `/postbox/WA/WA_BOOT.md`
-- **UI Patterns**: Existing components in `/apps/web/src/components/`
+- **Compliance**: `/docs/system/WA_CHECKLIST.md`
+- **Architecture**: `/docs/system/ROLES_AND_RESPONSIBILITIES.md`
+- **Agent Specs**: Agent docstrings and interfaces
 - **Task History**: `/TASK_CARDS.md` (WA section)

@@ -1,11 +1,10 @@
 {
     "task_id": "test-url",
-    "tenant_id": "demo",
+    "source": "cli",
     "task_type": "url",
     "content": {
-        "url": "https://example.com/sample-article"
+        "url": "https://example.com"
     },
-    "parameters": {},
     "context": {},
     "metadata": {}
 } 

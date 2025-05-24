@@ -219,4 +219,29 @@
         "Add more sample inputs",
         "Consider progress indicators for long-running tasks"
     ]
+}
+
+{
+    "task_id": "TASK-161N",
+    "status": "completed",
+    "timestamp": "2025-05-23T12:00:00Z",
+    "report": {
+        "summary": "Successfully created test input generator script with support for all agent types",
+        "files_generated": [
+            "scripts/generate_test_input.py",
+            "tests/sample_ingestion_url_input.json",
+            "tests/sample_ingestion_pdf_input.json",
+            "tests/sample_digest_input.json"
+        ],
+        "cli_verification": {
+            "ingestion_url": "Successfully generated URL input with all required fields",
+            "ingestion_pdf": "Successfully generated PDF input with all required fields",
+            "digest": "Successfully generated digest input with all required fields"
+        },
+        "usage_instructions": {
+            "ingestion_url": "python scripts/generate_test_input.py --agent ingestion --type url --output tests/sample_url_input.json",
+            "ingestion_pdf": "python scripts/generate_test_input.py --agent ingestion --type pdf --output tests/sample_pdf_input.json",
+            "digest": "python scripts/generate_test_input.py --agent digest --output tests/sample_digest_input.json"
+        }
+    }
 } 

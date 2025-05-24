@@ -1,4 +1,34 @@
 
+### TASK-161L: CLI Usability Audit and Feedback
+Status: COMPLETED ✅
+Assigned: WA
+Priority: MEDIUM
+Created: 2025-05-23
+Completed: 2025-05-23
+
+**Description:**
+Perform a usability audit of the CLI runner and provide structured feedback about the user experience, error handling, and documentation clarity.
+
+**Deliverables:**
+- ✅ Tested CLI commands with sample inputs
+- ✅ Identified documentation and usability issues
+- ✅ Created detailed feedback report
+- ✅ Provided actionable recommendations
+
+**Key Findings:**
+1. Missing sample files and incorrect command syntax in documentation
+2. Unhelpful error messages and missing dependency documentation
+3. Complex JSON input requirements and lack of interactive mode
+
+**Files Created/Modified:**
+- /issues/wa_usability_feedback.md
+- /postbox/WA/outbox.json
+
+**Notes:**
+The CLI is functional but would benefit from improved error handling, better documentation, and more user-friendly input methods. Detailed feedback has been provided in the issues directory.
+
+---
+
 ### TASK-161A: Bootstrap Bluelabel Autopilot Repository
 Status: COMPLETED ✅
 Assigned: CC
@@ -209,3 +239,91 @@ Fix duplicate definitions of core agent schemas and unify import structure acros
 - runner/cli_runner.py (updated imports)
 
 **Time Spent:** 30 minutes
+
+### TASK-161M: Implement Ingestion to Digest Workflow Integration
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-23
+Completed: 2025-05-23
+
+**Description:**
+Implement a demonstration script that shows the integration between IngestionAgent and DigestAgent, processing content through both agents in a pipeline.
+
+**Deliverables:**
+- ✅ Created ingestion_to_digest_demo.py workflow script
+- ✅ Implemented IngestionToDigestWorkflow orchestration class
+- ✅ Added transform_ingestion_to_digest bridge logic
+- ✅ Tested with both PDF and URL inputs
+- ✅ Fixed datetime JSON serialization issues in IngestionAgent
+- ✅ Updated sample input files with required fields
+- ✅ Command-line interface with --source option
+
+**Technical Details:**
+- Workflow chains IngestionAgent output to DigestAgent input
+- Handles both PDF and URL content sources
+- Provides clear step-by-step output showing the pipeline
+- Fixed JSON serialization for datetime objects in storage
+- Added proper Pydantic model_dump(mode='json') for metadata
+
+**Files Created/Modified:**
+- runner/ingestion_to_digest_demo.py (NEW)
+- agents/ingestion_agent.py (fixed datetime serialization)
+- tests/sample_pdf_input.json (added source field)
+- tests/sample_url_input.json (added source field, updated URL)
+
+**Example Usage:**
+```bash
+# Process PDF through both agents
+python runner/ingestion_to_digest_demo.py --source pdf
+
+# Process URL through both agents  
+python runner/ingestion_to_digest_demo.py --source url
+```
+
+**Verified Output:**
+- PDF processing: Successfully ingested 19 characters, generated markdown digest
+- URL processing: Successfully ingested 1256 characters from example.com, generated digest
+- Both workflows complete end-to-end with proper data transformation
+
+**Time Spent:** 45 minutes
+
+### TASK-161N: Create AgentInput Test Generator Script
+Status: COMPLETED ✅
+Assigned: CA
+Priority: MEDIUM
+Created: 2025-05-23
+Completed: 2025-05-23
+
+**Description:**
+Build a CLI utility to generate valid AgentInput JSON files for use with the IngestionAgent and DigestAgent. This will streamline development, testing, and onboarding for future agents and workflows.
+
+**Deliverables:**
+- ✅ Created scripts/generate_test_input.py
+- ✅ Implemented support for all agent types (ingestion URL, ingestion PDF, digest)
+- ✅ Added CLI argument parsing with sensible defaults
+- ✅ Generated sample input files for all modes
+- ✅ Added comprehensive documentation and help messages
+
+**Files Created/Modified:**
+- scripts/generate_test_input.py
+- TASK_CARDS.md
+
+**Example Usage:**
+```bash
+# Generate URL input for IngestionAgent
+python scripts/generate_test_input.py --agent ingestion --type url --output tests/sample_url_input.json
+
+# Generate PDF input for IngestionAgent
+python scripts/generate_test_input.py --agent ingestion --type pdf --output tests/sample_pdf_input.json
+
+# Generate input for DigestAgent
+python scripts/generate_test_input.py --agent digest --output tests/sample_digest_input.json
+```
+
+**Time Spent:** 45 minutes
+
+**Next Steps:**
+- Add unit tests for the generator script
+- Consider adding more customization options
+- Add validation against agent models

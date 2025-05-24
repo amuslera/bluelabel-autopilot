@@ -6,51 +6,52 @@ This checklist governs how Windsurf AI (WA) must execute every task in Phase 6.1
 - [ ] Read and understand task prompt completely
 - [ ] Verify task is explicitly assigned by ARCH-AI or Ariel
 - [ ] Check for any dependencies or prerequisites
-- [ ] Review existing UI patterns in `/apps/web/src/components/`
+- [ ] Review existing test patterns in `/tests/`
 
 ## Branch Management
-- [ ] Create feature branch using format: `ui/feature-TASK-XXXX`
+- [ ] Create feature branch using format: `test/feature-TASK-XXXX`
 - [ ] Branch must be created from `main`
 - [ ] Branch name must match task ID exactly
 
-## Development Standards
-- [ ] Use TypeScript with proper type definitions
-- [ ] Follow React functional component patterns
-- [ ] Implement with Tailwind CSS for styling
-- [ ] Ensure accessibility compliance
+## Testing Standards
+- [ ] Use pytest for all Python tests
+- [ ] Mock external dependencies properly
+- [ ] Test both success and error cases
+- [ ] Include edge case scenarios
 - [ ] Only modify files explicitly listed in task prompt
-- [ ] No experimental or partial implementations
+- [ ] No modifications to core logic or architecture
 
-## Testing Protocol
-- [ ] Start dev server: `npm run dev`
-- [ ] Test all modified routes and components
-- [ ] Verify responsive design at all breakpoints
-- [ ] Test accessibility features
-- [ ] Ensure no console errors or warnings
-- [ ] Verify all props and types are correct
+## Test Execution Protocol
+- [ ] Run all existing tests: `pytest`
+- [ ] Run tests with coverage: `pytest --cov=agents --cov=runner`
+- [ ] Verify all tests pass
+- [ ] Check coverage metrics meet requirements
+- [ ] Ensure no test warnings
+- [ ] Document any skipped tests
 
-## Visual Documentation
-- [ ] Take at least one screenshot of working UI
-- [ ] Screenshot must show the implemented feature
-- [ ] Save screenshot in `/apps/web/screenshots/`
-- [ ] Include screenshot path in outbox report
+## Test Documentation
+- [ ] Write clear test descriptions
+- [ ] Document test scenarios covered
+- [ ] Include coverage percentage
+- [ ] Note any limitations or gaps
+- [ ] Save test output for reporting
 
 ## Git Compliance
 - [ ] Check status: `git status`
 - [ ] Review diff: `git diff`
-- [ ] Verify only assigned files are modified
+- [ ] Verify only test files are modified
 - [ ] Write clear, descriptive commit messages
-- [ ] No CLI tools, core logic, or backend changes
+- [ ] No changes to agent logic or CLI infrastructure
 
 ## Documentation Updates
 - [ ] Update `/TASK_CARDS.md` with:
   - Task summary
-  - Implementation details
+  - Test implementation details
   - Status
   - Time spent
   - Files modified
-- [ ] Document component props
-- [ ] Update any relevant README files
+- [ ] Document test methods
+- [ ] Update any relevant test documentation
 
 ## Reporting Requirements
 Write structured report to `/postbox/WA/outbox.json`:
@@ -60,9 +61,10 @@ Write structured report to `/postbox/WA/outbox.json`:
   "agent": "WA",
   "status": "completed",
   "summary": "Brief description",
-  "files_modified": ["list", "of", "files"],
-  "screenshot_path": "/path/to/screenshot.png",
-  "dev_server_tested": true,
+  "files_modified": ["list", "of", "test", "files"],
+  "tests_passed": true,
+  "test_count": 15,
+  "coverage_percentage": 85,
   "checklist_complete": true,
   "timestamp": "ISO-8601"
 }
@@ -70,20 +72,20 @@ Write structured report to `/postbox/WA/outbox.json`:
 
 ## Quality Gates
 Before marking task complete:
-- [ ] Dev server runs without errors
-- [ ] All routes tested and functional
-- [ ] Screenshot captured and saved
+- [ ] All tests pass
+- [ ] Coverage meets requirements (>80%)
+- [ ] Test documentation complete
 - [ ] TASK_CARDS.md updated
 - [ ] Outbox report written
 - [ ] Git branch properly named
-- [ ] Only assigned files modified
+- [ ] Only test files modified
 
 ## Prohibited Actions
-- ❌ Modify CLI tools
-- ❌ Change core logic
-- ❌ Alter backend infrastructure
+- ❌ Modify agent implementations
+- ❌ Change CLI functionality
+- ❌ Alter interfaces or models
 - ❌ Skip documentation
-- ❌ Omit screenshots
+- ❌ Submit failing tests
 - ❌ Commit unverified code
 
 ## Consequences for Non-Compliance
@@ -94,5 +96,5 @@ Before marking task complete:
 4. Documented in agent scorecard
 
 ## Reference
-- [WA Operating Protocol – WA_BOOT.md](/postbox/WA/WA_BOOT.md)
-- [Windsurf Context – WINDSURF_CONTEXT.md](/docs/system/WINDSURF_CONTEXT.md) 
+- [Windsurf Context – WINDSURF_CONTEXT.md](/docs/system/WINDSURF_CONTEXT.md)
+- [Roles & Responsibilities – ROLES_AND_RESPONSIBILITIES.md](/docs/system/ROLES_AND_RESPONSIBILITIES.md)

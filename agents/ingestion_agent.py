@@ -205,7 +205,7 @@ class IngestionAgent:
                 return {
                     "content_id": metadata.content_id,
                     "content_type": "url",
-                    "metadata": metadata.dict(),
+                    "metadata": metadata.model_dump(mode='json'),
                     "content_length": len(text)
                 }
     
@@ -274,7 +274,7 @@ class IngestionAgent:
         return {
             "content_id": metadata.content_id,
             "content_type": "pdf",
-            "metadata": metadata.dict(),
+            "metadata": metadata.model_dump(mode='json'),
             "content_length": len(text)
         }
     
@@ -290,8 +290,20 @@ class IngestionAgent:
         content_id = content_data["id"]
         file_path = self.storage_path / f"{content_id}.json"
         
+        # Convert datetime objects to ISO format strings for JSON serialization
+        def convert_datetime(obj):
+            if isinstance(obj, datetime):
+                return obj.isoformat()
+            elif isinstance(obj, dict):
+                return {k: convert_datetime(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_datetime(item) for item in obj]
+            return obj
+        
+        serializable_data = convert_datetime(content_data)
+        
         with open(file_path, "w") as f:
-            json.dump(content_data, f, indent=2)
+            json.dump(serializable_data, f, indent=2)
     
     def get_capabilities(self) -> Dict[str, Any]:
         """Return the agent's capabilities."""

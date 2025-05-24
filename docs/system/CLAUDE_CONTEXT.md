@@ -1,52 +1,77 @@
-# Claude Code (CC) Session Context - v0.6.10
+# Claude Code (CC) Session Context - v0.6.11
 
 ## Project Overview
-Bluelabel Agent OS - Multi-agent system for AI-assisted software development with DAG-based task execution, MCP-compliant messaging, and comprehensive CLI/UI tooling.
+Bluelabel Autopilot - Content Intelligence Workflow MVP with multi-agent orchestration for URL/PDF ingestion, summarization, and digest delivery.
 
-## Phase 6.10 Summary (CC Contributions)
-**TASK-150C: MCP Schema Compliance Fix** ✅ MERGED
-- Fixed MCP schema validation issues with strict compliance
-- Updated message format validation
-- Enhanced error handling for schema violations
-- Branch: `core/mcp-schema-fix-TASK-150C`
+## Phase 6.11 Summary (CC Contributions)
+**TASK-160A: AIOS-V2 Codebase Audit** ✅ COMPLETED
+- Evaluated legacy ContentMind system for component extraction
+- Identified 12 reusable components, 8 refactor candidates
+- Created comprehensive integration roadmap
+- Branch: `audit/aios-v2-review-TASK-160A`
 
-**TASK-100A: Plan Context Engine + Conditional Evaluator** ✅ COMPLETED
-- Implemented PlanContextEngine for runtime context management
-- Added when/unless conditional execution support
-- Safe expression evaluation with sandboxed environment
-- Automatic context updates from task results
-- 25+ unit tests for comprehensive coverage
+**TASK-161A: Repository Bootstrap** ✅ COMPLETED
+- Extracted core agent framework from AIOS-V2
+- Implemented file-based DigestAgent
+- Modernized prompt templates
+- Built CLI runner infrastructure
 
-**Supporting Work**:
-- Code review and merge support for other Phase 6.10 tasks
-- Schema validation improvements
-- Test coverage enhancements
+**TASK-161G: Context Audit & Restructuring** ✅ COMPLETED
+- Audited all system/agent context files
+- Proposed 4-tier directory structure
+- Created implementation roadmap
+- Documented in `/docs/system/TASK_161G_CONTEXT_AUDIT.md`
 
-## Current Architecture (Post v0.6.10)
+**TASK-161H: Roles & Responsibilities Document** ✅ COMPLETED
+- Created definitive roles reference
+- Established clear agent boundaries
+- Defined communication protocols
+- Created `/docs/system/ROLES_AND_RESPONSIBILITIES.md`
+
+**TASK-161I: Branch Merge & Tagging** ✅ COMPLETED
+- Merged all Phase 6.11 foundation work
+- Created v0.6.11-alpha1 milestone tag
+- Cleaned repository structure
+
+**TASK-161J: Unify Agent Models** ✅ COMPLETED
+- Fixed duplicate model definitions
+- Standardized imports across all agents
+- Established interfaces/agent_models.py as source of truth
+
+## Current Architecture (v0.6.11-alpha1)
 ```
-/agent-comms-mvp/
-├── apps/              # Application layer
-│   ├── api/          # FastAPI backend
-│   └── web/          # React frontend with DAG visualization
-├── tools/            # CLI and utilities
-│   ├── arch/         # ARCH-specific tools (plan runner, router)
-│   └── cli/          # General CLI tools
-├── postbox/          # Agent communication (inbox/outbox)
-├── schemas/          # JSON schemas for validation
-├── contexts/         # Agent profile documents
-├── docs/             # Documentation
-│   ├── system/       # Architecture and design docs
-│   ├── protocols/    # Communication protocols
-│   └── releases/     # Sprint and release notes
-└── plans/            # YAML execution plans
+/bluelabel-autopilot/
+├── agents/               # Core agent implementations
+│   ├── base_agent.py    # Base class with MCP-compliant I/O
+│   ├── digest_agent.py  # Content digest generation
+│   └── ingestion_agent.py # URL and PDF processing
+├── interfaces/          # Shared interfaces
+│   └── agent_models.py  # Single source of truth for models
+├── prompts/            # YAML prompt templates
+│   └── contentmind/    # Content processing prompts
+├── runner/             # CLI and execution
+│   └── cli_runner.py   # Command-line interface
+├── docs/system/        # System documentation
+│   ├── CLAUDE_CONTEXT.md
+│   ├── CURSOR_CONTEXT.md
+│   ├── WINDSURF_CONTEXT.md
+│   ├── ARCH_CONTINUITY.md
+│   ├── AGENT_ORCHESTRATION_GUIDE.md
+│   ├── ROLES_AND_RESPONSIBILITIES.md
+│   └── WA_CHECKLIST.md
+└── postbox/            # Agent communication
+    ├── CC/
+    ├── CA/
+    └── WA/
 ```
 
 ## Working Patterns
 1. **Branching Strategy**:
    - Feature branches: `feat/TASK-XXX-description`
    - Core branches: `core/feature-TASK-XXX`
-   - Meta branches: `meta/topic-TASK-XXX`
-   - Always create PR-ready branches from main
+   - Development branches: `dev/TASK-XXX-description`
+   - Audit branches: `audit/topic-TASK-XXX`
+   - Always create dedicated branches for tasks
 
 2. **Development Flow**:
    - Use TodoWrite/TodoRead for task planning
@@ -59,25 +84,25 @@ Bluelabel Agent OS - Multi-agent system for AI-assisted software development wit
    - Type hints and dataclasses preferred
    - Comprehensive error handling
    - MCP schema compliance mandatory
-   - JSON Schema validation for all messages
+   - Single source of truth for models (interfaces/agent_models.py)
 
 4. **Testing Discipline**:
    - Unit tests for all new functionality
-   - Integration tests for cross-component features
-   - Schema validation tests required
+   - Integration tests for agent interactions
+   - Import structure validation
    - Mock external dependencies
 
-## Last Known State (v0.6.10)
-- **Current Tag**: v0.6.10 (Phase 6.10 complete)
-- **Branch Status**: All Phase 6.10 branches merged
-- **Pending**: WA review tasks may be ongoing
-- **System State**: Production-ready with full DAG execution
+## Last Known State (v0.6.11-alpha1)
+- **Current Tag**: v0.6.11-alpha1 (Phase 6.11 foundation)
+- **Branch Status**: main branch, all work merged
+- **Repository**: bluelabel-autopilot (separate from agent-comms-mvp)
+- **System State**: Foundation complete, ready for workflow implementation
 - **Key Features Active**:
-  - Conditional task execution (when/unless)
-  - DAG-aware logging with execution traces
-  - MCP-compliant messaging
-  - CLI tools suite (bluelabel commands)
-  - React UI with plan visualization
+  - MCP-compliant agent framework
+  - URL/PDF ingestion capability
+  - File-based digest generation
+  - CLI runner with both agents
+  - Standardized model definitions
 
 ## Reinitialization Protocol
 When restarting mid-task:
@@ -86,39 +111,39 @@ When restarting mid-task:
 2. **Read Key Files**:
    - `/TASK_CARDS.md` - Current task status
    - `/postbox/CC/inbox.json` - Pending tasks
-   - `/CLAUDE_CONTEXT.md` - This file
-   - Task-specific files from branch name
+   - `/docs/system/CLAUDE_CONTEXT.md` - This file
+   - `/docs/system/ROLES_AND_RESPONSIBILITIES.md` - Role boundaries
 
 3. **Review Recent Work**:
    - `git log --oneline -10` - Recent commits
    - Check TodoRead for in-progress items
-   - Review any test failures
+   - Review TASK_CARDS.md for completed tasks
 
 4. **Resume Pattern**:
-   - If tests exist, run them first
+   - Verify imports work correctly
    - Check for uncommitted changes
    - Complete any in-progress todos
    - Update TASK_CARDS.md if needed
    - Report completion to outbox
 
 ## Key Dependencies & Tools
-- **Language**: Python 3.11+
-- **Backend**: FastAPI, Pydantic, YAML
-- **Frontend**: React, TypeScript, Tailwind CSS, ReactFlow
-- **Testing**: pytest, Jest
-- **CLI**: Click-based `bluelabel` command suite
-- **Validation**: JSON Schema 2020-12
+- **Language**: Python 3.8+
+- **Agents**: BaseAgent, AgentInput, AgentOutput (MCP-compliant)
+- **Content**: aiohttp, PyPDF2
+- **Storage**: File-based JSON storage
+- **CLI**: Click-based runner
+- **Models**: Pydantic for validation
 
 ## Agent Communication
-- **Role**: Claude Code (CC) - Core implementation agent
+- **Role**: Claude Code (CC) - Core system architect & backend
 - **Inbox**: `/postbox/CC/inbox.json`
 - **Outbox**: `/postbox/CC/outbox.json`
 - **Message Format**: MCP-compliant JSON
 - **Task Assignment**: Via ARCH orchestrator
 
 ## Critical Files for Context
-- `/tools/arch/plan_runner.py` - DAG execution engine
-- `/tools/arch/plan_utils.py` - Plan utilities & context engine
-- `/schemas/MCP_MESSAGE_SCHEMA.json` - Message format
-- `/docs/protocols/AGENT_PROTOCOL.md` - Communication rules
-- `/contexts/CC_PROFILE.md` - Agent capabilities
+- `/interfaces/agent_models.py` - Single source of truth for models
+- `/agents/base_agent.py` - Base agent implementation
+- `/TASK_CARDS.md` - Task history and status
+- `/docs/system/ROLES_AND_RESPONSIBILITIES.md` - Agent boundaries
+- `/docs/system/ARCH_CONTINUITY.md` - Orchestration patterns

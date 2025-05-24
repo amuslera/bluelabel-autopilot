@@ -1,11 +1,10 @@
 {
     "task_id": "test-pdf",
-    "tenant_id": "demo",
+    "source": "cli",
     "task_type": "pdf",
     "content": {
         "file_path": "tests/sample.pdf"
     },
-    "parameters": {},
     "context": {},
     "metadata": {}
 } 
