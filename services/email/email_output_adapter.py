@@ -19,6 +19,8 @@ from typing import Dict, Any, Optional, List, Union
 # Import the email snapshot functionality
 from .email_snapshot import save_email_snapshot
 
+from services.config import get_config
+
 logger = logging.getLogger(__name__)
 
 
