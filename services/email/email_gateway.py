@@ -21,6 +21,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from services.config import get_config
+from services.security import store_oauth_token, retrieve_oauth_token
 
 logger = logging.getLogger(__name__)
 
@@ -82,30 +83,44 @@ class GmailInboxWatcher:
         logger.info(f"Initialized GmailInboxWatcher (label={watch_label}, poll={poll_interval}s)")
     
     def _load_credentials(self) -> bool:
-        """Load saved OAuth credentials from file"""
-        if os.path.exists(self.token_file):
-            try:
-                self.credentials = Credentials.from_authorized_user_file(
-                    self.token_file, self.SCOPES
-                )
-                logger.info("Loaded saved OAuth credentials")
-                return True
-            except Exception as e:
-                logger.error(f"Error loading credentials: {e}")
+        """Load saved OAuth credentials from secure storage"""
+        try:
+            # Retrieve from secure storage
+            token_data = retrieve_oauth_token('gmail')
+            if not token_data:
                 return False
-        return False
+                
+            self.credentials = Credentials.from_authorized_user_info(
+                token_data, self.SCOPES
+            )
+            
+            # Refresh if expired
+            if self.credentials and self.credentials.expired and self.credentials.refresh_token:
+                try:
+                    self.credentials.refresh(Request())
+                    self._save_credentials()
+                    logger.info("Refreshed expired OAuth credentials")
+                except Exception as e:
+                    logger.error(f"Error refreshing credentials: {e}")
+                    return False
+            
+            logger.info("Loaded saved OAuth credentials securely")
+            return True
+        except Exception as e:
+            logger.error(f"Error loading credentials: {e}")
+            return False
     
     def _save_credentials(self):
-        """Save OAuth credentials to file"""
+        """Save OAuth credentials securely using encryption"""
         if self.credentials:
             try:
-                # Ensure directory exists
-                token_path = Path(self.token_file)
-                token_path.parent.mkdir(parents=True, exist_ok=True)
+                # Convert credentials to dict for secure storage
+                token_data = json.loads(self.credentials.to_json())
                 
-                with open(self.token_file, 'w') as token:
-                    token.write(self.credentials.to_json())
-                logger.info("Saved OAuth credentials")
+                # Store securely with encryption
+                store_oauth_token('gmail', token_data)
+                
+                logger.info("Saved OAuth credentials securely")
             except Exception as e:
                 logger.error(f"Error saving credentials: {e}")
     
@@ -139,26 +154,31 @@ class GmailInboxWatcher:
                             "needs_setup": True
                         }
                     
-                    # Create OAuth flow
+                    # Create OAuth flow with local redirect
                     flow = Flow.from_client_secrets_file(
                         self.credentials_file,
                         scopes=self.SCOPES,
-                        redirect_uri='urn:ietf:wg:oauth:2.0:oob'
+                        redirect_uri='http://localhost:8080'
                     )
                     
-                    auth_url, _ = flow.authorization_url(prompt='consent')
+                    auth_url, state = flow.authorization_url(
+                        prompt='consent',
+                        access_type='offline',
+                        include_granted_scopes='true'
+                    )
                     
                     return {
                         "status": "authorization_required",
                         "auth_url": auth_url,
-                        "message": "Visit the URL to authorize Gmail access"
+                        "state": state,
+                        "message": "Visit the URL to authorize Gmail access. Run the local server to capture the response."
                     }
                 
                 # Exchange auth code for credentials
                 flow = Flow.from_client_secrets_file(
                     self.credentials_file,
                     scopes=self.SCOPES,
-                    redirect_uri='urn:ietf:wg:oauth:2.0:oob'
+                    redirect_uri='http://localhost:8080'
                 )
                 flow.fetch_token(code=auth_code)
                 self.credentials = flow.credentials
@@ -316,7 +336,8 @@ class GmailInboxWatcher:
             try:
                 from email.utils import parsedate_to_datetime
                 received_at = parsedate_to_datetime(date_str) if date_str else datetime.now()
-            except:
+            except (ValueError, TypeError) as e:
+                logger.warning(f"Error parsing email date '{date_str}': {e}")
                 received_at = datetime.now()
             
             # Extract body and attachments

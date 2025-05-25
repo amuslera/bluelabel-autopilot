@@ -25,6 +25,7 @@ from agents.digest_agent import DigestAgent
 from agents.ingestion_agent import IngestionAgent
 from runner.workflow_loader import WorkflowLoader, WorkflowStep
 from runner.workflow_storage import WorkflowStorage
+from services.validation import validate_workflow_file, WorkflowValidationError
 
 
 class WorkflowEngine:
@@ -82,9 +83,19 @@ class WorkflowEngine:
             if step.agent == 'ingestion_agent' and input_data.get('task_type') == 'pdf':
                 pdf_path = input_data.get('content', {}).get('file_path')
                 if pdf_path and Path(pdf_path).exists():
+                    # Check file size before loading
+                    file_size = Path(pdf_path).stat().st_size
+                    max_size = 100 * 1024 * 1024  # 100MB limit
+                    
+                    if file_size > max_size:
+                        raise ValueError(f"PDF file too large: {file_size} bytes (max: {max_size})")
+                    
+                    # For now, still load the whole file but with size limit
+                    # TODO: Implement streaming for ingestion agent
                     with open(pdf_path, 'rb') as pdf_file:
                         input_data['content']['pdf_data'] = pdf_file.read()
                         input_data['content']['filename'] = Path(pdf_path).name
+                        input_data['content']['file_size'] = file_size
                         
             return input_data
         
@@ -219,6 +230,11 @@ class WorkflowEngine:
         run_id = str(uuid.uuid4())
         
         try:
+            # Validate workflow file for security
+            is_valid, error_msg = validate_workflow_file(workflow_path)
+            if not is_valid:
+                raise WorkflowValidationError(f"Workflow validation failed: {error_msg}")
+            
             # Load and validate workflow
             loader = WorkflowLoader(workflow_path)
             workflow_data = loader.load()
