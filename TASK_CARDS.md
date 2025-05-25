@@ -2746,3 +2746,129 @@ python runner/workflow_executor_with_email.py \
 ---
 
 ## TASK-161CL: Closeout Phase 6.12 Sprint 2
+
+## TASK-161FB: Create ARCH-AI Prompt Structure Reference
+
+**Status:** ✅ Completed
+**Date:** 2025-05-28
+**Assignee:** CA
+**Branch:** `dev/TASK-161FB-ca-arch-prompt-reference`
+
+### Objective
+Create a reusable reference file to guide future ARCH-AI agents on how to properly write agent task prompts, reflecting current best practices and avoiding common issues.
+
+### Implementation Details
+
+**Files Created/Updated:**
+1. **Template File:** `/docs/system/templates/ARCH_AGENT_TASK_PROMPT_TEMPLATE.md`
+   - Standardized task prompt structure
+   - Clear guidelines and examples
+   - Best practices documentation
+   - Common pitfalls to avoid
+
+2. **Documentation Updates:**
+   - `/docs/system/ARCH_CONTINUITY_PROMPT.md` - Added reference to template
+   - `/TASK_CARDS.md` - This entry
+   - `/postbox/CA/outbox.json` - Task completion record
+
+### Key Features
+- Clear structure for task prompts
+- Standardized formatting guidelines
+- Real-world examples
+- Best practices documentation
+- Common pitfalls to avoid
+
+### Deliverables
+- ✅ New prompt template created with examples
+- ✅ Template linked in ARCH continuity files
+- ✅ Task recorded in tracking files
+
+---
+
+## TASK-161FZ: Document Security Fixes and Confirm Remediation Log
+
+**Status:** ✅ Completed
+**Date:** 2025-05-28
+**Assignee:** CC
+**Branch:** `dev/TASK-161FZ-cc-security-remediation`
+
+### Objective
+Formally record and publish the security remediations implemented following the code review in Phase 6.12. This is a backfilled task to ensure audit compliance and continuity.
+
+### Implementation Details
+
+**Security Fixes Implemented:**
+1. **OAuth Token Encryption (CRITICAL)**
+   - Created `/services/security/credential_manager.py`
+   - Implemented Fernet symmetric encryption
+   - Tokens stored encrypted at `~/.bluelabel/credentials/`
+   - Master key with 0600 permissions
+
+2. **OAuth Flow Security (CRITICAL)**
+   - Created `/services/email/oauth_server.py`
+   - Replaced deprecated `urn:ietf:wg:oauth:2.0:oob` flow
+   - Implemented local redirect server on `http://localhost:8080`
+   - Added browser integration for proper OAuth 2.0 flow
+
+3. **Workflow Input Validation (CRITICAL)**
+   - Created `/services/validation/workflow_validator.py`
+   - Blocks command injection patterns (backticks, $(), ${})
+   - Prevents path traversal (../)
+   - Validates against whitelist of allowed agents
+   - Enforces size limits (50 steps max, 1MB file size)
+
+4. **Error Handling (MEDIUM)**
+   - Fixed bare except clauses in `/services/email/email_gateway.py`
+   - Now catches specific exceptions: `(ValueError, TypeError)`
+   - Added proper error logging
+
+5. **Resource Management (MEDIUM)**
+   - Created `/services/pdf/pdf_stream_handler.py`
+   - Implements streaming for PDFs >50MB
+   - Enforces 100MB file size limit
+   - Page-by-page processing to prevent memory exhaustion
+
+**Files Created/Modified:**
+- `/services/security/` - New module for credential encryption
+- `/services/validation/` - New module for workflow validation
+- `/services/pdf/` - New module for PDF streaming
+- `/services/email/email_gateway.py` - Updated for secure OAuth
+- `/services/email/oauth_server.py` - New OAuth redirect handler
+- `/core/workflow_engine.py` - Added validation and size limits
+- `/tests/test_security_fixes.py` - Comprehensive test suite
+- `/SECURITY_FIXES.md` - Detailed documentation
+- `/requirements.txt` - Added security dependencies
+
+### Test Coverage
+Created `/tests/test_security_fixes.py` with tests for:
+- ✅ Credential encryption verification
+- ✅ Workflow validation (command injection, path traversal, code injection)
+- ✅ PDF streaming and size limits
+- ✅ Error handling improvements
+
+### Threats Mitigated
+1. **Credential Theft** - OAuth tokens no longer in plain text
+2. **Command Injection** - Input validation blocks malicious patterns
+3. **Path Traversal** - Validation prevents directory traversal
+4. **Code Injection** - Python code patterns blocked
+5. **Memory Exhaustion** - PDF size limits and streaming
+6. **OAuth Vulnerabilities** - Deprecated flow replaced
+
+### Dependencies Added
+- `cryptography>=41.0.0` - For credential encryption
+- `google-api-python-client>=2.100.0` - Gmail API
+- `google-auth-httplib2>=0.1.0` - OAuth support
+- `google-auth-oauthlib>=1.0.0` - OAuth flow
+- `aiohttp>=3.9.0` - OAuth redirect server
+
+### Follow-up Recommendations
+1. Integrate with cloud secret managers (AWS KMS, GCP Secret Manager)
+2. Implement rate limiting across all services
+3. Add security audit logging
+4. Regular dependency vulnerability scanning
+5. Consider security-focused CI/CD checks
+
+### Merge Status
+- ✅ Security fixes merged to main in commit `0b7d243`
+- ✅ All changes tested and verified
+- ✅ Documentation complete

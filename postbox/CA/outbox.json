@@ -1,4 +1,59 @@
 {
+    "task_id": "TASK-161FB",
+    "timestamp": "2025-05-28T00:00:00Z",
+    "implementation_summary": {
+        "title": "Create ARCH-AI Prompt Structure Reference",
+        "description": "Created a standardized template and reference guide for ARCH-AI task prompts, ensuring consistency and clarity in task assignments.",
+        "key_features": [
+            "Standardized task prompt structure",
+            "Clear formatting guidelines",
+            "Best practices documentation",
+            "Common pitfalls to avoid",
+            "Real-world examples"
+        ]
+    },
+    "files": [
+        {
+            "path": "docs/system/templates/ARCH_AGENT_TASK_PROMPT_TEMPLATE.md",
+            "type": "template",
+            "description": "Standardized task prompt template with guidelines"
+        },
+        {
+            "path": "docs/system/ARCH_CONTINUITY_PROMPT.md",
+            "type": "documentation",
+            "description": "Updated with template reference"
+        },
+        {
+            "path": "TASK_CARDS.md",
+            "type": "documentation",
+            "description": "Added task completion record"
+        }
+    ],
+    "template_sections": [
+        "Basic Structure",
+        "Title Format",
+        "Objective Section",
+        "Branch Naming",
+        "File Paths",
+        "Requirements Format",
+        "Output Requirements"
+    ],
+    "best_practices": [
+        "Keep objectives concise (1-2 sentences)",
+        "Use clear, direct instructions",
+        "Avoid markdown wrapping",
+        "Use ✅ bullet points for requirements",
+        "Include specific acceptance criteria"
+    ],
+    "next_steps": [
+        "Monitor template adoption",
+        "Gather feedback from agents",
+        "Update template based on usage patterns",
+        "Consider automation of template validation"
+    ]
+}
+
+{
     "task_id": "TASK-161B",
     "timestamp": "2024-03-19T00:00:00Z",
     "implementation_summary": {
