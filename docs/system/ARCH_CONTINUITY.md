@@ -8,15 +8,13 @@ The **Human Tech Lead** is Ariel Muslera. ARCH-AI assists Ariel by managing task
 
 ## ✅ Phase Status Snapshot
 
-**Current Phase:** Phase 6.12 (Real-World Email Triggers & Output) - COMPLETED
-**Previous Phase:** Phase 6.11 (Content Intelligence Workflow MVP) - COMPLETED
+**Current Phase:** Phase 6.13 (System Hardening) - IN PROGRESS
+**Previous Phase:** Phase 6.12 (Real-World Email Triggers & Output) - COMPLETED
 **Last Completed Tag:** `v0.6.12-alpha3`
-**Last known Task:** `TASK-161DJ` — Closeout Phase 6.12 Sprint 3 (in progress)
-**Phase 6.11 Status:** COMPLETED (2025-05-24)
-**Phase 6.12 Status:** Sprint 3 COMPLETE (2025-05-27)
-  - Sprint 1 Status: COMPLETED (2025-05-25) - Tag: v0.6.12-alpha1
-  - Sprint 2 Status: COMPLETED (2025-05-26) - Tag: v0.6.12-alpha2
-  - Sprint 3 Status: COMPLETED (2025-05-27) - Tag: v0.6.12-alpha3
+**Last known Task:** `TASK-161FA` — Sprint Launch: Plan + SOP Updates (in progress)
+**Phase 6.12 Status:** COMPLETED (2025-05-27)
+**Phase 6.13 Status:** Sprint 1 IN PROGRESS (2025-05-27)
+  - Sprint 1 Status: IN PROGRESS (2025-05-27) - Target Tag: v0.6.13-alpha1
 
 ---
 
