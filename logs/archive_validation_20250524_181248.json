@@ -1,0 +1,78 @@
+{
+  "summary": {
+    "total_entries": 6,
+    "valid_entries": 0,
+    "invalid_entries": 6,
+    "validation_rate": "0.0%",
+    "error_types": {
+      "missing_directory": 6
+    },
+    "warning_types": {},
+    "failed_workflows": {
+      "pdf_ingestion_and_digest": [
+        "pdf_ingestion_and_digest/602158c9-75ee-49da-a4d7-472635d2c086",
+        "pdf_ingestion_and_digest/b9c7358d-f2f9-4f18-bcd3-49d67151d0d5",
+        "pdf_ingestion_and_digest/25b9e962-8b24-4162-b9fb-e9e0ae69cf70"
+      ],
+      "email_to_digest": [
+        "email_to_digest/test-001",
+        "email_to_digest/test-003"
+      ],
+      "url_scraper": [
+        "url_scraper/test-002"
+      ]
+    },
+    "timestamp": "2025-05-25T01:12:48.476880"
+  },
+  "validation_issues": [
+    {
+      "entry_id": "pdf_ingestion_and_digest/602158c9-75ee-49da-a4d7-472635d2c086",
+      "errors": [
+        "Run directory not found: data/workflows/pdf_ingestion_and_digest/602158c9-75ee-49da-a4d7-472635d2c086"
+      ],
+      "warnings": [],
+      "valid": false
+    },
+    {
+      "entry_id": "pdf_ingestion_and_digest/b9c7358d-f2f9-4f18-bcd3-49d67151d0d5",
+      "errors": [
+        "Run directory not found: data/workflows/pdf_ingestion_and_digest/b9c7358d-f2f9-4f18-bcd3-49d67151d0d5"
+      ],
+      "warnings": [],
+      "valid": false
+    },
+    {
+      "entry_id": "pdf_ingestion_and_digest/25b9e962-8b24-4162-b9fb-e9e0ae69cf70",
+      "errors": [
+        "Run directory not found: data/workflows/pdf_ingestion_and_digest/25b9e962-8b24-4162-b9fb-e9e0ae69cf70"
+      ],
+      "warnings": [],
+      "valid": false
+    },
+    {
+      "entry_id": "email_to_digest/test-001",
+      "errors": [
+        "Run directory not found: data/workflows/email_to_digest/test-001"
+      ],
+      "warnings": [],
+      "valid": false
+    },
+    {
+      "entry_id": "url_scraper/test-002",
+      "errors": [
+        "Run directory not found: data/workflows/url_scraper/test-002"
+      ],
+      "warnings": [],
+      "valid": false
+    },
+    {
+      "entry_id": "email_to_digest/test-003",
+      "errors": [
+        "Run directory not found: data/workflows/email_to_digest/test-003"
+      ],
+      "warnings": [],
+      "valid": false
+    }
+  ],
+  "full_results_count": 6
+}

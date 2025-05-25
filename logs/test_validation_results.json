@@ -1,0 +1,72 @@
+{
+  "summary": {
+    "total_entries": 5,
+    "valid_entries": 2,
+    "invalid_entries": 3,
+    "validation_rate": "40.0%",
+    "error_types": {
+      "corrupt_files": 2,
+      "invalid_timestamp": 1,
+      "missing_directory": 2,
+      "missing_fields": 2
+    },
+    "warning_types": {
+      "missing_metadata": 1,
+      "missing_outputs": 1,
+      "other": 3
+    },
+    "failed_workflows": {
+      "test_validation_workflow": [
+        "test_validation_workflow/corrupt-run-003",
+        "test_validation_workflow/missing-run-004",
+        "test_validation_workflow/incomplete-run-005"
+      ]
+    },
+    "timestamp": "2025-05-25T01:14:13.044877"
+  },
+  "validation_issues": [
+    {
+      "entry_id": "test_validation_workflow/partial-run-002",
+      "errors": [],
+      "warnings": [
+        "Missing Run metadata: data/workflows/test_validation_workflow/partial-run-002/run_metadata.json",
+        "No step output files found for successful run"
+      ],
+      "valid": true
+    },
+    {
+      "entry_id": "test_validation_workflow/corrupt-run-003",
+      "errors": [
+        "Error reading metadata file: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+        "Error reading step output step1_output.json: Expecting value: line 1 column 12 (char 11)"
+      ],
+      "warnings": [
+        "Invalid duration value: -100",
+        "Source should be a dictionary, got: str"
+      ],
+      "valid": false
+    },
+    {
+      "entry_id": "test_validation_workflow/missing-run-004",
+      "errors": [
+        "Invalid timestamp format: invalid-timestamp (time data 'invalid-timestamp' does not match format '%Y-%m-%d %H:%M:%S')",
+        "Run directory not found: data/workflows/test_validation_workflow/missing-run-004"
+      ],
+      "warnings": [
+        "Invalid status value: unknown"
+      ],
+      "valid": false
+    },
+    {
+      "entry_id": "test_validation_workflow/incomplete-run-005",
+      "errors": [
+        "Missing required field: timestamp",
+        "Missing required field: workflow_name",
+        "Run directory not found: data/workflows/test_validation_workflow/incomplete-run-005"
+      ],
+      "warnings": [],
+      "valid": false
+    }
+  ],
+  "full_results_count": 5
+}

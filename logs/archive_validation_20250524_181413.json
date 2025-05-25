@@ -1,0 +1,29 @@
+{
+  "summary": {
+    "total_entries": 1,
+    "valid_entries": 0,
+    "invalid_entries": 1,
+    "validation_rate": "0.0%",
+    "error_types": {
+      "missing_directory": 1
+    },
+    "warning_types": {},
+    "failed_workflows": {
+      "email_to_digest": [
+        "email_to_digest/test-003"
+      ]
+    },
+    "timestamp": "2025-05-25T01:14:13.178605"
+  },
+  "validation_issues": [
+    {
+      "entry_id": "email_to_digest/test-003",
+      "errors": [
+        "Run directory not found: data/workflows/email_to_digest/test-003"
+      ],
+      "warnings": [],
+      "valid": false
+    }
+  ],
+  "full_results_count": 1
+}

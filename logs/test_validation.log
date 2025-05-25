@@ -1,0 +1,40 @@
+2025-05-24 18:14:13,042 - archive_validator - INFO - Starting archive validation...
+2025-05-24 18:14:13,042 - archive_validator - INFO - Loaded 5 entries from archive
+2025-05-24 18:14:13,042 - archive_validator - WARNING - test_validation_workflow/partial-run-002: 2 warnings
+2025-05-24 18:14:13,042 - archive_validator - WARNING -   - Missing Run metadata: data/workflows/test_validation_workflow/partial-run-002/run_metadata.json
+2025-05-24 18:14:13,042 - archive_validator - WARNING -   - No step output files found for successful run
+2025-05-24 18:14:13,042 - archive_validator - ERROR - test_validation_workflow/corrupt-run-003: 2 errors
+2025-05-24 18:14:13,043 - archive_validator - ERROR -   - Error reading metadata file: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+2025-05-24 18:14:13,043 - archive_validator - ERROR -   - Error reading step output step1_output.json: Expecting value: line 1 column 12 (char 11)
+2025-05-24 18:14:13,043 - archive_validator - WARNING - test_validation_workflow/corrupt-run-003: 2 warnings
+2025-05-24 18:14:13,043 - archive_validator - WARNING -   - Invalid duration value: -100
+2025-05-24 18:14:13,043 - archive_validator - WARNING -   - Source should be a dictionary, got: str
+2025-05-24 18:14:13,044 - archive_validator - ERROR - test_validation_workflow/missing-run-004: 2 errors
+2025-05-24 18:14:13,044 - archive_validator - ERROR -   - Invalid timestamp format: invalid-timestamp (time data 'invalid-timestamp' does not match format '%Y-%m-%d %H:%M:%S')
+2025-05-24 18:14:13,044 - archive_validator - ERROR -   - Run directory not found: data/workflows/test_validation_workflow/missing-run-004
+2025-05-24 18:14:13,044 - archive_validator - WARNING - test_validation_workflow/missing-run-004: 1 warnings
+2025-05-24 18:14:13,044 - archive_validator - WARNING -   - Invalid status value: unknown
+2025-05-24 18:14:13,044 - archive_validator - ERROR - test_validation_workflow/incomplete-run-005: 3 errors
+2025-05-24 18:14:13,044 - archive_validator - ERROR -   - Missing required field: timestamp
+2025-05-24 18:14:13,044 - archive_validator - ERROR -   - Missing required field: workflow_name
+2025-05-24 18:14:13,044 - archive_validator - ERROR -   - Run directory not found: data/workflows/test_validation_workflow/incomplete-run-005
+2025-05-24 18:14:13,045 - archive_validator - INFO - ==================================================
+2025-05-24 18:14:13,045 - archive_validator - INFO - VALIDATION SUMMARY
+2025-05-24 18:14:13,045 - archive_validator - INFO - ==================================================
+2025-05-24 18:14:13,045 - archive_validator - INFO - Total entries validated: 5
+2025-05-24 18:14:13,045 - archive_validator - INFO - Valid entries: 2
+2025-05-24 18:14:13,045 - archive_validator - INFO - Invalid entries: 3
+2025-05-24 18:14:13,045 - archive_validator - INFO - Validation rate: 40.0%
+2025-05-24 18:14:13,045 - archive_validator - INFO - 
+Error breakdown:
+2025-05-24 18:14:13,045 - archive_validator - INFO -   - corrupt_files: 2
+2025-05-24 18:14:13,045 - archive_validator - INFO -   - invalid_timestamp: 1
+2025-05-24 18:14:13,045 - archive_validator - INFO -   - missing_directory: 2
+2025-05-24 18:14:13,045 - archive_validator - INFO -   - missing_fields: 2
+2025-05-24 18:14:13,045 - archive_validator - INFO - 
+Warning breakdown:
+2025-05-24 18:14:13,045 - archive_validator - INFO -   - missing_metadata: 1
+2025-05-24 18:14:13,045 - archive_validator - INFO -   - missing_outputs: 1
+2025-05-24 18:14:13,045 - archive_validator - INFO -   - other: 3
+2025-05-24 18:14:13,045 - archive_validator - INFO - 
+Detailed results saved to: logs/test_validation_results.json

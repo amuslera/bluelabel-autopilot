@@ -2036,6 +2036,80 @@
         "remediation_notes": "This implements TASK-161CY which was falsely marked complete by CA",
         "status": "completed"
       }
+    },
+    {
+      "task_id": "TASK-161DH",
+      "timestamp": "2025-05-27T14:00:00Z",
+      "agent": "CC",
+      "message_type": "task_completion",
+      "content": {
+        "summary": "Successfully implemented archive integrity validator",
+        "files_created": [
+          {
+            "path": "runner/validate_archive_integrity.py",
+            "purpose": "Archive validation script with comprehensive checks",
+            "lines": 528,
+            "features": [
+              "10 different validation checks",
+              "Date range filtering",
+              "Detailed logging system",
+              "JSON summary reports",
+              "Error categorization"
+            ]
+          },
+          {
+            "path": "scripts/test_archive_validator.py",
+            "purpose": "Test script with failure scenarios",
+            "lines": 167
+          }
+        ],
+        "validation_checks": [
+          "Required field validation",
+          "Timestamp format checking",
+          "Directory existence verification",
+          "File presence validation",
+          "Metadata consistency checks",
+          "Step output validation",
+          "JSON integrity verification",
+          "Status value validation",
+          "Duration value checking",
+          "Source structure validation"
+        ],
+        "cli_interface": {
+          "parameters": [
+            "--archive/-a: Path to run_archive.json",
+            "--start/-s: Start date filter",
+            "--end/-e: End date filter", 
+            "--log/-l: Log file path",
+            "--output/-o: JSON results file",
+            "--verbose/-v: Verbose logging"
+          ],
+          "defaults": {
+            "archive": "data/workflows/run_archive.json",
+            "log": "logs/archive_validation.log"
+          }
+        },
+        "output_features": [
+          "Categorized error types",
+          "Warning classification",
+          "Failed workflow grouping",
+          "Validation rate calculation",
+          "Detailed issue tracking"
+        ],
+        "test_results": {
+          "scenarios_tested": [
+            "Valid runs with all files",
+            "Runs with missing metadata",
+            "Corrupt JSON files",
+            "Invalid timestamps",
+            "Missing required fields"
+          ],
+          "detection_rate": "100%",
+          "false_positives": 0
+        },
+        "remediation_notes": "This implements TASK-161CZ which was falsely marked complete by CA",
+        "status": "completed"
+      }
     }
   ]
 }

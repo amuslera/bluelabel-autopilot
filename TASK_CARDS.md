@@ -1,3 +1,93 @@
+## TASK-161DH: Implement Archive Validator (TASK-161CZ)
+
+**Status:** ✅ Completed
+**Date:** 2025-05-27
+**Assignee:** CC
+**Branch:** `dev/TASK-161DH-cc-archive-validator`
+
+### Objective
+Create a script to audit the integrity of past archived workflow runs and flag broken/missing paths.
+
+### Implementation Details
+
+**Files Created:**
+1. **runner/validate_archive_integrity.py** (528 lines)
+   - Comprehensive validation script with 10 validation checks
+   - Date range filtering support
+   - Detailed logging to file and console
+   - JSON summary output with categorized issues
+
+2. **scripts/test_archive_validator.py** (167 lines)
+   - Test script creating various failure scenarios
+   - Tests validation of corrupt files, missing directories
+   - Validates error categorization and reporting
+
+### Validation Checks
+1. **Required Fields**: workflow_id, run_id, timestamp, workflow_name, status
+2. **Timestamp Format**: Validates ISO format and datetime parsing
+3. **Directory Existence**: Checks if run directory exists
+4. **Expected Files**: workflow.yaml, run_metadata.json
+5. **Metadata Consistency**: Verifies run_id and workflow_name match
+6. **Step Outputs**: Checks for output files in successful runs
+7. **JSON Integrity**: Validates all JSON files are parseable
+8. **Status Values**: Ensures valid status (success, failed, error, etc.)
+9. **Duration Value**: Validates non-negative numeric duration
+10. **Source Structure**: Ensures source is a dictionary when present
+
+### CLI Usage
+```bash
+# Validate entire archive
+python runner/validate_archive_integrity.py
+
+# Filter by date range
+python runner/validate_archive_integrity.py --start 2025-05-20 --end 2025-05-27
+
+# Custom paths and verbose output
+python runner/validate_archive_integrity.py --archive custom/archive.json --log custom.log --verbose
+
+# Save results to specific file
+python runner/validate_archive_integrity.py --output results/validation_report.json
+```
+
+### Output Format
+```json
+{
+  "summary": {
+    "total_entries": 5,
+    "valid_entries": 2,
+    "invalid_entries": 3,
+    "validation_rate": "40.0%",
+    "error_types": {
+      "missing_fields": 2,
+      "missing_directory": 2,
+      "invalid_timestamp": 1,
+      "corrupt_files": 2
+    },
+    "warning_types": {
+      "missing_metadata": 1,
+      "missing_outputs": 1,
+      "data_mismatch": 1
+    }
+  },
+  "validation_issues": [...]
+}
+```
+
+### Test Results
+- ✅ Detects missing run directories
+- ✅ Identifies corrupt JSON files
+- ✅ Validates required fields
+- ✅ Checks timestamp formats
+- ✅ Categorizes errors and warnings
+- ✅ Generates detailed reports
+
+### Log Output
+- Console: Real-time validation progress and summary
+- Log file: Detailed validation steps and all issues
+- JSON report: Structured results for programmatic use
+
+---
+
 ## TASK-161DG: Implement Weekly Digest Generator (TASK-161CY)
 
 **Status:** ✅ Completed
