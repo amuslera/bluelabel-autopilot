@@ -1967,6 +1967,75 @@
         "remediation_notes": "This fixes TASK-161CX which claimed archive functionality existed but was not implemented",
         "status": "completed"
       }
+    },
+    {
+      "task_id": "TASK-161DG",
+      "timestamp": "2025-05-27T13:00:00Z",
+      "agent": "CC",
+      "message_type": "task_completion",
+      "content": {
+        "summary": "Successfully implemented weekly digest generator CLI tool",
+        "files_created": [
+          {
+            "path": "runner/weekly_digest_generator.py",
+            "purpose": "CLI tool for generating markdown digests from run_archive.json",
+            "lines": 377,
+            "features": [
+              "Date range filtering with defaults",
+              "Statistical analysis of runs",
+              "Grouping by workflow, tags, and sources",
+              "Failed run highlighting",
+              "Configurable paths"
+            ]
+          },
+          {
+            "path": "scripts/test_weekly_digest.py",
+            "purpose": "Comprehensive test script",
+            "lines": 126
+          }
+        ],
+        "cli_interface": {
+          "default_usage": "python runner/weekly_digest_generator.py",
+          "parameters": [
+            "--start/-s: Start date (YYYY-MM-DD)",
+            "--end/-e: End date (YYYY-MM-DD)",
+            "--archive/-a: Path to run_archive.json",
+            "--output-dir/-o: Output directory",
+            "--verbose/-v: Enable verbose logging"
+          ],
+          "defaults": {
+            "date_range": "Last 7 days",
+            "archive": "data/workflows/run_archive.json",
+            "output": "data/digests/"
+          }
+        },
+        "digest_features": [
+          "Summary statistics (total runs, success rate)",
+          "Workflow breakdown with performance metrics",
+          "Tag cloud showing run categorization",
+          "Source type distribution",
+          "Recent run summaries (last 10)",
+          "Failed run details for debugging"
+        ],
+        "validation_results": {
+          "test_scenarios": [
+            "Default 7-day range",
+            "Custom date ranges",
+            "Empty date ranges",
+            "Missing archive file",
+            "Various data patterns"
+          ],
+          "digests_generated": 4,
+          "error_handling": "Robust with clear messages"
+        },
+        "output_format": {
+          "filename": "weekly_digest_YYYYMMDD_YYYYMMDD.md",
+          "location": "data/digests/",
+          "content": "Well-formatted markdown with sections"
+        },
+        "remediation_notes": "This implements TASK-161CY which was falsely marked complete by CA",
+        "status": "completed"
+      }
     }
   ]
 }

@@ -1,3 +1,98 @@
+## TASK-161DG: Implement Weekly Digest Generator (TASK-161CY)
+
+**Status:** ✅ Completed
+**Date:** 2025-05-27
+**Assignee:** CC
+**Branch:** `dev/TASK-161DG-cc-weekly-digest`
+
+### Objective
+Build a CLI tool to read run_archive.json and generate a markdown digest for a date range.
+
+### Implementation Details
+
+**Files Created:**
+1. **runner/weekly_digest_generator.py** (377 lines)
+   - Full-featured CLI tool with argparse
+   - Date range filtering with defaults (7 days)
+   - Comprehensive markdown formatting
+   - Error handling and logging
+
+2. **scripts/test_weekly_digest.py** (126 lines)
+   - Automated test script
+   - Adds varied test data
+   - Tests multiple scenarios
+   - Verifies output format
+
+### Key Features
+- **Date Filtering**: Supports custom date ranges or defaults to last 7 days
+- **Statistics**: Shows total runs, success rate, workflow breakdown
+- **Grouping**: Groups by workflow, tags, and sources
+- **Summaries**: Displays recent run summaries (truncated)
+- **Failed Runs**: Highlights recent failures for investigation
+- **Flexible Output**: Saves to `data/digests/` with timestamp naming
+
+### CLI Usage
+```bash
+# Default: last 7 days
+python runner/weekly_digest_generator.py
+
+# Custom date range
+python runner/weekly_digest_generator.py --start 2025-05-20 --end 2025-05-27
+
+# Verbose logging
+python runner/weekly_digest_generator.py --verbose
+
+# Custom paths
+python runner/weekly_digest_generator.py --archive path/to/archive.json --output-dir custom/output
+```
+
+### Digest Format
+```markdown
+# Weekly Digest (YYYY-MM-DD to YYYY-MM-DD)
+
+## Summary
+- Total Runs: X
+- Successful: Y (Z%)
+- Failed: N
+
+## Workflows
+### Workflow Name
+- Runs: X
+- Success Rate: Y%
+- Avg Duration: Zms
+
+## Tags
+- tag1: X runs
+- tag2: Y runs
+
+## Sources
+- email: X
+- url: Y
+
+## Recent Summaries
+[Last 10 run summaries]
+
+## Failed Runs
+[Recent failures with details]
+```
+
+### Validation Results
+- ✅ Generates well-formatted markdown digests
+- ✅ Handles empty date ranges gracefully
+- ✅ Calculates statistics correctly
+- ✅ Groups and sorts data meaningfully
+- ✅ Error handling for missing files
+- ✅ Comprehensive test coverage
+
+### Test Output
+Generated 4 digest files during testing:
+- `weekly_digest_20200101_20200107.md` (empty range test)
+- `weekly_digest_20250517_20250524.md` (default range)
+- `weekly_digest_20250521_20250524.md` (test data)
+- `weekly_digest_20250524_20250527.md` (recent runs)
+
+---
+
 ## TASK-161DF: Fix Sprint 3 Final Verification (TASK-161CX)
 
 **Status:** ✅ Completed
@@ -48,69 +143,3 @@ Re-run the end-to-end workflow to generate missing archive files and confirm sna
   "run_id": "602158c9-75ee-49da-a4d7-472635d2c086",
   "timestamp": "2025-05-25T00:54:15.860103",
   "workflow_name": "PDF Ingestion and Digest",
-  "version": "1.0.0",
-  "status": "success",
-  "duration_ms": 37,
-  "tags": [],
-  "summary": "# Content Digest...",
-  "source": {}
-}
-```
-
-### Verification Evidence
-- Archive contains multiple workflow runs
-- Snapshots saved to `data/logs/output_snapshots/<run_id>/`
-- Files include: email_output.md, email_output.txt, metadata.json
-- Docker paths properly configured for volume mounts
-
----
-
-## TASK-161DE: Remediate Docker Setup (Fix for TASK-161CR)
-
-**Status:** ✅ Completed
-**Date:** 2025-05-27
-**Assignee:** CC
-**Branch:** `dev/TASK-161DE-cc-docker-remediation`
-
-### Objective
-Create a working Docker setup for bluelabel-autopilot with clear support for .env loading and CLI task execution.
-
-### Implementation Details
-
-**Files Created:**
-1. **Dockerfile** (36 lines)
-   - Python 3.11-slim base image
-   - System dependencies installation
-   - Non-root user security
-   - Volume mount points for data and config
-
-2. **start.sh** (64 lines)
-   - Executable shell script
-   - Dev/prod environment support
-   - Automatic .env file handling
-   - Docker build and run automation
-
-3. **.dockerignore** (50 lines)
-   - Excludes git, Python cache, IDE files
-   - Prevents env files from being baked in
-   - Optimizes build context
-
-4. **/docs/setup/DOCKER_QUICKSTART.md** (216 lines)
-   - Comprehensive quickstart guide
-   - Common commands and examples
-   - Troubleshooting section
-   - Security recommendations
-
-### Key Features
-- **Environment Support**: Separate dev/prod modes with different .env files
-- **Volume Mounts**: Data persistence for workflows and agent outputs
-- **Security**: Runs as non-root user (appuser, UID 1000)
-- **Flexibility**: Can override default command via start.sh
-
-### Usage Examples
-```bash
-# Development mode
-./start.sh dev
-
-# Production mode
-./start.sh prod
