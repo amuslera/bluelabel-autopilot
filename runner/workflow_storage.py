@@ -3,7 +3,7 @@ import os
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 class WorkflowStorage:
     """Handles persistence of workflow outputs and metadata."""
@@ -11,6 +11,7 @@ class WorkflowStorage:
     def __init__(self, base_path: str = "data/workflows"):
         self.base_path = Path(base_path)
         self.base_path.mkdir(parents=True, exist_ok=True)
+        self.archive_file = self.base_path / "run_archive.json"
     
     def _generate_run_id(self, use_uuid: bool = False) -> str:
         """Generate a unique run ID."""
@@ -67,4 +68,53 @@ class WorkflowStorage:
         if not output_path.exists():
             return None
         with open(output_path) as f:
-            return json.load(f) 
+            return json.load(f)
+    
+    def _load_archive(self) -> List[Dict[str, Any]]:
+        """Load existing archive or return empty list."""
+        if self.archive_file.exists():
+            try:
+                with open(self.archive_file) as f:
+                    return json.load(f)
+            except (json.JSONDecodeError, IOError):
+                return []
+        return []
+    
+    def _save_archive(self, archive: List[Dict[str, Any]]) -> None:
+        """Save archive to disk."""
+        with open(self.archive_file, 'w') as f:
+            json.dump(archive, f, indent=2)
+    
+    def add_to_archive(self, workflow_id: str, run_id: str, metadata: Dict[str, Any]) -> None:
+        """Add a workflow run to the archive."""
+        archive = self._load_archive()
+        
+        # Create archive entry
+        entry = {
+            "workflow_id": workflow_id,
+            "run_id": run_id,
+            "timestamp": metadata.get("timestamp", datetime.utcnow().isoformat()),
+            "workflow_name": metadata.get("workflow_name", workflow_id),
+            "version": metadata.get("version", "1.0.0"),
+            "status": metadata.get("status", "completed"),
+            "duration_ms": metadata.get("duration_ms", 0),
+            "tags": metadata.get("tags", []),
+            "summary": metadata.get("summary", ""),
+            "source": metadata.get("source", {})
+        }
+        
+        # Add entry and keep only last 100 runs
+        archive.append(entry)
+        if len(archive) > 100:
+            archive = archive[-100:]
+        
+        self._save_archive(archive)
+    
+    def get_archive(self) -> List[Dict[str, Any]]:
+        """Get the full run archive."""
+        return self._load_archive()
+    
+    def get_recent_runs(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Get most recent runs from archive."""
+        archive = self._load_archive()
+        return archive[-limit:] if archive else [] 

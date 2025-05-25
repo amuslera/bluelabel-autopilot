@@ -311,19 +311,47 @@ class WorkflowEngine:
             
             # Save final metadata if persisting
             if persist:
-                self.workflow_storage.save_run_metadata(
-                    run_dir, {
-                        'workflow_name': workflow_name,
-                        'version': workflow_version,
-                        'timestamp': start_time.isoformat(),
-                        'completed_at': end_time.isoformat(),
-                        'status': result.status.value,
-                        'duration_ms': result.duration_ms,
-                        'steps_completed': len([s for s in result.step_outputs.values() if s.status == "success"]),
-                        'steps_failed': len([s for s in result.step_outputs.values() if s.status == "error"]),
-                        'run_id': run_id
-                    }
-                )
+                metadata = {
+                    'workflow_name': workflow_name,
+                    'version': workflow_version,
+                    'timestamp': start_time.isoformat(),
+                    'completed_at': end_time.isoformat(),
+                    'status': result.status.value,
+                    'duration_ms': result.duration_ms,
+                    'steps_completed': len([s for s in result.step_outputs.values() if s.status == "success"]),
+                    'steps_failed': len([s for s in result.step_outputs.values() if s.status == "error"]),
+                    'run_id': run_id
+                }
+                
+                # Save run metadata
+                self.workflow_storage.save_run_metadata(run_dir, metadata)
+                
+                # Extract summary from last successful step
+                summary = ""
+                tags = []
+                source = {}
+                
+                for step_id in reversed(result.execution_order or []):
+                    step_result = result.step_outputs.get(step_id)
+                    if step_result and step_result.status == "success" and step_result.result:
+                        # Extract summary/digest
+                        summary = step_result.result.get('digest', 
+                                 step_result.result.get('summary', 
+                                 step_result.result.get('content', '')[:200]))
+                        # Extract tags
+                        tags = step_result.result.get('tags', [])
+                        # Extract source info
+                        source = step_result.result.get('metadata', {}).get('source', {})
+                        break
+                
+                # Add to archive
+                archive_metadata = {
+                    **metadata,
+                    'summary': summary,
+                    'tags': tags,
+                    'source': source
+                }
+                self.workflow_storage.add_to_archive(workflow_id, run_id, archive_metadata)
             
             self.logger.info(f"Workflow completed with status: {result.status.value}")
             

@@ -1,0 +1,15 @@
+{
+  "workflow": "PDF Ingestion and Digest",
+  "sender": "workflow@example.com",
+  "recipient": "user@example.com",
+  "subject": "Workflow Complete: PDF Ingestion and Digest",
+  "content_type": "markdown",
+  "formatter": "format_digest_markdown",
+  "timestamp": "2025-05-25T00:54:53.733155",
+  "run_id": "b9c7358d-f2f9-4f18-bcd3-49d67151d0d5",
+  "snapshot_timestamp": "2025-05-25T00:54:53.839867",
+  "saved_paths": {
+    "markdown": "data/logs/output_snapshots/b9c7358d-f2f9-4f18-bcd3-49d67151d0d5/email_output.md",
+    "plaintext": "data/logs/output_snapshots/b9c7358d-f2f9-4f18-bcd3-49d67151d0d5/email_output.txt"
+  }
+}

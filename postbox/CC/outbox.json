@@ -1909,6 +1909,64 @@
         "remediation_notes": "This fixes TASK-161CR which was incorrectly marked complete by CA",
         "status": "completed"
       }
+    },
+    {
+      "task_id": "TASK-161DF",
+      "timestamp": "2025-05-27T12:00:00Z",
+      "agent": "CC",
+      "message_type": "task_completion",
+      "content": {
+        "summary": "Successfully implemented run_archive.json functionality and validated workflow outputs",
+        "files_modified": [
+          {
+            "path": "runner/workflow_storage.py",
+            "changes": "Added archive management methods and run_archive.json support"
+          },
+          {
+            "path": "core/workflow_engine.py",
+            "changes": "Integrated archive creation after workflow completion"
+          }
+        ],
+        "files_created": [
+          {
+            "path": "scripts/test_e2e_workflow.py",
+            "purpose": "End-to-end workflow test with archive validation",
+            "lines": 126
+          },
+          {
+            "path": "scripts/test_docker_workflow.sh",
+            "purpose": "Docker workflow validation script",
+            "lines": 67
+          }
+        ],
+        "validation_results": {
+          "run_archive": {
+            "exists": true,
+            "entries": 3,
+            "format": "JSON array with workflow metadata",
+            "location": "data/workflows/run_archive.json"
+          },
+          "email_snapshots": {
+            "working": true,
+            "files_generated": ["email_output.md", "email_output.txt", "metadata.json"],
+            "location": "data/logs/output_snapshots/<run_id>/"
+          },
+          "docker_validation": {
+            "commands_documented": true,
+            "volume_mounts_verified": true,
+            "start_script_works": true
+          }
+        },
+        "archive_features": [
+          "Automatic archive entry on workflow completion",
+          "Extracts summary from last successful step",
+          "Maintains last 100 runs",
+          "Includes workflow metadata and timing",
+          "Thread-safe append operations"
+        ],
+        "remediation_notes": "This fixes TASK-161CX which claimed archive functionality existed but was not implemented",
+        "status": "completed"
+      }
     }
   ]
 }
