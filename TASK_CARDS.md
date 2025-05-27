@@ -46,6 +46,89 @@ Brief description of the task objective.
 
 ## Active Tasks
 
+### TASK-161GA: Email-to-DAG Trigger Bridge
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2024-03-21
+Completed: 2024-03-21
+
+**Description:**
+Create a real connection between the email ingestion service and the DAG execution engine. When an email arrives with a valid PDF attachment, it should extract the file, store it for downstream use, and launch a DAGRun using a defined workflow.
+
+**Deliverables:**
+- ✅ Created `/services/email/email_dag_connector.py` with EmailDAGConnector class
+- ✅ Implemented PDF detection and file extraction from email events
+- ✅ Integrated with StatefulDAGRunner for DAG execution
+- ✅ Created mock email listener for testing
+- ✅ Added comprehensive integration tests
+- ✅ Updated email service __init__.py
+
+**Technical Details:**
+- EmailDAGConnector monitors email events and triggers DAGs for PDFs
+- Files saved to `/inputs/{run_id}/source.pdf`
+- DAGRun launched with mock content processing workflow (extract_text → generate_summary → create_digest)
+- Asynchronous execution with fire-and-forget pattern
+- Mock executors demonstrate the full flow
+
+**Files Created/Modified:**
+- `/services/email/email_dag_connector.py` (new)
+- `/services/email/__init__.py` (updated)
+- `/tests/integration/test_email_dag_bridge.py` (new)
+- `/tests/integration/run_email_dag_test.py` (new)
+
+**Testing:**
+- All 4 integration tests passing
+- Manual test script successfully demonstrates end-to-end flow
+- Correctly handles emails with and without PDFs
+
+**Time Spent:** 1 hour
+
+**Next Steps:**
+- Replace mock executors with real content processing agents
+- Add support for multiple PDF attachments
+- Implement real email gateway integration
+
+### TASK-161G0: Sprint 2A Launch — Create Sprint Plan + Update Continuity Docs
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2024-03-21
+Updated: 2024-03-21
+
+**Description:**
+Formally initiate Sprint 2A of Phase 6.13 by creating the official sprint plan file and updating all system continuity documents to reflect the start of Sprint 2A.
+
+**Deliverables:**
+- ✅ Created `/docs/devphases/PHASE_6.13/sprints/SPRINT_2A_PLAN.md`
+- ✅ Updated `/docs/system/ARCH_CONTINUITY.md` with Sprint 2A status
+- ✅ Updated `/docs/system/CLAUDE_CONTEXT.md` with Sprint 2A tasks
+- ✅ Updated `/docs/system/SPRINT_HISTORY.md` with Sprint 2A details
+- ✅ Registered task in TASK_CARDS.md
+- ✅ Logged completion in outbox
+
+**Files Created/Modified:**
+- `/docs/devphases/PHASE_6.13/sprints/SPRINT_2A_PLAN.md` (new)
+- `/docs/system/ARCH_CONTINUITY.md`
+- `/docs/system/CLAUDE_CONTEXT.md`
+- `/docs/system/SPRINT_HISTORY.md`
+- `/TASK_CARDS.md`
+- `/postbox/CA/outbox.json`
+
+**Technical Details:**
+- Sprint 2A focuses on real-world DAG execution
+- Includes email trigger, content agents, and YAML definition
+- Target completion tag: v0.6.13-alpha2
+- Sprint dates: 2024-03-21 to 2024-03-28
+
+**Time Spent:** 45 minutes
+
+**Next Steps:**
+- Begin TASK-161GA (Email-to-DAG Trigger Bridge)
+- Begin TASK-161GB (Real DAG Execution)
+- Begin TASK-161GG (YAML Workflow Definition)
+- Begin TASK-161GH (Step Output Preview UI)
+
 ### TASK-161J: Unify Agent Models and Standardize Imports
 Status: COMPLETED ✅
 Assigned: CC
