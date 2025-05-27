@@ -1,0 +1,82 @@
+// Import jest-dom for better assertions
+import '@testing-library/jest-dom';
+import React from 'react';
+
+// Mock next/router
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    pathname: '/',
+    query: {},
+    asPath: '/',
+  })),
+}));
+
+// Mock the DAGRunStatus component
+const MockDAGRunStatus = ({ dagRun }: { dagRun: any }) => (
+  <div data-testid="dag-run-status">
+    {dagRun.dagId} - {dagRun.runId}
+  </div>
+);
+
+jest.mock('@/components/DAGRunStatus', () => MockDAGRunStatus);
+
+// Mock the ErrorBoundary component
+const MockErrorBoundary = ({ children }: { children: React.ReactNode }) => (
+  <div data-testid="error-boundary">{children}</div>
+);
+
+jest.mock('@/components/ErrorBoundary', () => ({
+  __esModule: true,
+  default: MockErrorBoundary,
+}));
+
+// Mock the generateMockDAGRun function
+const mockDAGRun = (overrides = {}) => ({
+  id: 'test-run-123',
+  dagId: 'example_dag',
+  runId: 'test-run-123',
+  status: 'running',
+  startDate: new Date().toISOString(),
+  endDate: null,
+  executionDate: new Date().toISOString(),
+  steps: [],
+  ...overrides,
+});
+
+jest.mock('@/lib/types', () => ({
+  ...jest.requireActual('@/lib/types'),
+  generateMockDAGRun: jest.fn(mockDAGRun),
+}));
+
+// Mock console methods
+const originalConsoleError = console.error;
+const originalConsoleWarn = console.warn;
+
+beforeAll(() => {
+  // Mock console.error and console.warn to track test errors
+  console.error = jest.fn();
+  console.warn = jest.fn();
+});
+
+afterAll(() => {
+  // Restore original console methods
+  console.error = originalConsoleError;
+  console.warn = originalConsoleWarn;
+});
+
+// Mock window.matchMedia which is not available in JSDOM
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});

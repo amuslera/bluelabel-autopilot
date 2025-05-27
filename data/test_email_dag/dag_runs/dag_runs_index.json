@@ -1,0 +1,23 @@
+{
+  "440b2e9c-7f50-474d-a2b8-efde74aa24ef": {
+    "dag_id": "contentmind_email_20250527_105242_3ece8e23",
+    "status": "created",
+    "created_at": "2025-05-27T17:52:42.161242",
+    "updated_at": "2025-05-27T17:52:42.165258",
+    "file": "run_440b2e9c-7f50-474d-a2b8-efde74aa24ef.json"
+  },
+  "3a8f42b4-1ca2-4d31-9e3b-8185d15e8f18": {
+    "dag_id": "contentmind_email_20250527_105311_5e082fd1",
+    "status": "running",
+    "created_at": "2025-05-27T17:53:11.987672",
+    "updated_at": "2025-05-27T17:53:13.998372",
+    "file": "run_3a8f42b4-1ca2-4d31-9e3b-8185d15e8f18.json"
+  },
+  "ffcc5dbb-ba94-4a2e-a6e5-03229a6cc738": {
+    "dag_id": "contentmind_email_20250527_105420_cda0849f",
+    "status": "success",
+    "created_at": "2025-05-27T17:54:20.391153",
+    "updated_at": "2025-05-27T17:54:20.411392",
+    "file": "run_ffcc5dbb-ba94-4a2e-a6e5-03229a6cc738.json"
+  }
+}

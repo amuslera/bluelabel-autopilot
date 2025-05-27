@@ -9,6 +9,7 @@ import json
 import logging
 import os
 import shutil
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional
@@ -37,6 +38,14 @@ class EmailDAGConnector:
         self.input_base_path = Path(input_base_path)
         self.input_base_path.mkdir(parents=True, exist_ok=True)
         
+        # Initialize metrics
+        self.metrics = {
+            "total_emails_processed": 0,
+            "pdfs_processed": 0,
+            "dags_triggered": 0,
+            "processing_errors": 0
+        }
+        
     async def process_email_event(self, email_data: Dict[str, Any]) -> Optional[str]:
         """
         Process an email event and trigger DAG if PDF is detected.
@@ -51,64 +60,96 @@ class EmailDAGConnector:
         Returns:
             DAG run ID if triggered, None otherwise
         """
-        logger.info(f"Processing email event from {email_data.get('from')}")
+        start_time = time.perf_counter()
+        self.metrics["total_emails_processed"] += 1
         
-        # Check for PDF attachments
-        pdf_attachments = [
-            att for att in email_data.get('attachments', [])
-            if att.get('content_type') == 'application/pdf'
-        ]
-        
-        if not pdf_attachments:
-            logger.info("No PDF attachments found, skipping DAG trigger")
-            return None
+        try:
+            logger.info(f"Processing email event from {email_data.get('from')}")
             
-        # Use first PDF attachment
-        pdf_info = pdf_attachments[0]
-        logger.info(f"Found PDF attachment: {pdf_info.get('filename')}")
-        
-        # Generate run ID
-        run_id = f"email_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid4().hex[:8]}"
-        
-        # Create run directory and save file
-        run_dir = self.input_base_path / run_id
-        run_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Save PDF file (in real scenario, would download/extract from email)
-        pdf_path = run_dir / "source.pdf"
-        if 'file_path' in pdf_info:
-            # For testing: copy from provided path
-            shutil.copy2(pdf_info['file_path'], pdf_path)
-            logger.info(f"Saved PDF to {pdf_path}")
-        else:
-            # In production: extract from email attachment data
-            logger.warning("No file_path provided, creating placeholder")
-            pdf_path.write_text("PDF placeholder content")
-        
-        # Create DAG input payload
-        dag_input = {
-            "run_id": run_id,
-            "source": "email",
-            "email_metadata": {
-                "from": email_data.get('from'),
-                "subject": email_data.get('subject'),
-                "timestamp": email_data.get('timestamp'),
-                "attachment": pdf_info.get('filename')
-            },
-            "input_file": str(pdf_path),
-            "workflow": "pdf_to_digest"  # Default workflow
-        }
-        
-        # Save metadata
-        metadata_path = run_dir / "metadata.json"
-        with open(metadata_path, 'w') as f:
-            json.dump(dag_input, f, indent=2)
-        
-        # Trigger DAG execution
-        dag_id = await self._trigger_dag(dag_input)
-        
-        logger.info(f"Triggered DAG {dag_id} for email from {email_data.get('from')}")
-        return dag_id
+            # Check for PDF attachments
+            pdf_attachments = [
+                att for att in email_data.get('attachments', [])
+                if att.get('content_type') == 'application/pdf'
+            ]
+            
+            if not pdf_attachments:
+                logger.info("No PDF attachments found, skipping DAG trigger")
+                return None
+                
+            # Use first PDF attachment
+            pdf_info = pdf_attachments[0]
+            logger.info(f"Found PDF attachment: {pdf_info.get('filename')}")
+            self.metrics["pdfs_processed"] += 1
+            
+            # Generate run ID
+            run_id = f"email_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid4().hex[:8]}"
+            
+            # Create run directory and save file
+            run_dir = self.input_base_path / run_id
+            run_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Time PDF extraction and saving
+            pdf_start = time.perf_counter()
+            pdf_path = run_dir / "source.pdf"
+            if 'file_path' in pdf_info:
+                # For testing: copy from provided path
+                shutil.copy2(pdf_info['file_path'], pdf_path)
+                logger.info(f"Saved PDF to {pdf_path}")
+            else:
+                # In production: extract from email attachment data
+                logger.warning("No file_path provided, creating placeholder")
+                pdf_path.write_text("PDF placeholder content")
+            pdf_duration = time.perf_counter() - pdf_start
+            logger.info(f"PDF extraction and saving took {pdf_duration:.3f} seconds")
+            
+            # Create DAG input payload
+            dag_input = {
+                "run_id": run_id,
+                "source": "email",
+                "email_metadata": {
+                    "from": email_data.get('from'),
+                    "subject": email_data.get('subject'),
+                    "timestamp": email_data.get('timestamp'),
+                    "attachment": pdf_info.get('filename')
+                },
+                "input_file": str(pdf_path),
+                "workflow": "pdf_to_digest",  # Default workflow
+                "metrics": {
+                    "pdf_extraction_time": pdf_duration
+                }
+            }
+            
+            # Save metadata
+            metadata_path = run_dir / "metadata.json"
+            with open(metadata_path, 'w') as f:
+                json.dump(dag_input, f, indent=2)
+            
+            # Time DAG triggering
+            dag_start = time.perf_counter()
+            dag_id = await self._trigger_dag(dag_input)
+            dag_duration = time.perf_counter() - dag_start
+            logger.info(f"DAG triggering took {dag_duration:.3f} seconds")
+            
+            # Update metrics
+            self.metrics["dags_triggered"] += 1
+            dag_input["metrics"]["dag_trigger_time"] = dag_duration
+            
+            # Log total processing time
+            total_duration = time.perf_counter() - start_time
+            logger.info(f"Total email processing took {total_duration:.3f} seconds")
+            dag_input["metrics"]["total_processing_time"] = total_duration
+            
+            # Update metadata with final metrics
+            with open(metadata_path, 'w') as f:
+                json.dump(dag_input, f, indent=2)
+            
+            logger.info(f"Triggered DAG {dag_id} for email from {email_data.get('from')}")
+            return dag_id
+            
+        except Exception as e:
+            self.metrics["processing_errors"] += 1
+            logger.error(f"Error processing email: {e}")
+            raise
         
     async def _trigger_dag(self, dag_input: Dict[str, Any]) -> str:
         """

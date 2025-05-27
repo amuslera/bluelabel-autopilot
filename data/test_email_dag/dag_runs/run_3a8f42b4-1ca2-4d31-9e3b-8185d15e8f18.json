@@ -1,0 +1,88 @@
+{
+  "dag_id": "contentmind_email_20250527_105311_5e082fd1",
+  "run_id": "3a8f42b4-1ca2-4d31-9e3b-8185d15e8f18",
+  "status": "running",
+  "steps": {
+    "extract_text": {
+      "step_id": "extract_text",
+      "status": "retry",
+      "start_time": "2025-05-27T17:53:13.009162",
+      "end_time": "2025-05-27T17:53:13.012569",
+      "retry_count": 2,
+      "max_retries": 3,
+      "error": null,
+      "result": null,
+      "metadata": {
+        "retry_delay": 1.0,
+        "retry_backoff": "exponential",
+        "critical": true,
+        "error_history": [
+          {
+            "timestamp": "2025-05-27T17:53:11.999679",
+            "attempt": 1,
+            "error": "extract_text() missing 1 required positional argument: 'context'",
+            "error_type": "TypeError"
+          },
+          {
+            "timestamp": "2025-05-27T17:53:13.012572",
+            "attempt": 2,
+            "error": "extract_text() missing 1 required positional argument: 'context'",
+            "error_type": "TypeError"
+          }
+        ]
+      },
+      "duration_seconds": 0.003407
+    },
+    "generate_summary": {
+      "step_id": "generate_summary",
+      "status": "pending",
+      "start_time": null,
+      "end_time": null,
+      "retry_count": 0,
+      "max_retries": 2,
+      "error": null,
+      "result": null,
+      "metadata": {
+        "retry_delay": 1.0,
+        "retry_backoff": "exponential",
+        "critical": true
+      },
+      "duration_seconds": null
+    },
+    "create_digest": {
+      "step_id": "create_digest",
+      "status": "pending",
+      "start_time": null,
+      "end_time": null,
+      "retry_count": 0,
+      "max_retries": 2,
+      "error": null,
+      "result": null,
+      "metadata": {
+        "retry_delay": 1.0,
+        "retry_backoff": "exponential",
+        "critical": true
+      },
+      "duration_seconds": null
+    }
+  },
+  "start_time": "2025-05-27T17:53:11.996180",
+  "end_time": null,
+  "total_retries": 2,
+  "error": null,
+  "metadata": {
+    "input": {
+      "run_id": "email_20250527_105311_5e082fd1",
+      "source": "email",
+      "email_metadata": {
+        "from": "user@example.com",
+        "subject": "Important Document for Processing",
+        "timestamp": "2025-05-27T10:53:11.985654",
+        "attachment": "quarterly_report.pdf"
+      },
+      "input_file": "data/test_email_dag/inputs/email_20250527_105311_5e082fd1/source.pdf",
+      "workflow": "pdf_to_digest"
+    }
+  },
+  "duration_seconds": null
+}
