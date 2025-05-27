@@ -308,7 +308,11 @@ class DAGRunStore:
             )
         }
     
-    def save_trace(self, run_id: str, trace: DAGRunTrace) -> None:
+    def _get_trace_file(self, run_id: str) -> Path:
+        """Get file path for a specific run's trace."""
+        return self.storage_path / f"trace_{run_id}.json"
+    
+    def save_trace(self, run_id: str, trace: Any) -> None:
         """
         Save execution trace for a DAGRun.
         
@@ -320,14 +324,7 @@ class DAGRunStore:
         
         try:
             # Convert trace to dict for JSON serialization
-            trace_data = {
-                'run_id': trace.run_id,
-                'dag_id': trace.dag_id,
-                'start_time': trace.start_time.isoformat() if trace.start_time else None,
-                'end_time': trace.end_time.isoformat() if trace.end_time else None,
-                'trace_entries': [entry.to_dict() for entry in trace.trace_entries],
-                'summary': trace.summary
-            }
+            trace_data = trace.to_dict()
             
             with open(trace_file, 'w') as f:
                 json.dump(trace_data, f, indent=2)
@@ -338,7 +335,7 @@ class DAGRunStore:
             logger.error(f"Error saving trace for DAGRun {run_id}: {e}")
             raise
     
-    def get_trace(self, run_id: str) -> Optional[DAGRunTrace]:
+    def get_trace(self, run_id: str) -> Optional[Any]:
         """
         Retrieve execution trace for a DAGRun.
         
@@ -358,7 +355,10 @@ class DAGRunStore:
             with open(trace_file, 'r') as f:
                 trace_data = json.load(f)
             
-            # Convert back to DAGRunTrace using from_dict
+            # Import here to avoid circular dependency
+            from shared.schemas.dag_trace_schema import DAGRunTrace
+            
+            # Convert back to DAGRunTrace
             trace = DAGRunTrace.from_dict(trace_data)
             
             return trace
