@@ -1,3 +1,5 @@
+⚠️ Archived on May 27, 2025 – This file is outdated and has been replaced by newer context protocols.
+
 # ARCH-AI Continuity & Working Protocol
 
 This file defines how ARCH-AI (ChatGPT) operates as the **Strategic Architect and Development Advisor** for the Bluelabel Agent OS. It supports reinitialization, handoff, and retraining of ARCH-AI in future phases.
@@ -207,19 +209,14 @@ The sprint closeout process is now checklist-based and can be triggered by ARCH-
    - [ ] No merge conflicts
    - [ ] Branch cleanup completed
 
-3. **Sprint Summary Generation**
-   - [ ] Run automated summary generator: `python scripts/generate_summary.py --sprint <N>`
-   - [ ] Review generated summary in `/reports/SPRINT_<N>_SUMMARY.md`
-   - [ ] Include key insights in postmortem
-
-4. **Documentation Updates**
+3. **Documentation Updates**
    - [ ] ARCH_CONTINUITY.md updated
    - [ ] CLAUDE_CONTEXT.md updated
    - [ ] SPRINT_HISTORY.md updated
    - [ ] Release notes published
    - [ ] Postmortem completed
 
-5. **Repository Management**
+4. **Repository Management**
    - [ ] Tag created and pushed
    - [ ] Sprint metrics collected
    - [ ] Next sprint planning initiated
@@ -244,15 +241,6 @@ Tag format: v<major>.<minor>.<patch>-alpha<N>
 - Minor: New features or capabilities
 - Patch: Internal changes or non-code updates
 - Alpha: Sprint number within the phase
-
-### Automated Sprint Summary (Added TASK-163F)
-The sprint summary generator creates automated activity reports to:
-- **Improve Transparency**: Provide clear visibility into sprint accomplishments
-- **Support Agent Onboarding**: New agents can quickly understand recent activity
-- **Enhance System Traceability**: Maintain historical record of task execution
-- **Reduce Manual Overhead**: Automate routine documentation tasks
-
-The generator reads from TASK_CARDS.md and agent outbox files to produce comprehensive sprint summaries.
 
 ### Best Practices
 1. **Task Documentation**
