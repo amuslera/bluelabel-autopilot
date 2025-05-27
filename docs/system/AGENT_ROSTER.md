@@ -1,63 +1,58 @@
 # Agent Roster - Bluelabel Agent OS
 
-**Version**: 1.0.0  
-**Last Updated**: 2024-03-23  
-**Phase**: 6.13+  
+**Version**: 2.0.0  
+**Last Updated**: May 27, 2025  
+**Phase**: 6.13 Sprint 2  
 **Status**: Current Reference
 
-## Active Agents
+## Active Agents (as of Sprint 2)
 
-### 1. ARCH-AI (Strategic Architect)
-**Status**: Active  
-**Role**: System Orchestration  
-**Primary Responsibilities**:
-- Task planning and assignment
-- System compliance oversight
-- Multi-agent coordination
-- Quality assurance
-- Documentation maintenance
+| Agent | Full Name | Role | Model | Responsibilities | Notes |
+|-------|-----------|------|-------|-------------------|-------|
+| CA | Cursor AI | Core Agent | GPT-4 via Cursor | Backend, CLI, UI components | Also handles WA's decommissioned scope |
+| CC | Claude Code | Core Agent | Claude 3 | Backend audits, merges, review, orchestration | Primary code review agent |
+| ARCH | ARCH-AI | System Architect | GPT-4 | Planning, prompting, continuity, phase oversight | Strategic system coordination |
 
-### 2. Claude Code (CC)
-**Status**: Active  
-**Role**: Core System Agent  
-**Primary Responsibilities**:
-- Backend architecture and development
-- Database and storage systems
-- Schema validation
-- Code review and merging
-- System documentation
-- Integration testing
+## Decommissioned Agents
 
-### 3. Cursor AI (CA)
-**Status**: Active  
-**Role**: Full-Stack Development Agent  
-**Primary Responsibilities**:
-- CLI tool development
-- Content processing
-- Frontend/UI development
-- Test infrastructure
-- Documentation
-- UI/UX implementation
-- Accessibility compliance
+> WA (Windsurf AI) was decommissioned in Sprint 2 (see `/docs/agents/WA_LEGACY_REPORT.md`) due to persistent execution and process failures.
 
-## Archived Agents
+## Agent Context Files
 
-### Windsurf AI (WA)
-**Status**: Decommissioned (2024-03-22)  
-**Former Role**: UI/Frontend Agent  
-**Legacy Report**: `/docs/agents/WA_LEGACY_REPORT.md`  
-**Responsibilities Transferred To**: CA
+The following files contain detailed context and configuration for each agent:
 
-## Agent Interaction Matrix
+- `/docs/system/CURSOR_CONTEXT.md` - CA's operational parameters and capabilities
+- `/docs/system/CLAUDE_CONTEXT.md` - CC's system integration and review protocols
+- `/docs/system/ARCH_CONTINUITY.md` - ARCH's strategic planning and oversight framework
+- `/docs/agents/WA_LEGACY_REPORT.md` (archived) - Historical record of WA's decommissioning
 
-| From \ To | ARCH-AI | CC | CA |
-|-----------|---------|----|----|
-| ARCH-AI   | -       | ✅ | ✅ |
-| CC        | ✅      | -  | ✅ |
-| CA        | ✅      | ✅ | -  |
+## System Interaction Flow
 
-## Notes
-- All agent interactions must follow the MCP-compliant communication protocol
-- Task assignments must be explicit and documented
-- One active task per agent unless explicitly overridden
-- All changes must be made through proper branching and review process 
+```mermaid
+graph TD
+    ARCH[ARCH-AI]
+    CA[CA (Cursor AI)]
+    CC[CC (Claude Code)]
+    
+    %% Strategic Planning Flow
+    ARCH -->|Strategic Planning| CA
+    ARCH -->|System Architecture| CC
+    
+    %% Task Execution Flow
+    CA -->|Code Implementation| CC
+    CA -->|Documentation| ARCH
+    
+    %% Review Flow
+    CC -->|Code Review| CA
+    CC -->|Architecture Review| ARCH
+    
+    %% Legend
+    subgraph Legend
+        L1[Strategic Planning]
+        L2[Implementation]
+        L3[Review]
+    end
+```
+
+## Version Note
+> Agent roster last updated during Sprint 2 (May 27, 2025) 

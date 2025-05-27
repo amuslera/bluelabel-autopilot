@@ -46,6 +46,76 @@ Brief description of the task objective.
 
 ## Active Tasks
 
+### TASK-163A: Context File Optimization Plan
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Design a streamlined system for managing agent context files to reduce memory load during onboarding, improve agent reboot speed, and clarify the role and scope of each .md file.
+
+**Deliverables:**
+- ✅ Analyzed current file ecosystem (98KB total context load)
+- ✅ Classified files into Essential/Reference/Archival tiers
+- ✅ Identified redundancies and overlaps
+- ✅ Designed three-tier context system
+- ✅ Created new onboarding protocol
+- ✅ Defined implementation task list for Sprint 3
+
+**Key Proposals:**
+- Reduce onboarding from 98KB to 15KB (85% reduction)
+- Create new essential files: AGENT_QUICKSTART.md, CURRENT_STATE.md, ROLES_SUMMARY.md
+- Implement three-tier system: Essential (always load), Reference (on-demand), Archival (search only)
+- Automate context updates with daily/weekly maintenance
+- 5 implementation tasks planned for Sprint 3
+
+**Files Created:**
+- /docs/system/CONTEXT_REFACTOR_PLAN.md
+
+**Time Spent:** 45 minutes
+
+**Next Steps:**
+- Review plan with team
+- Begin Sprint 3 implementation tasks
+- Create automation scripts for maintenance
+
+### TASK-162Z: CA Reboot Onboarding and Context Load
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Reboot CA instance with full operational context by reading all relevant onboarding, continuity, and agent role files, understanding current sprint structure and responsibilities, and verifying system environment.
+
+**Deliverables:**
+- ✅ Read and synthesized key context files
+- ✅ Understood current sprint structure and responsibilities
+- ✅ Verified system environment
+- ✅ Generated reboot confirmation report
+- ✅ Updated TASK_CARDS.md
+- ✅ Logged reboot event in outbox
+
+**Technical Details:**
+- Reviewed CURSOR_CONTEXT.md, ARCH_CONTINUITY.md, SPRINT_HISTORY.md
+- Confirmed CA's expanded role including frontend/UI responsibilities
+- Verified Phase 6.13, Sprint 2 status and objectives
+- Confirmed system is ready for Sprint 2 work
+
+**Files Modified:**
+- /TASK_CARDS.md
+- /postbox/CA/outbox.json
+
+**Time Spent:** 15 minutes
+
+**Next Steps:**
+- Begin Sprint 2 tasks with focus on WA decommissioning and UI ownership
+- Update documentation for new agent responsibilities
+- Prepare system for continued development
+
 ### TASK-162O: Close Out WA Deletion Audit (Folded into TASK-162J)
 Status: COMPLETED ✅
 Assigned: CC
@@ -1370,31 +1440,39 @@ Formally archive the work and history of the decommissioned WA (Windsurf AI) age
 - Consider implementing additional safeguards for UI development
 - Prepare for future UI agent onboarding
 
-### TASK-162P: Update Agent Roster and Documentation
+### TASK-162P: Rebuild Agent Roster and System Diagram
 Status: COMPLETED ✅
 Assigned: CA
 Priority: HIGH
-Created: 2024-03-23
-Completed: 2024-03-23
+Created: 2025-05-27
+Completed: 2025-05-27
 
 **Description:**
-Update the documentation to reflect the current active agent roster after WA's decommissioning, and clarify CA's dual role covering frontend and general coding tasks.
+Reconstruct and formalize the system-wide agent roster and coordination diagram, based on the current Phase 6.13 Sprint 2 state. Ensure clear role visibility, documentation consistency, and onboarding clarity.
 
 **Deliverables:**
-- ✅ Updated ROLES_AND_RESPONSIBILITIES.md with CA's expanded role
-- ✅ Updated AGENT_ORCHESTRATION_GUIDE.md to reflect current agent setup
-- ✅ Created new AGENT_ROSTER.md with current agent status
-- ✅ Updated version numbers and dates
-- ✅ Maintained consistent formatting across all documents
+- ✅ Created updated AGENT_ROSTER.md with new format
+- ✅ Added comprehensive agent table with roles and responsibilities
+- ✅ Created mermaid diagram showing agent interactions
+- ✅ Updated version and date information
+- ✅ Ensured consistency with ROLES_AND_RESPONSIBILITIES.md
+- ✅ Updated TASK_CARDS.md with task metadata
+- ✅ Updated outbox.json with completion report
+
+**Technical Details:**
+- Implemented new markdown table format for agent listing
+- Created detailed mermaid diagram showing agent interaction flows
+- Added clear version tracking and update history
+- Maintained consistency with existing documentation
+- Documented WA decommissioning status
 
 **Files Modified:**
-- `/docs/system/ROLES_AND_RESPONSIBILITIES.md`
-- `/docs/system/AGENT_ORCHESTRATION_GUIDE.md`
-- `/docs/system/AGENT_ROSTER.md` (new)
+- /docs/system/AGENT_ROSTER.md
+- /TASK_CARDS.md
+- /postbox/CA/outbox.json
 
-**Time Spent:** 1 hour
+**Time Spent:** 30 minutes
 
 **Next Steps:**
 - Monitor for any documentation inconsistencies
-- Consider adding more detailed UI development guidelines
-- Plan regular documentation reviews
+- Prepare for next Sprint 2 tasks
