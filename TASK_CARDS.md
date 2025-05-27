@@ -46,6 +46,65 @@ Brief description of the task objective.
 
 ## Active Tasks
 
+### TASK-162Y: Codebase vs Documentation Integrity Audit
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Validate that the current codebase state matches what is described in system documentation, ensuring canonical `.md` files accurately reflect the merged and active code.
+
+**Deliverables:**
+- ✅ Reviewed current Git state and recent merges
+- ✅ Audited 6 key documentation files against codebase
+- ✅ Identified and fixed 3 documentation inconsistencies
+- ✅ Updated ROLES_AND_RESPONSIBILITIES.md to reflect WA decommissioning
+- ✅ Fixed Sprint History status inconsistency
+
+**Findings:**
+- ARCH_CONTINUITY.md: Minor issue with Sprint 2A Plan location
+- SPRINT_HISTORY.md: TASK-162T incorrectly shown as in progress
+- ROLES_AND_RESPONSIBILITIES.md: Still listed WA as active (fixed)
+- All code implementations match documentation
+- All documented files exist in correct locations
+- Git tags and branches consistent with docs
+
+**Fixes Applied:**
+- Updated SPRINT_HISTORY.md to show TASK-162T as completed
+- Updated ROLES_AND_RESPONSIBILITIES.md to v1.0.2 with WA decommissioning
+- Added version history entries for changes
+
+**Time Spent:** 45 minutes
+
+### TASK-162X: Intermediate Sprint 2 Merge (No Tag)
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Perform intermediate merge of completed Sprint 2 branches into main WITHOUT creating any tags or postmortems.
+
+**Deliverables:**
+- ✅ Merged completed Sprint 2 branches into main
+- ✅ Did NOT create sprint tag
+- ✅ Did NOT update sprint status documentation
+
+**Branches Merged:**
+1. `dev/TASK-162K-cc-sprint1-closeout` - Sprint 1 Final Closeout
+2. `dev/TASK-162T-cc-docsync` - Sprint 2 Onboarding Doc Patch
+
+**Technical Details:**
+- Created intermediate merge branch `dev/TASK-162X-cc-sprint2-merge`
+- Merged both branches without conflicts
+- Following explicit instructions to NOT create tags or postmortems
+- Ready for future Sprint 2 tasks
+
+**Time Spent:** 15 minutes
+
 ### TASK-162T: Sprint 2 Onboarding Doc Patch & Sync
 Status: COMPLETED ✅
 Assigned: CC

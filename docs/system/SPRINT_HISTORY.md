@@ -59,8 +59,9 @@
 
 This sprint focuses on managing the transition from WA to CA for UI responsibilities, hardening documentation for seamless agent onboarding, and establishing clear ownership boundaries for the new agent configuration.
 
-#### Tasks In Progress
-- TASK-162T: Sprint 2 Onboarding Doc Patch & Sync (CC) 🚧
+#### Tasks Completed
+- TASK-162T: Sprint 2 Onboarding Doc Patch & Sync (CC) ✅
+- TASK-162X: Intermediate Sprint 2 Merge (CC) ✅
 
 #### Tasks Planned
 - To be added after Sprint Kickoff

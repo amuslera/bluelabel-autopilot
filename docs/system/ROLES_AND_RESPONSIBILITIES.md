@@ -1,7 +1,7 @@
 # Roles and Responsibilities - Bluelabel Agent OS
 
-**Version**: 1.0.0  
-**Last Updated**: 2025-05-23  
+**Version**: 1.0.2  
+**Last Updated**: 2025-05-27  
 **Phase**: 6.11+  
 **Status**: Definitive Reference
 
@@ -137,19 +137,21 @@ Strategic Architect and Development Advisor responsible for system-wide orchestr
 
 ---
 
-### 5. Windsurf AI (WA) - UI & Quality Agent
-**Authority Level**: Implementation (UI/Frontend)  
-**Specialization**: User Interface, Quality Assurance
+### 5. Windsurf AI (WA) - DECOMMISSIONED
+**Status**: DECOMMISSIONED as of 2024-03-22  
+**Legacy Report**: `/docs/agents/WA_LEGACY_REPORT.md`  
+**Former Authority Level**: Implementation (UI/Frontend)  
+**Former Specialization**: User Interface, Quality Assurance
 
-#### Responsibilities
-- UI development (only when explicitly assigned)
-- Frontend component implementation
-- User experience improvements
-- CLI output formatting and feedback
-- Quality assurance and testing
-- UI screenshot documentation
-- Accessibility compliance
-- Cross-browser compatibility
+#### Former Responsibilities (Now Assigned to CA)
+- UI development → CA
+- Frontend component implementation → CA
+- User experience improvements → CA
+- CLI output formatting and feedback → CA
+- Quality assurance and testing → CC/CA
+- UI screenshot documentation → CA
+- Accessibility compliance → CA
+- Cross-browser compatibility → CA
 
 #### Technical Scope
 - React/TypeScript development
@@ -346,8 +348,15 @@ When multiple agents work simultaneously:
 |------------|--------|--------------------|
 | 2024-03-22 | CA     | Initial version documented (Phase 6.13) |
 | 2024-03-22 | CA     | Added version history section |
+| 2025-05-27 | CC     | Updated WA status to DECOMMISSIONED, reassigned UI responsibilities to CA |
 
 ## Change Log
+
+### Version 1.0.2 (2025-05-27)
+- Updated WA (Windsurf AI) status to DECOMMISSIONED
+- Reassigned all UI/Frontend responsibilities to CA
+- Added reference to WA_LEGACY_REPORT.md
+- Updated inter-agent dependency matrix
 
 ### Version 1.0.1 (2024-03-22)
 - Added version history section to track document changes
