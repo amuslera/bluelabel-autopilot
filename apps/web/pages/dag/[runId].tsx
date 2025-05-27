@@ -20,19 +20,26 @@ const DAGRunPage: NextPage = () => {
         setIsLoading(true);
         
         // In a real app, you would fetch from your API:
-        // const response = await fetch(`/api/dag-runs/${runId}`);
-        // if (!response.ok) throw new Error('Failed to fetch DAG run');
-        // const data = await response.json();
+        const response = await fetch(`/api/dag-runs/${runId}`);
+        if (!response.ok) {
+          if (response.status === 404) {
+            setDagRun(null);
+            setError(null);
+            return;
+          }
+          throw new Error('Failed to fetch DAG run');
+        }
+        const data = await response.json();
         
-        // For now, use mock data
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
-        const mockData = generateMockDAGRun({ id: runId as string });
+        // For testing, fall back to mock data if no data is returned
+        const mockData = data || generateMockDAGRun({ id: runId as string });
         
         setDagRun(mockData);
         setError(null);
       } catch (err) {
         console.error('Error fetching DAG run:', err);
         setError('Failed to load DAG run. Please try again later.');
+        setDagRun(null);
       } finally {
         setIsLoading(false);
       }

@@ -14,6 +14,7 @@ import logging
 from filelock import FileLock
 
 from .dag_run_tracker import DAGRun, DAGRunStatus
+from shared.schemas.dag_trace_schema import DAGRunTrace, StepTraceEntry, TraceEventType
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +43,10 @@ class DAGRunStore:
     def _get_run_file(self, run_id: str) -> Path:
         """Get file path for a specific run."""
         return self.storage_path / f"run_{run_id}.json"
+    
+    def _get_trace_file(self, run_id: str) -> Path:
+        """Get file path for a specific run's trace."""
+        return self.storage_path / f"trace_{run_id}.json"
     
     def _load_index(self) -> Dict[str, Any]:
         """Load the run index."""
@@ -171,6 +176,9 @@ class DAGRunStore:
             # Delete file
             run_file.unlink()
             
+            # Delete associated trace if exists
+            self.delete_trace(run_id)
+            
             # Update index
             index = self._load_index()
             if run_id in index:
@@ -299,3 +307,85 @@ class DAGRunStore:
                 if total_runs > 0 else 0
             )
         }
+    
+    def _get_trace_file(self, run_id: str) -> Path:
+        """Get file path for a specific run's trace."""
+        return self.storage_path / f"trace_{run_id}.json"
+    
+    def save_trace(self, run_id: str, trace: Any) -> None:
+        """
+        Save execution trace for a DAGRun.
+        
+        Args:
+            run_id: The run ID
+            trace: The execution trace to save
+        """
+        trace_file = self._get_trace_file(run_id)
+        
+        try:
+            # Convert trace to dict for JSON serialization
+            trace_data = trace.to_dict()
+            
+            with open(trace_file, 'w') as f:
+                json.dump(trace_data, f, indent=2)
+            
+            logger.info(f"Saved trace for DAGRun {run_id}")
+            
+        except Exception as e:
+            logger.error(f"Error saving trace for DAGRun {run_id}: {e}")
+            raise
+    
+    def get_trace(self, run_id: str) -> Optional[Any]:
+        """
+        Retrieve execution trace for a DAGRun.
+        
+        Args:
+            run_id: The run ID
+            
+        Returns:
+            DAGRunTrace instance or None if not found
+        """
+        trace_file = self._get_trace_file(run_id)
+        
+        if not trace_file.exists():
+            logger.debug(f"No trace found for DAGRun {run_id}")
+            return None
+        
+        try:
+            with open(trace_file, 'r') as f:
+                trace_data = json.load(f)
+            
+            # Import here to avoid circular dependency
+            from shared.schemas.dag_trace_schema import DAGRunTrace
+            
+            # Convert back to DAGRunTrace
+            trace = DAGRunTrace.from_dict(trace_data)
+            
+            return trace
+            
+        except Exception as e:
+            logger.error(f"Error loading trace for DAGRun {run_id}: {e}")
+            return None
+    
+    def delete_trace(self, run_id: str) -> bool:
+        """
+        Delete execution trace for a DAGRun.
+        
+        Args:
+            run_id: The run ID
+            
+        Returns:
+            True if deleted, False if not found
+        """
+        trace_file = self._get_trace_file(run_id)
+        
+        if not trace_file.exists():
+            return False
+        
+        try:
+            trace_file.unlink()
+            logger.info(f"Deleted trace for DAGRun {run_id}")
+            return True
+        except Exception as e:
+            logger.error(f"Error deleting trace for DAGRun {run_id}: {e}")
+            return False

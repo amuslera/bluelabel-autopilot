@@ -1,0 +1,93 @@
+{
+  "dag_id": "contentmind_email_20250527_105420_cda0849f",
+  "run_id": "ffcc5dbb-ba94-4a2e-a6e5-03229a6cc738",
+  "status": "success",
+  "steps": {
+    "extract_text": {
+      "step_id": "extract_text",
+      "status": "success",
+      "start_time": "2025-05-27T17:54:20.399379",
+      "end_time": "2025-05-27T17:54:20.400739",
+      "retry_count": 0,
+      "max_retries": 3,
+      "error": null,
+      "result": {
+        "status": "success",
+        "content": "Extracted PDF content...",
+        "pages": 10,
+        "extraction_time": "2.5s"
+      },
+      "metadata": {
+        "retry_delay": 1.0,
+        "retry_backoff": "exponential",
+        "critical": true
+      },
+      "duration_seconds": 0.00136
+    },
+    "generate_summary": {
+      "step_id": "generate_summary",
+      "status": "success",
+      "start_time": "2025-05-27T17:54:20.401847",
+      "end_time": "2025-05-27T17:54:20.403294",
+      "retry_count": 0,
+      "max_retries": 2,
+      "error": null,
+      "result": {
+        "status": "success",
+        "summary": "This document discusses important topics...",
+        "key_points": [
+          "Point 1",
+          "Point 2",
+          "Point 3"
+        ],
+        "generation_time": "5.2s"
+      },
+      "metadata": {
+        "retry_delay": 1.0,
+        "retry_backoff": "exponential",
+        "critical": true
+      },
+      "duration_seconds": 0.001447
+    },
+    "create_digest": {
+      "step_id": "create_digest",
+      "status": "success",
+      "start_time": "2025-05-27T17:54:20.404422",
+      "end_time": "2025-05-27T17:54:20.406027",
+      "retry_count": 0,
+      "max_retries": 2,
+      "error": null,
+      "result": {
+        "status": "success",
+        "digest": "# Document Digest\n\n## Summary\n...",
+        "format": "markdown",
+        "creation_time": "1.8s"
+      },
+      "metadata": {
+        "retry_delay": 1.0,
+        "retry_backoff": "exponential",
+        "critical": true
+      },
+      "duration_seconds": 0.001605
+    }
+  },
+  "start_time": "2025-05-27T17:54:20.398012",
+  "end_time": "2025-05-27T17:54:20.408320",
+  "total_retries": 0,
+  "error": null,
+  "metadata": {
+    "input": {
+      "run_id": "email_20250527_105420_cda0849f",
+      "source": "email",
+      "email_metadata": {
+        "from": "user@example.com",
+        "subject": "Important Document for Processing",
+        "timestamp": "2025-05-27T10:54:20.388894",
+        "attachment": "quarterly_report.pdf"
+      },
+      "input_file": "data/test_email_dag/inputs/email_20250527_105420_cda0849f/source.pdf",
+      "workflow": "pdf_to_digest"
+    }
+  },
+  "duration_seconds": 0.010308
+}

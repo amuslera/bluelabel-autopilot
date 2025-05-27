@@ -1,97 +1,212 @@
-# ARCH-AI Task Prompt Structure Reference
+# ARCH Agent Task Prompt Template (v2.0)
 
-This document provides a standardized template for creating task prompts for ARCH-AI agents. Following this structure ensures consistency and clarity in task assignments.
+This document defines the **standard format** and **structure** of all task prompts created by ARCH-AI. It is designed for **clarity**, **automation-readiness**, and **high-quality agent execution**.
 
-## Basic Structure
+---
 
+## 🧩 Prompt Structure Overview
+
+```markdown
+┌─────────────────────────────────────────────┐  
+│ TASK ID: <ID>                               │  
+│ Agent: <Agent Name>                         │  
+│ Branch: <git branch name>                   │  
+│ Title: <concise title with emoji>           │  
+└─────────────────────────────────────────────┘
+
+🎯 Objective  
+📁 File Scope  
+📄 Implementation Instructions  
+✅ Output Requirements  
+⚠️ Constraints & Compliance  
+📣 Completion Report Format
 ```
-TASK-XXXXX — [Clear, Concise Title]
+
+## 📋 Required Sections
+
+### 1. Task Header
+- **TASK ID**: Must match pattern `TASK-XXXXX`
+- **Agent**: One of `CA`, `CC`, `WA`
+- **Branch**: Follow pattern `dev/TASK-XXXX-agent-name-description`
+- **Title**: Concise description with relevant emoji
+
+### 2. Objective
+- 1-2 sentences describing the end goal
+- Focus on what, not how
+- Include success criteria if applicable
+
+### 3. File Scope
+- List all files to create/modify
+- Use absolute paths from project root
+- Group by operation type (create/update)
+- Include expected file contents or changes
+
+### 4. Implementation Instructions
+- Step-by-step guidance
+- Clear acceptance criteria
+- Technical requirements
+- Dependencies and prerequisites
+
+### 5. Output Requirements
+- Expected deliverables
+- Console output format
+- File update confirmations
+- Testing requirements
+
+### 6. Constraints & Compliance
+- Technical limitations
+- Security requirements
+- Performance expectations
+- Agent-specific requirements
+
+### 7. Completion Report Format
+- Standardized console message
+- Required file confirmations
+- Summary of changes
+- Next steps or follow-ups
+
+## 🔄 Agent-Specific Requirements
+
+### WA Requirements
+- Must follow WA_CHECKLIST.md
+- UI/UX considerations
+- Visual documentation requirements
+- Testing and accessibility standards
+
+### CA Requirements
+- CLI and tooling focus
+- Test coverage expectations
+- Documentation standards
+- Integration requirements
+
+### CC Requirements
+- Core functionality focus
+- Performance considerations
+- Security requirements
+- Error handling standards
+
+## 📝 Example Prompts
+
+### Example 1: Feature Implementation
+```markdown
+TASK-162L — 🧠 Redesign ARCH Agent Task Prompt Template
 
 🎯 Objective:
-[1-2 sentences describing the task goal]
+Evolve the current task prompt format into a v2 version, incorporating lessons from recent sprints and compliance requirements.
 
-📁 Branch:
-dev/TASK-XXXX-agent-name-description
+📁 File Scope:
+- /docs/system/templates/ARCH_AGENT_TASK_PROMPT_TEMPLATE.md
+- /TASK_CARDS.md
+- /postbox/CA/outbox.json
 
-📂 Files to Create/Update:
-- /path/to/file1
-- /path/to/file2
+📄 Implementation Instructions:
+1. Start from v1.0 template
+2. Update structure with new requirements
+3. Add agent-specific sections
+4. Include examples and glossary
 
-📄 Content Requirements:
-- ✅ Requirement 1
-- ✅ Requirement 2
-- ✅ Requirement 3
+✅ Output Requirements:
+- Updated template file
+- Task card registration
+- Completion report
+- Console confirmation
 
-📦 Output Requirements:
-- ✅ Deliverable 1
-- ✅ Deliverable 2
-- ✅ Deliverable 3
+⚠️ Constraints & Compliance:
+- Markdown only
+- No HTML/scripting
+- Follow existing conventions
+- Include version history
+
+📣 Completion Format:
+CA Reports: I have completed TASK-162L.
+✅ Created/Updated files
+📘 Major changes summary
+📦 Next steps
 ```
 
-## Guidelines
-
-1. **Title Format**
-   - Always start with `TASK-XXXXX`
-   - Use em dash (—) after task number
-   - Keep title concise and descriptive
-
-2. **Objective Section**
-   - Maximum 1-2 sentences
-   - Focus on the end goal
-   - Avoid implementation details
-
-3. **Branch Naming**
-   - Follow pattern: `dev/TASK-XXXX-agent-name-description`
-   - Use lowercase with hyphens
-   - Include task number and brief description
-
-4. **File Paths**
-   - List absolute paths from project root
-   - Clearly indicate if file is new or existing
-   - Group by create/update operations
-
-5. **Requirements Format**
-   - Use ✅ bullet points
-   - One requirement per line
-   - Start with action verb
-   - Keep requirements specific and measurable
-
-6. **Output Requirements**
-   - List all expected deliverables
-   - Use ✅ bullet points
-   - Include acceptance criteria
-
-## Example
-
-```
-TASK-12345 — Implement User Authentication Flow
+### Example 2: Bug Fix
+```markdown
+TASK-162M — 🐛 Fix DAGRunStatus Type Error
 
 🎯 Objective:
-Create a secure authentication system using OAuth 2.0 for user login and registration.
+Resolve TypeScript duplicate identifier error in DAGRunStatus component.
 
-📁 Branch:
-dev/TASK-12345-auth-implementation
+📁 File Scope:
+- /apps/web/components/DAGRunStatus.tsx
+- /apps/web/components/__tests__/DAGRunStatus.test.tsx
 
-📂 Files to Create/Update:
-- /src/auth/AuthService.ts
-- /src/auth/types.ts
-- /docs/auth/README.md
+📄 Implementation Instructions:
+1. Identify duplicate identifier
+2. Rename component appropriately
+3. Update all references
+4. Add test coverage
 
-📄 Content Requirements:
-- ✅ Implement OAuth 2.0 authentication flow
-- ✅ Add user registration endpoint
-- ✅ Create login validation middleware
-- ✅ Add password hashing with bcrypt
+✅ Output Requirements:
+- Fixed component
+- Updated tests
+- Type checking passing
+- Build successful
 
-📦 Output Requirements:
-- ✅ Working authentication endpoints
-- ✅ Updated API documentation
-- ✅ Unit tests with 90% coverage
+⚠️ Constraints & Compliance:
+- No breaking changes
+- Maintain existing API
+- Follow React best practices
+- 100% test coverage
+
+📣 Completion Format:
+CA Reports: I have completed TASK-162M.
+✅ Fixed type error
+✅ Updated tests
+📘 Changes summary
+📦 Verification steps
 ```
 
-## Notes
+## 📚 Glossary
 
-- Avoid markdown wrapping or nested code fences
-- Keep instructions direct and clear
-- Use plain text for requirements
-- Reference ARCH_CONTINUITY.md and PROMPT.md for additional context 
+- **Task ID**: Unique identifier for the task (TASK-XXXXX)
+- **Agent**: Assigned agent (CA, CC, WA)
+- **Branch**: Git branch name following convention
+- **Objective**: Clear, concise task goal
+- **File Scope**: Files to create or modify
+- **Implementation**: Step-by-step instructions
+- **Output**: Expected deliverables
+- **Constraints**: Limitations and requirements
+- **Completion**: Standardized report format
+
+## 🔄 Version History
+
+### v2.0 (2024-03-22)
+- Added agent-specific requirements
+- Included WA_CHECKLIST.md compliance
+- Added comprehensive examples
+- Enhanced glossary
+- Added version history
+
+### v1.0 (2024-03-21)
+- Initial template structure
+- Basic section requirements
+- Simple examples
+- Core guidelines
+
+## ⚠️ Important Notes
+
+1. **Do's**:
+   - Use clear, direct language
+   - Include all required sections
+   - Follow agent-specific requirements
+   - Provide detailed examples
+   - Update version history
+
+2. **Don'ts**:
+   - Use HTML or scripting
+   - Skip required sections
+   - Use ambiguous language
+   - Omit agent-specific requirements
+   - Forget completion format
+
+3. **Compliance**:
+   - Must follow ARCH_CONTINUITY.md
+   - Must update CLAUDE_CONTEXT.md when relevant
+   - Must follow WA_CHECKLIST.md for WA tasks
+   - Must include dual reporting (console + file)
+   - Must update TASK_CARDS.md and outbox.json 
