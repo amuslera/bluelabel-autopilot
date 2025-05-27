@@ -46,6 +46,37 @@ Brief description of the task objective.
 
 ## Active Tasks
 
+### TASK-162O: Close Out WA Deletion Audit (Folded into TASK-162J)
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Formally close TASK-162O by recording that its intent has already been fulfilled as part of TASK-162J. No additional work is required.
+
+**Deliverables:**
+- ✅ Documented that audit was already completed in TASK-162J
+- ✅ No separate task execution required
+- ✅ Updated TASK_CARDS.md with closure note
+- ✅ Updated outbox.json with reference to TASK-162J
+
+**Technical Details:**
+- TASK-162J already performed comprehensive UI integrity audit
+- All WA-related test artifacts were removed during TASK-162J
+- 30 test files and configurations cleaned up
+- Package.json dependencies sanitized
+- Core UI components verified intact
+
+**Closure Reason:**
+The scope of TASK-162O (WA deletion audit) was fully covered by TASK-162J (UI Integrity Audit – Revert & Sanitize Post-WA Failure). No additional audit work is needed.
+
+**Reference Task:**
+- TASK-162J: UI Integrity Audit – Revert & Sanitize Post-WA Failure (Completed 2025-05-27)
+
+**Time Spent:** 5 minutes (administrative closure)
+
 ### TASK-162Y: Codebase vs Documentation Integrity Audit
 Status: COMPLETED ✅
 Assigned: CC
@@ -1338,3 +1369,32 @@ Formally archive the work and history of the decommissioned WA (Windsurf AI) age
 - Monitor for any remaining WA-related cleanup needs
 - Consider implementing additional safeguards for UI development
 - Prepare for future UI agent onboarding
+
+### TASK-162P: Update Agent Roster and Documentation
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2024-03-23
+Completed: 2024-03-23
+
+**Description:**
+Update the documentation to reflect the current active agent roster after WA's decommissioning, and clarify CA's dual role covering frontend and general coding tasks.
+
+**Deliverables:**
+- ✅ Updated ROLES_AND_RESPONSIBILITIES.md with CA's expanded role
+- ✅ Updated AGENT_ORCHESTRATION_GUIDE.md to reflect current agent setup
+- ✅ Created new AGENT_ROSTER.md with current agent status
+- ✅ Updated version numbers and dates
+- ✅ Maintained consistent formatting across all documents
+
+**Files Modified:**
+- `/docs/system/ROLES_AND_RESPONSIBILITIES.md`
+- `/docs/system/AGENT_ORCHESTRATION_GUIDE.md`
+- `/docs/system/AGENT_ROSTER.md` (new)
+
+**Time Spent:** 1 hour
+
+**Next Steps:**
+- Monitor for any documentation inconsistencies
+- Consider adding more detailed UI development guidelines
+- Plan regular documentation reviews
