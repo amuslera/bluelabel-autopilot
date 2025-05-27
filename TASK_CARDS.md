@@ -129,6 +129,49 @@ Formally initiate Sprint 2A of Phase 6.13 by creating the official sprint plan f
 - Begin TASK-161GG (YAML Workflow Definition)
 - Begin TASK-161GH (Step Output Preview UI)
 
+### TASK-161GK: DAGRun Log Collector + Structured Execution Trace
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2024-03-21
+Completed: 2024-03-21
+
+**Description:**
+Implement a structured logging and trace collection system for DAGRun execution. Capture chronological step-by-step history including timing, retries, errors, and agent metadata.
+
+**Deliverables:**
+- ✅ Created `/shared/schemas/dag_trace_schema.py` with trace data models
+- ✅ Created `/services/workflow/dag_run_trace.py` with DAGRunTraceCollector
+- ✅ Updated DAGRunStore to support trace persistence
+- ✅ Added comprehensive unit tests for trace functionality
+- ✅ All 6 tests passing
+
+**Technical Details:**
+- TraceEventType enum defines all possible events (DAG_START, STEP_COMPLETE, etc.)
+- StepTraceEntry captures individual events with timing and metadata
+- DAGRunTrace aggregates all entries for a complete execution history
+- DAGRunTraceCollector provides tracing API integrated with DAGRunTracker
+- Traces persisted as JSON files alongside DAGRun data
+- Passive logging only - doesn't alter DAG execution logic
+
+**Files Created/Modified:**
+- `/shared/schemas/dag_trace_schema.py` (new)
+- `/services/workflow/dag_run_trace.py` (new)
+- `/services/workflow/dag_run_store.py` (updated with trace methods)
+- `/tests/test_dag_run_trace.py` (new)
+
+**Testing:**
+- 6 unit tests covering all trace functionality
+- Tests trace lifecycle, retries, persistence, deletion
+- All tests passing
+
+**Time Spent:** 1 hour
+
+**Next Steps:**
+- Integrate trace collector with StatefulDAGRunner
+- Add trace visualization/export capabilities
+- Create trace analysis tools for debugging
+
 ### TASK-161J: Unify Agent Models and Standardize Imports
 Status: COMPLETED ✅
 Assigned: CC
