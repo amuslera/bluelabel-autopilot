@@ -1,0 +1,12 @@
+{
+  "run_id": "email_20250527_105311_5e082fd1",
+  "source": "email",
+  "email_metadata": {
+    "from": "user@example.com",
+    "subject": "Important Document for Processing",
+    "timestamp": "2025-05-27T10:53:11.985654",
+    "attachment": "quarterly_report.pdf"
+  },
+  "input_file": "data/test_email_dag/inputs/email_20250527_105311_5e082fd1/source.pdf",
+  "workflow": "pdf_to_digest"
+}

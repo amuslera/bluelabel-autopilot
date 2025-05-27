@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DAGRun, DAGStep, DAGStatus } from '@/lib/types';
 import { formatDistanceToNow, parseISO, format } from 'date-fns';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 interface DAGRunStatusProps {
   dagRun: DAGRun;
@@ -58,51 +59,74 @@ const formatDuration = (ms?: number): string => {
   return parts.join(' ');
 };
 
+import DAGStepOutput from './DAGStepOutput';
+
 const StepRow: React.FC<{ step: DAGStep }> = ({ step }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const statusColor = statusColors[step.status] || 'bg-gray-100 text-gray-800';
   const icon = statusIcons[step.status] || null;
+  const hasOutput = step.output || step.error;
 
   return (
-    <div className="flex items-center py-3 px-4 border-b border-gray-100">
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center">
-          <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor} mr-3`}>
-            {icon}
-            <span className="ml-1 capitalize">{step.status}</span>
+    <div className="border-b border-gray-100">
+      <div 
+        className={`flex items-center py-3 px-4 ${hasOutput ? 'cursor-pointer hover:bg-gray-50' : ''}`}
+        onClick={hasOutput ? () => setIsExpanded(!isExpanded) : undefined}
+      >
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center">
+            <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor} mr-3`}>
+              {icon}
+              <span className="ml-1 capitalize">{step.status}</span>
+            </div>
+            <h4 className="text-sm font-medium text-gray-900 truncate">
+              {step.name}
+            </h4>
           </div>
-          <h4 className="text-sm font-medium text-gray-900 truncate">
-            {step.name}
-          </h4>
+          <div className="mt-1 text-xs text-gray-500">
+            {step.startTime ? (
+              <span>
+                {format(parseISO(step.startTime), 'MMM d, yyyy HH:mm:ss')}
+                {step.endTime && (
+                  <>
+                    {' → '}
+                    {format(parseISO(step.endTime), 'MMM d, yyyy HH:mm:ss')}
+                  </>
+                )}
+              </span>
+            ) : (
+              'Not started'
+            )}
+          </div>
         </div>
-        <div className="mt-1 text-xs text-gray-500">
-          {step.startTime ? (
-            <span>
-              {format(parseISO(step.startTime), 'MMM d, yyyy HH:mm:ss')}
-              {step.endTime && (
-                <>
-                  {' → '}
-                  {format(parseISO(step.endTime), 'MMM d, yyyy HH:mm:ss')}
-                </>
-              )}
-            </span>
-          ) : (
-            'Not started'
-          )}
+        <div className="ml-4 flex-shrink-0 flex flex-col items-end">
+          <span className="text-xs font-medium text-gray-500">
+            {step.retryCount > 0 ? `${step.retryCount} retries` : 'No retries'}
+          </span>
+          <span className="text-xs text-gray-400">
+            {formatDuration(step.duration)}
+          </span>
         </div>
+        {hasOutput && (
+          <div className="ml-2">
+            {isExpanded ? (
+              <ChevronUpIcon className="h-4 w-4 text-gray-500" />
+            ) : (
+              <ChevronDownIcon className="h-4 w-4 text-gray-500" />
+            )}
+          </div>
+        )}
       </div>
-      <div className="ml-4 flex-shrink-0 flex flex-col items-end">
-        <span className="text-xs font-medium text-gray-500">
-          {step.retryCount > 0 ? `${step.retryCount} retries` : 'No retries'}
-        </span>
-        <span className="text-xs text-gray-400">
-          {formatDuration(step.duration)}
-        </span>
-      </div>
+      {isExpanded && hasOutput && (
+        <div className="px-4 pb-3 -mt-1">
+          <DAGStepOutput step={step} />
+        </div>
+      )}
     </div>
   );
 };
 
-const DAGRunStatus: React.FC<DAGRunStatusProps> = ({ dagRun, className = '' }) => {
+const DAGRunStatusComponent: React.FC<DAGRunStatusProps> = ({ dagRun, className = '' }) => {
   const statusColor = statusColors[dagRun.status] || 'bg-gray-100 text-gray-800';
   const icon = statusIcons[dagRun.status] || null;
 
@@ -174,4 +198,4 @@ const DAGRunStatus: React.FC<DAGRunStatusProps> = ({ dagRun, className = '' }) =
   );
 };
 
-export default DAGRunStatus;
+export default DAGRunStatusComponent;

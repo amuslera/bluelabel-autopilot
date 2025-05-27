@@ -1,0 +1,57 @@
+name: PDF Processing Workflow
+version: 1.0.0
+description: Process PDF files through ingestion, summarization, and digest generation
+
+steps:
+  - id: ingest_pdf
+    name: Ingest PDF
+    agent: ingestion_agent
+    action: process_pdf
+    parameters:
+      extract_metadata: true
+    input_mapping:
+      pdf_data: ${input.pdf_data}
+      filename: ${input.filename}
+    output_mapping:
+      content_id: ${output.content_id}
+      metadata: ${output.metadata}
+
+  - id: generate_summary
+    name: Generate Summary
+    agent: contentmind_agent
+    action: generate_summary
+    parameters:
+      max_length: 1000
+      format: markdown
+    input_mapping:
+      content_id: ${steps.ingest_pdf.output.content_id}
+    output_mapping:
+      summary: ${output.summary}
+      summary_id: ${output.content_id}
+
+  - id: create_digest
+    name: Create Digest
+    agent: digest_agent
+    action: generate_digest
+    parameters:
+      format: markdown
+    input_mapping:
+      content_id: ${steps.generate_summary.output.summary_id}
+    output_mapping:
+      digest: ${output.digest}
+      digest_id: ${output.content_id}
+
+error_handling:
+  retry_count: 3
+  retry_delay: 5000  # milliseconds
+  on_failure:
+    action: notify_error
+    parameters:
+      error_message: ${error.message}
+      step_id: ${error.step_id}
+
+output_mapping:
+  content_id: ${steps.ingest_pdf.output.content_id}
+  summary_id: ${steps.generate_summary.output.summary_id}
+  digest_id: ${steps.create_digest.output.digest_id}
+  final_digest: ${steps.create_digest.output.digest} 
