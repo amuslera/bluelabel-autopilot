@@ -46,6 +46,99 @@ Brief description of the task objective.
 
 ## Active Tasks
 
+### TASK-162J: UI Integrity Audit – Revert & Sanitize Post-WA Failure
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+WA's recent task caused significant deviation from SOPs, including failure to use a feature branch and potentially polluting /apps/web/. This task ensures the system is fully clean, aligned with sprint goals, and safe to proceed.
+
+**Deliverables:**
+- ✅ Removed all test-related files and configurations
+- ✅ Cleaned package.json of test dependencies
+- ✅ Verified core UI components remain functional
+- ✅ Confirmed no references to jest.setup.js or test configs
+- ✅ Removed build artifacts (.next directory)
+- ✅ Verified DAGRunStatus component is intact
+
+**Files Removed:**
+- All files in `__tests__/` directory (18 files)
+- All files in `__mocks__/` directory (6 files)
+- Test configurations: `jest.config.js`, `jest.setup.js`, `jest.polyfills.js`
+- Build configs: `babel.config.js`, `.eslintrc.js`, `.prettierrc.js`
+- Test TypeScript configs: `tsconfig.test.json`, `tsconfig.jest.json`
+- Test pages: `pages/test.html`, `pages/test.tsx`
+- Build artifacts: `.next/` directory
+- Outdated `package-lock.json`
+
+**Technical Details:**
+- Cleaned package.json to remove 30+ test-related dependencies
+- Kept only essential Next.js and TypeScript dependencies
+- Verified core UI components are unmodified and functional
+- Confirmed no jest or test references remain in production code
+- Directory structure is now clean and production-ready
+
+**Repository Status:**
+- ✅ /apps/web/ is clean and contains only production code
+- ✅ /apps/ui/ does not exist (as expected)
+- ✅ No test artifacts or configurations remain
+- ✅ Build and UI components are functional
+- ✅ Main branch is safe to proceed
+
+**Recommendations:**
+- ❌ WA's branch `dev/TASK-161GE-wa-dag-graph-ui` does not exist in remote (can be considered deleted)
+- ✅ TASK-161GE can be reassigned to another agent if needed
+- ⚠️ Consider implementing stricter branch protection rules
+- ⚠️ WA should be reminded of SOP compliance requirements
+
+**Time Spent:** 30 minutes
+
+**Next Steps:**
+- Merge this audit branch to main
+- Proceed with Sprint 2 closeout
+- Consider additional safeguards for UI development
+
+### TASK-162H: Pre-Reorg Merge: Consolidate Sprint 2 Branches (Excluding WA)
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Safely merge all completed Sprint 2 branches into `main` except WA's active branch (`dev/TASK-161GE-wa-dag-graph-ui`), to prevent merge conflicts before documentation restructuring (`TASK-162I`).
+
+**Deliverables:**
+- ✅ Merged 4 completed Sprint 2 branches into main
+- ✅ Excluded WA's active branch as requested
+- ✅ Resolved all merge conflicts
+- ✅ Verified functionality post-merge
+
+**Branches Merged:**
+1. `dev/TASK-161GA-cc-email-dag-bridge` - Email-to-DAG Trigger Bridge
+2. `dev/TASK-161GK-cc-dag-trace-collector` - DAGRun Log Collector
+3. `dev/TASK-161GL-cc-dag-resume-support` - DAG Resume Support
+4. `dev/TASK-162GC-cc-dag-parallel-execution` - Parallel Step Execution
+
+**Branches Excluded:**
+- ❌ `dev/TASK-161GE-wa-dag-graph-ui` - WA's active branch (still in progress)
+
+**Technical Details:**
+- Resolved conflicts in `dag_run_store.py` (trace methods)
+- Resolved conflicts in `TASK_CARDS.md` (task entries)
+- Resolved conflicts in `postbox/CA/outbox.json` (report entries)
+- All merges used `--no-ff` to preserve branch history
+
+**Time Spent:** 30 minutes
+
+**Next Steps:**
+- Wait for CA to complete TASK-162I (documentation restructure)
+- Do not tag until after restructure is complete
+- Do not delete branches until after tagging
+
 ### TASK-162GC: Implement Parallel Step Execution in DAG Runner
 Status: COMPLETED ✅
 Assigned: CC
@@ -1029,3 +1122,56 @@ Leverage the existing `DAGRunTrace` system to generate a human-readable, interac
 - Add support for more export formats (e.g., JSON, PDF)
 - Implement real-time updates via WebSocket
 - Add export to cloud storage options
+
+### TASK-162I: Restructure System Documentation for Clarity and Onboarding
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2024-03-22
+Completed: 2024-03-22
+
+**Description:**
+Implemented the new documentation structure proposed in DOCS_STRUCTURE_AUDIT.md to improve maintainability and onboarding experience. This involved creating a new directory structure, migrating content, and updating references.
+
+**Deliverables:**
+- ✅ Created new directory structure with clear separation of concerns
+- ✅ Created symlink for current phase access
+- ✅ Migrated all system and sprint documentation
+- ✅ Created comprehensive README.md for navigation
+- ✅ Updated internal references and links
+- ✅ Removed obsolete directories and files
+
+**Technical Details:**
+- Created new structure with system/, phases/, agents/, dev/, and security/ directories
+- Implemented symlink system for current phase access
+- Moved agent-specific documentation to dedicated directories
+- Consolidated sprint documentation under phases
+- Created clear navigation guide in README.md
+
+**Files Created/Modified:**
+- `/docs/README.md` (new)
+- `/docs/phases/current` (symlink)
+- `/docs/agents/wa/checklist.md` (moved)
+- `/docs/dev/testing/CLI_TEST_RUNNER.md` (moved)
+- `/docs/phases/PHASE_6.13/architecture/signoffs/` (moved)
+- `/docs/phases/PHASE_6.13/sprints/` (moved)
+
+**Testing:**
+- Verified all file moves completed successfully
+- Confirmed symlink creation and functionality
+- Validated internal references
+- Checked file permissions and ownership
+
+**Time Spent:** 1 hour
+
+**Notable Decisions:**
+- Kept system/ directory for core documentation
+- Created dedicated agents/ directory for agent-specific content
+- Implemented phases/ with symlink for current phase access
+- Maintained security/ directory for security documentation
+
+**Next Steps:**
+- Monitor usage of new structure
+- Gather feedback from team members
+- Consider adding more navigation aids if needed
+- Plan regular documentation audits
