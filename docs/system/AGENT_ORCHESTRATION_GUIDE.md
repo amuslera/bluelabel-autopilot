@@ -34,8 +34,7 @@ No agent should commit work directly to `main`, `dev`, or another system branch.
 
 | Agent | Notes |
 |-------|-------|
-| **WA** | Must follow `/WA_CHECKLIST.md`. Required: branch name, screenshot, path restrictions, task report. No CLI or backend files. |
-| **CA** | Best for CLI tools, docs, plans. Fast and versatile. Needs structured scope. |
+| **CA** | Full-stack development agent. Handles CLI tools, docs, plans, and UI development. Must provide screenshots for UI changes and follow accessibility guidelines. |
 | **CC** | Owns core logic, backend infra, merges, and schema validation. High reliability. Prefer for testable infra. |
 
 ---

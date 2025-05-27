@@ -1,8 +1,8 @@
 # Roles and Responsibilities - Bluelabel Agent OS
 
-**Version**: 1.0.2  
-**Last Updated**: 2025-05-27  
-**Phase**: 6.11+  
+**Version**: 1.0.3  
+**Last Updated**: 2024-03-23  
+**Phase**: 6.13+  
 **Status**: Definitive Reference
 
 ## Overview
@@ -99,9 +99,9 @@ Strategic Architect and Development Advisor responsible for system-wide orchestr
 
 ---
 
-### 4. Cursor AI (CA) - CLI & Processing Agent
-**Authority Level**: Implementation (CLI/Processing)  
-**Specialization**: Command Line Tools, Content Processing
+### 4. Cursor AI (CA) - Full-Stack Development Agent
+**Authority Level**: Implementation (Full-Stack/CLI)  
+**Specialization**: Command Line Tools, Content Processing, Frontend Development
 
 #### Responsibilities
 - CLI tool development and maintenance
@@ -112,6 +112,11 @@ Strategic Architect and Development Advisor responsible for system-wide orchestr
 - Prompt management systems
 - YAML plan creation and validation
 - Documentation and guides
+- Frontend/UI development (inherited from WA)
+- React/Next.js component implementation
+- UI/UX improvements and accessibility
+- Cross-browser compatibility
+- UI testing and quality assurance
 
 #### Technical Scope
 - Python CLI development (Click framework)
@@ -120,9 +125,13 @@ Strategic Architect and Development Advisor responsible for system-wide orchestr
 - Async task runners
 - YAML configuration management
 - Shell scripting
+- React/TypeScript development
+- Tailwind CSS styling
+- Component state management
+- Frontend testing (Jest)
+- UI/UX best practices
 
 #### Prohibited Actions
-- **NO** UI component development
 - **NO** API endpoint creation
 - **NO** Workflow coordination logic
 - **NO** Database schema changes
@@ -134,6 +143,10 @@ Strategic Architect and Development Advisor responsible for system-wide orchestr
 - Idempotent operations
 - Progress indicators for long tasks
 - Structured output formats
+- UI component documentation
+- Accessibility compliance
+- Cross-browser testing
+- Screenshot documentation for UI changes
 
 ---
 
