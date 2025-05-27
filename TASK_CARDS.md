@@ -1063,6 +1063,38 @@ None encountered.
 - Consider adding more detailed change descriptions
 - Evaluate need for role-specific change tracking
 
+## Backlog
+
+### TASK-161GE: DAG Graph UI
+Status: NOT_STARTED 🔴
+Assigned: TBD (Previously WA)
+Priority: MEDIUM
+Created: 2024-03-21
+Updated: 2025-05-27
+
+**Description:**
+Create a React component that visualizes DAG structure with nodes and edges showing step dependencies and flow.
+
+**Note:** Sprint 1 incomplete – to be reassigned in Sprint 2
+
+**Previous Issues:**
+- Initial implementation by WA failed due to fundamental testing issues
+- All test artifacts had to be removed during UI audit (TASK-162J)
+- Needs complete reimplementation by agent with React/Next.js expertise
+
+**Deliverables:**
+- [ ] Interactive DAG visualization component
+- [ ] Node status indicators
+- [ ] Edge flow animation
+- [ ] Zoom/pan controls
+- [ ] Proper test coverage
+
+**Technical Requirements:**
+- React component with TypeScript
+- Use existing DAGRun data structure
+- Responsive design
+- Performance optimization for large DAGs
+
 ## Completed Tasks Archive
 
 [Previous completed tasks remain in the file but are moved here for reference]

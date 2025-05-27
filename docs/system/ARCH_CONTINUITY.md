@@ -10,12 +10,13 @@ The **Human Tech Lead** is Ariel Muslera. ARCH-AI assists Ariel by managing task
 
 **Current Phase:** Phase 6.13 (System Hardening) - IN PROGRESS
 **Previous Phase:** Phase 6.12 (Real-World Email Triggers & Output) - COMPLETED
-**Last Completed Tag:** `v0.6.13-alpha1`
-**Last known Task:** `TASK-162GC` — DAGRun Export Utility (completed)
+**Last Completed Tag:** `v0.6.13-alpha2`
+**Last known Task:** `TASK-162K` — Sprint 1 Final Closeout, Retag, and Postmortem (current)
 **Phase 6.12 Status:** COMPLETED (2025-05-27)
-**Phase 6.13 Status:** Sprint 1 COMPLETED (2025-05-28), Sprint 2 IN PROGRESS
-  - Sprint 1 Status: COMPLETED (2025-05-28) - Tag: v0.6.13-alpha1
-  - Sprint 2 Status: IN PROGRESS - Latest Task: TASK-162GC (DAGRun Export Utility)
+**Phase 6.13 Status:** Sprint 1 CLOSED (2025-05-27), Sprint 2 PENDING
+  - Sprint 1 Status: CLOSED (2025-05-27) - Tag: v0.6.13-alpha2
+  - Sprint 1 Postmortem: /docs/devphases/PHASE_6.13/sprints/SPRINT_1_POSTMORTEM.md
+  - Sprint 2 Status: PENDING - Ready to begin planning
 
 ---
 
