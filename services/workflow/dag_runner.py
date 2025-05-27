@@ -13,6 +13,8 @@ from datetime import datetime
 
 from .dag_run_tracker import DAGRun, DAGStepStatus, DAGRunStatus
 from .dag_run_store import DAGRunStore
+from .dag_resume_manager import DAGResumeManager
+from .dag_run_trace import DAGRunTraceCollector
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +32,8 @@ class StatefulDAGRunner:
     def __init__(self, 
                  dag_id: str,
                  store: Optional[DAGRunStore] = None,
-                 run_id: Optional[str] = None):
+                 run_id: Optional[str] = None,
+                 resume_mode: bool = False):
         """
         Initialize the stateful DAG runner.
         
@@ -38,22 +41,39 @@ class StatefulDAGRunner:
             dag_id: Identifier of the DAG to execute
             store: DAGRunStore instance (creates default if None)
             run_id: Optional existing run ID to resume
+            resume_mode: Whether to enable resume mode for incomplete runs
         """
         self.dag_id = dag_id
         self.store = store or DAGRunStore()
+        self.resume_mode = resume_mode
+        self.resume_manager = DAGResumeManager(store=self.store)
+        self.trace_collector = DAGRunTraceCollector(store=self.store)
         
         # Load existing run or create new one
         if run_id:
-            self.dag_run = self.store.get(run_id)
-            if not self.dag_run:
-                raise ValueError(f"DAGRun {run_id} not found")
-            if self.dag_run.dag_id != dag_id:
-                raise ValueError(f"DAGRun {run_id} is for DAG {self.dag_run.dag_id}, not {dag_id}")
-            logger.info(f"Resuming DAGRun {run_id} for DAG {dag_id}")
+            # If resume mode, prepare the run for resumption
+            if resume_mode:
+                self.dag_run = self.resume_manager.prepare_for_resume(run_id)
+                if not self.dag_run:
+                    raise ValueError(f"Cannot resume DAGRun {run_id}")
+                logger.info(f"Prepared DAGRun {run_id} for resume")
+            else:
+                self.dag_run = self.store.get(run_id)
+                if not self.dag_run:
+                    raise ValueError(f"DAGRun {run_id} not found")
+                if self.dag_run.dag_id != dag_id:
+                    raise ValueError(f"DAGRun {run_id} is for DAG {self.dag_run.dag_id}, not {dag_id}")
+                logger.info(f"Loading existing DAGRun {run_id} for DAG {dag_id}")
         else:
             self.dag_run = DAGRun(dag_id=dag_id)
             self.store.create(self.dag_run)
             logger.info(f"Created new DAGRun {self.dag_run.run_id} for DAG {dag_id}")
+            
+        # Initialize trace if new run
+        if not run_id or resume_mode:
+            self.trace = self.trace_collector.start_dag_trace(self.dag_run)
+        else:
+            self.trace = self.trace_collector.get_trace(self.dag_run.run_id)
 
         # Step executors registry
         self._step_executors: Dict[str, Callable] = {}
@@ -193,6 +213,12 @@ class StatefulDAGRunner:
             # Update retry count
             self.dag_run.update_retry_count()
             self._persist_state()
+            
+            # Complete trace
+            if self.trace:
+                completed_trace = self.trace_collector.complete_dag_trace(self.dag_run)
+                if completed_trace:
+                    self.store.save_trace(self.dag_run.run_id, completed_trace)
 
         return self.dag_run
 
@@ -205,6 +231,13 @@ class StatefulDAGRunner:
         # Skip if already completed
         if step.status == DAGStepStatus.SUCCESS:
             logger.info(f"Step {step_id} already completed, skipping")
+            if self.resume_mode:
+                # Add skip event to trace
+                self.trace_collector.add_info_entry(
+                    self.dag_run.run_id,
+                    f"Skipped completed step during resume",
+                    step_id=step_id
+                )
             return
 
         # Skip if cancelled
@@ -232,6 +265,14 @@ class StatefulDAGRunner:
                 step.start()
                 self._persist_state()
                 logger.info(f"Executing step {step_id} (attempt {retry_count + 1}/{max_retries + 1})")
+                
+                # Trace step start
+                self.trace_collector.trace_step_start(
+                    self.dag_run.run_id,
+                    step,
+                    agent_name=step.metadata.get('agent_name'),
+                    task_type=step.metadata.get('task_type')
+                )
 
                 # Execute
                 result = await executor()
@@ -239,6 +280,14 @@ class StatefulDAGRunner:
                 # Complete step
                 step.complete(result)
                 self._persist_state()
+                
+                # Trace step completion
+                self.trace_collector.trace_step_complete(
+                    self.dag_run.run_id,
+                    step,
+                    output_summary={'result': str(result)[:500] if result else None}
+                )
+                
                 logger.info(f"Step {step_id} completed successfully")
                 return
 
@@ -256,6 +305,18 @@ class StatefulDAGRunner:
                     'error_type': type(e).__name__
                 })
                 self._persist_state()
+                
+                # Trace step failure
+                self.trace_collector.trace_step_fail(
+                    self.dag_run.run_id,
+                    step,
+                    error_details={
+                        'error': str(e),
+                        'error_type': type(e).__name__,
+                        'attempt': retry_count + 1
+                    }
+                )
+                
                 logger.error(f"Step {step_id} failed (attempt {retry_count + 1}): {e}")
 
                 # Check if we should retry
@@ -267,6 +328,14 @@ class StatefulDAGRunner:
 
                         # Calculate retry delay based on backoff strategy
                         retry_delay = self._calculate_retry_delay(retry_count, step.metadata)
+                        
+                        # Trace retry event
+                        self.trace_collector.trace_step_retry(
+                            self.dag_run.run_id,
+                            step,
+                            retry_delay=retry_delay
+                        )
+                        
                         logger.debug(f"Waiting {retry_delay}s before retry (backoff: {step.metadata.get('retry_backoff', 'exponential')})")
                         await asyncio.sleep(retry_delay)
                         continue
@@ -372,4 +441,4 @@ class DAGRunnerFactory:
         if not dag_run:
             raise ValueError(f"DAGRun {run_id} not found")
 
-        return StatefulDAGRunner(dag_run.dag_id, store, run_id)
+        return StatefulDAGRunner(dag_run.dag_id, store, run_id, resume_mode=True)
