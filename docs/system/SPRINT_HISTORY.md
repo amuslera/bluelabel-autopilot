@@ -49,4 +49,24 @@
 - 20 tasks completed (95.2% completion rate)
 - 50+ unit tests added, all passing
 - 1 task moved to backlog due to critical failure
-- Required 1 emergency cleanup task 
+- Required 1 emergency cleanup task
+
+### Sprint 2: Agent Transition & Documentation Hardening
+**Dates:** 2025-05-27 to TBD
+**Tag:** TBD
+**Status:** IN PROGRESS
+**Purpose:** Agent Transition + Documentation Hardening
+
+This sprint focuses on managing the transition from WA to CA for UI responsibilities, hardening documentation for seamless agent onboarding, and establishing clear ownership boundaries for the new agent configuration.
+
+#### Tasks In Progress
+- TASK-162T: Sprint 2 Onboarding Doc Patch & Sync (CC) 🚧
+
+#### Tasks Planned
+- To be added after Sprint Kickoff
+
+#### Key Objectives
+- Complete WA decommissioning and handoff
+- Update all documentation for new agent responsibilities
+- Establish CA's frontend/UI ownership
+- Prepare system for continued development 
