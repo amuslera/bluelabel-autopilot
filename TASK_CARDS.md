@@ -46,6 +46,42 @@ Brief description of the task objective.
 
 ## Active Tasks
 
+### TASK-162T: Sprint 2 Onboarding Doc Patch & Sync
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Prepare all key documentation files for the reboot of CA and ARCH-AI by ensuring they reflect the correct system state after Sprint 1 and before any Sprint 2 tasks begin.
+
+**Deliverables:**
+- ✅ Update ARCH_CONTINUITY.md with Sprint 2 info and backlog
+- ✅ Update CURSOR_CONTEXT.md to clarify CA's new UI role
+- ✅ Add Sprint 2 section to SPRINT_HISTORY.md
+- ✅ Validate CLAUDE_CONTEXT.md accuracy
+- ✅ Update TASK_CARDS.md and outbox.json
+
+**Technical Details:**
+- Sprint 2 purpose: Agent Transition & Documentation Hardening
+- CA now responsible for frontend/UI tasks after WA decommissioning
+- Added TASK-162M to backlog for prompt template standardization
+- Created framework for Sprint 2 planning
+
+**Files Modified:**
+- /docs/system/ARCH_CONTINUITY.md
+- /docs/system/CURSOR_CONTEXT.md
+- /docs/system/SPRINT_HISTORY.md
+- /TASK_CARDS.md
+- /postbox/CC/outbox.json
+
+**Time Spent:** 30 minutes
+
+**Next Steps:**
+- CA and ARCH-AI can now be rebooted with accurate context
+- Sprint 2 kickoff can proceed
+
 ### TASK-162J: UI Integrity Audit – Revert & Sanitize Post-WA Failure
 Status: COMPLETED ✅
 Assigned: CC
@@ -1207,3 +1243,39 @@ Implemented the new documentation structure proposed in DOCS_STRUCTURE_AUDIT.md 
 - Gather feedback from team members
 - Consider adding more navigation aids if needed
 - Plan regular documentation audits
+
+### TASK-162N: Decommission WA Agent – Archive & Handoff
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2024-03-22
+Completed: 2024-03-22
+
+**Description:**
+Formally archive the work and history of the decommissioned WA (Windsurf AI) agent by creating a legacy report that summarizes its contributions, failures, and transition out of the project.
+
+**Deliverables:**
+- ✅ Created `/docs/agents/WA_LEGACY_REPORT.md` with comprehensive agent history
+- ✅ Documented contributions and failures
+- ✅ Included CC's audit findings from TASK-162J
+- ✅ Added lessons learned and future guidelines
+- ✅ Updated system records
+
+**Technical Details:**
+- Created structured legacy report with 5 main sections
+- Documented agent's brief tenure and contributions
+- Detailed catastrophic failure in TASK-161GE
+- Included recovery steps and decommission rationale
+- Added guidelines for future UI agents
+
+**Files Created/Modified:**
+- `/docs/agents/WA_LEGACY_REPORT.md` (new)
+- `/TASK_CARDS.md` (updated)
+- `/postbox/CA/outbox.json` (updated)
+
+**Time Spent:** 1 hour
+
+**Next Steps:**
+- Monitor for any remaining WA-related cleanup needs
+- Consider implementing additional safeguards for UI development
+- Prepare for future UI agent onboarding
