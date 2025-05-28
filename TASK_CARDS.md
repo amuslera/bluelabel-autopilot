@@ -46,6 +46,86 @@ Brief description of the task objective.
 
 ## Active Tasks
 
+### TASK-163G: Review Summary System and Update Sprint Closeout Protocol
+Status: COMPLETED ✅
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Review CA's auto-summary implementation and update the official sprint closeout protocol to include it.
+
+**Deliverables:**
+- ✅ Reviewed generate_summary.py script implementation
+- ✅ Assessed test coverage (found empty test file)
+- ✅ Validated example output quality
+- ✅ Updated TEMPLATE_SPRINT_CLOSEOUT.md with summary generation step
+- ✅ Updated ARCH_CONTINUITY.md with rationale and instructions
+- ✅ Documented findings and recommendations
+
+**Review Findings:**
+- Script Quality: Good structure, clear output format
+- Test Coverage: Missing - test file is empty (needs improvement)
+- Output Quality: Well-formatted and useful for sprint summaries
+- Integration: Easy to add to closeout process
+
+**Updates Applied:**
+- Added "Sprint Summary Generation" section to closeout template
+- Included command: `python scripts/generate_summary.py --sprint <N>`
+- Added rationale section to ARCH_CONTINUITY.md
+- Documented benefits: transparency, onboarding, traceability
+
+**Recommendations:**
+- CA should add unit tests for the summary generator
+- Consider adding error handling for missing files
+- Future enhancement: add --sprint parameter support
+
+**Time Spent:** 30 minutes
+
+### TASK-163C: Create Reboot Capsules for All Core Agents
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Standardize reboot protocols for all core agents by creating dedicated reboot context capsules to ensure consistency, clarity, and correct onboarding for all future agent instances.
+
+**Deliverables:**
+- ✅ Created ARCH_REBOOT_CONTEXT.md
+- ✅ Created CA_REBOOT_CONTEXT.md
+- ✅ Created CC_REBOOT_CONTEXT.md
+- ✅ Updated TASK_CARDS.md
+- ✅ Updated outbox.json
+
+**Technical Details:**
+- Each capsule includes:
+  - Header block with agent info
+  - Key responsibilities
+  - Task prompt guidelines
+  - Special rules and boundaries
+  - Versioning notes
+  - Cross-links to other context files
+- All files follow consistent formatting
+- Cross-referenced with existing context files
+
+**Files Created:**
+- /docs/system/ARCH_REBOOT_CONTEXT.md
+- /docs/system/CA_REBOOT_CONTEXT.md
+- /docs/system/CC_REBOOT_CONTEXT.md
+
+**Files Modified:**
+- /TASK_CARDS.md
+- /postbox/CA/outbox.json
+
+**Time Spent:** 45 minutes
+
+**Next Steps:**
+- Begin implementing TASK-163D (Archive historical content)
+- Prepare for TASK-163E (Update agent rebooting process)
+
 ### TASK-163A: Context File Optimization Plan
 Status: COMPLETED ✅
 Assigned: CC
@@ -1476,3 +1556,47 @@ Reconstruct and formalize the system-wide agent roster and coordination diagram,
 **Next Steps:**
 - Monitor for any documentation inconsistencies
 - Prepare for next Sprint 2 tasks
+
+### TASK-163B: Implement Phase 1 of Context File Refactor
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Begin implementing the refactor plan defined in CONTEXT_REFACTOR_PLAN.md, with the goal of reducing onboarding friction, eliminating redundancy, and improving clarity in agent context handoff.
+
+**Deliverables:**
+- ✅ Created CONTEXT_ROOT_INDEX.md
+- ✅ Created AGENT_QUICKSTART.md template
+- ✅ Created CURRENT_STATE.md
+- ✅ Created ROLES_SUMMARY.md
+- ✅ Created TEMPLATE_AGENT_REBOOT.md
+- ✅ Added cross-links between all context files
+- ✅ Applied file format standardization
+- ✅ Updated TASK_CARDS.md with task metadata
+- ✅ Updated outbox.json with completion report
+
+**Technical Details:**
+- Implemented new three-tier context system
+- Created master index for all context files
+- Standardized file headers and sections
+- Added comprehensive cross-linking
+- Established clear file hierarchy
+
+**Files Created/Modified:**
+- /docs/system/CONTEXT_ROOT_INDEX.md (new)
+- /docs/system/AGENT_QUICKSTART.md (new)
+- /docs/system/CURRENT_STATE.md (new)
+- /docs/system/ROLES_SUMMARY.md (new)
+- /docs/system/TEMPLATE_AGENT_REBOOT.md (new)
+- /TASK_CARDS.md
+- /postbox/CA/outbox.json
+
+**Time Spent:** 2 hours
+
+**Next Steps:**
+- Begin TASK-163C (Create Agent Capsule Files)
+- Monitor for any documentation inconsistencies
+- Prepare for Phase 2 implementation

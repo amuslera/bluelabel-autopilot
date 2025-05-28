@@ -22,6 +22,15 @@ This checklist ensures all required steps are completed when closing a sprint. F
 - [ ] Run tests after each merge to ensure stability
 - [ ] Delete merged branches: `git branch -d dev/TASK-XXX-description`
 
+## Sprint Summary Generation
+- [ ] Run the automated sprint summary generator:
+  ```bash
+  python scripts/generate_summary.py --sprint <sprint_number>
+  ```
+- [ ] Verify output is saved to `/reports/SPRINT_<N>_SUMMARY.md`
+- [ ] Review generated summary for accuracy and completeness
+- [ ] Include key insights from summary in postmortem
+
 ## Required Documentation Updates
 
 ### 1. ARCH_CONTINUITY.md
@@ -120,3 +129,4 @@ This checklist ensures all required steps are completed when closing a sprint. F
 - Customize as needed for specific sprint requirements
 - Archive completed checklists in sprint documentation
 - Review and update template based on lessons learned
+- The sprint summary generator (added in TASK-163F) provides automated activity tracking and improves transparency for agent onboarding
