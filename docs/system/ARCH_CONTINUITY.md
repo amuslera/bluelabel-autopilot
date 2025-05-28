@@ -10,11 +10,13 @@ The **Human Tech Lead** is Ariel Muslera. ARCH-AI assists Ariel by managing task
 
 **Current Phase:** Phase 6.13 (System Hardening) - IN PROGRESS
 **Previous Phase:** Phase 6.12 (Real-World Email Triggers & Output) - COMPLETED
-**Last Completed Tag:** `v0.6.13-alpha1`
-**Last known Task:** `TASK-161FG` — Sprint 1 Closeout + UI Audit (completed)
+**Last Completed Tag:** `v0.6.13-alpha3`
+**Last known Task:** `TASK-163I` — Sprint 2 Closeout (completed)
 **Phase 6.12 Status:** COMPLETED (2025-05-27)
-**Phase 6.13 Status:** Sprint 1 COMPLETED (2025-05-28)
+**Phase 6.13 Status:** Sprint 2 COMPLETED (2025-05-27)
   - Sprint 1 Status: COMPLETED (2025-05-28) - Tag: v0.6.13-alpha1
+  - Sprint 2 Status: COMPLETED (2025-05-27) - Tag: v0.6.13-alpha3
+  - Postmortem: /docs/devphases/PHASE_6.13/sprints/SPRINT_2_POSTMORTEM.md
 
 ---
 
@@ -201,14 +203,19 @@ The sprint closeout process is now checklist-based and can be triggered by ARCH-
    - [ ] No merge conflicts
    - [ ] Branch cleanup completed
 
-3. **Documentation Updates**
+3. **Sprint Summary Generation**
+   - [ ] Run automated summary generator: `python scripts/generate_summary.py --sprint <N>`
+   - [ ] Review generated summary in `/reports/SPRINT_<N>_SUMMARY.md`
+   - [ ] Include key insights in postmortem
+
+4. **Documentation Updates**
    - [ ] ARCH_CONTINUITY.md updated
    - [ ] CLAUDE_CONTEXT.md updated
    - [ ] SPRINT_HISTORY.md updated
    - [ ] Release notes published
    - [ ] Postmortem completed
 
-4. **Repository Management**
+5. **Repository Management**
    - [ ] Tag created and pushed
    - [ ] Sprint metrics collected
    - [ ] Next sprint planning initiated
@@ -233,6 +240,15 @@ Tag format: v<major>.<minor>.<patch>-alpha<N>
 - Minor: New features or capabilities
 - Patch: Internal changes or non-code updates
 - Alpha: Sprint number within the phase
+
+### Automated Sprint Summary (Added TASK-163G)
+The sprint summary generator creates automated activity reports to:
+- **Improve Transparency**: Provide clear visibility into sprint accomplishments
+- **Support Agent Onboarding**: New agents can quickly understand recent activity
+- **Enhance System Traceability**: Maintain historical record of task execution
+- **Reduce Manual Overhead**: Automate routine documentation tasks
+
+The generator reads from TASK_CARDS.md and agent outbox files to produce comprehensive sprint summaries.
 
 ### Best Practices
 1. **Task Documentation**

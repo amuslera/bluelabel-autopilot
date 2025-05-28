@@ -71,6 +71,15 @@ This checklist ensures all required steps are completed when closing a sprint. F
   - Ensure checklist reflects current practices
   - Update with any new compliance requirements
 
+## Sprint Summary Generation
+- [ ] Run the automated sprint summary generator:
+  ```bash
+  python scripts/generate_summary.py --sprint <sprint_number>
+  ```
+- [ ] Verify output is saved to `/reports/SPRINT_<N>_SUMMARY.md`
+- [ ] Review generated summary for accuracy
+- [ ] Use summary content to inform postmortem
+
 ## Tag Creation
 - [ ] Ensure all changes are committed
 - [ ] Create annotated tag:
@@ -80,15 +89,47 @@ This checklist ensures all required steps are completed when closing a sprint. F
 - [ ] Verify tag was created: `git tag -l`
 - [ ] Push tag (if remote exists): `git push origin v0.6.11-alphaX`
 
-## Sprint Postmortem
-- [ ] Create postmortem file: `/docs/release_notes/PHASE_6.11_SPRINT_X_POSTMORTEM.md`
-- [ ] Include sections:
-  - What Went Well
-  - What Could Be Improved
-  - Key Metrics
-  - Lessons Learned
-  - Recommendations for Next Sprint
-- [ ] Reference postmortem in ARCH_CONTINUITY.md
+## 📝 Sprint Postmortem
+- [ ] Create postmortem file: `/docs/devphases/PHASE_<X>/sprints/SPRINT_<N>_POSTMORTEM.md`
+- [ ] Use standard postmortem template with sections:
+  ```markdown
+  # Sprint <N> Postmortem - Phase <X>
+  **Date:** YYYY-MM-DD
+  **Sprint Duration:** YYYY-MM-DD to YYYY-MM-DD
+  **Sprint Tag:** v0.6.XX-alphaX
+  
+  ## Summary
+  [High-level overview of sprint goals and outcomes]
+  
+  ## What Went Well
+  - [Success 1]
+  - [Success 2]
+  
+  ## What Could Be Improved
+  - [Issue 1]
+  - [Issue 2]
+  
+  ## Key Metrics
+  - Tasks Completed: X/Y
+  - Sprint Velocity: X
+  - Test Coverage: X%
+  - Agent Performance: CC (X/Y), CA (X/Y), WA (X/Y)
+  
+  ## Lessons Learned
+  - [Learning 1]
+  - [Learning 2]
+  
+  ## Action Items for Next Sprint
+  - [ ] [Action 1]
+  - [ ] [Action 2]
+  
+  ## Technical Debt Identified
+  - [Debt item 1]
+  - [Debt item 2]
+  ```
+- [ ] Reference postmortem file path in:
+  - ARCH_CONTINUITY.md (Sprint completion section)
+  - SPRINT_HISTORY.md (Sprint record)
 
 ## Repository Sync
 - [ ] Check repository status: `git status`
