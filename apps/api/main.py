@@ -34,6 +34,7 @@ from apps.api.models import (
     DAGRunListResponse, WebSocketMessage
 )
 from apps.api.websocket_manager import WebSocketManager
+from apps.api.middleware import log_requests, handle_errors, metrics
 
 
 logger = logging.getLogger(__name__)
@@ -78,6 +79,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add custom middleware
+app.middleware("http")(log_requests)
+app.middleware("http")(handle_errors)
+app.middleware("http")(metrics)
 
 # Store active runs in memory (in production, use a database)
 active_runs: Dict[str, WorkflowRunResult] = {}
@@ -363,6 +369,27 @@ async def health_check():
         "timestamp": datetime.utcnow().isoformat(),
         "active_runs": len(active_runs),
         "connected_clients": len(ws_manager.active_connections)
+    }
+
+
+@app.get("/metrics")
+async def get_metrics():
+    """Get API performance metrics."""
+    return {
+        "timestamp": datetime.utcnow().isoformat(),
+        "api_metrics": metrics.get_metrics(),
+        "dag_metrics": {
+            "active_runs": len(active_runs),
+            "total_runs": len(active_runs),
+            "runs_by_status": {
+                "running": len([r for r in active_runs.values() if r.status == WorkflowStatus.RUNNING]),
+                "success": len([r for r in active_runs.values() if r.status == WorkflowStatus.SUCCESS]),
+                "failed": len([r for r in active_runs.values() if r.status == WorkflowStatus.FAILED])
+            }
+        },
+        "websocket_metrics": {
+            "connected_clients": ws_manager.get_connection_count()
+        }
     }
 
 

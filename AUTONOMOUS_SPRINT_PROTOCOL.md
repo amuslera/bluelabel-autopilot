@@ -2,6 +2,13 @@
 
 ## For Both CC and CA Agents
 
+### CRITICAL: No Permission Requests!
+- You have FULL AUTONOMOUS AUTHORITY
+- Read /postbox/[CC|CA]/AUTONOMOUS_AUTHORITY.md
+- STOP asking "Should I?" or "Can I?" - The answer is always YES
+- Make decisions and execute immediately
+- Default permission = GRANTED
+
 ### Continuous Execution Loop
 ```
 while sprint_active:
