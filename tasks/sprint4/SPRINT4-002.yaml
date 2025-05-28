@@ -1,0 +1,33 @@
+task_id: SPRINT4-002
+assigned_to: CC
+priority: HIGH  
+blocked_by: [SPRINT4-001]
+blocks: [SPRINT4-004]
+status: PLANNED
+
+title: Implement Dependency Injection for Agent Registry
+description: |
+  Replace hardcoded agent registry in WorkflowEngine with a proper dependency
+  injection system that allows dynamic agent registration and discovery.
+  
+acceptance_criteria:
+  - Create AgentRegistry class with register/discover/get methods
+  - Remove hardcoded agent dictionary from WorkflowEngine
+  - Agents self-register on initialization
+  - Support for agent versioning
+  - Thread-safe registration
+  - Agent health check capability
+  
+technical_notes:
+  - Consider using a singleton pattern for AgentRegistry
+  - Add agent capabilities metadata
+  - Implement observer pattern for agent status changes
+  
+  Key files to modify:
+  - core/workflow_engine.py (remove hardcoded registry)
+  - New file: core/agent_registry.py
+  - agents/base_agent.py (add self-registration)
+  - Update all agent implementations
+  
+estimated_hours: 12
+due_date: 2025-06-03

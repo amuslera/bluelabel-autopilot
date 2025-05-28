@@ -1,0 +1,14 @@
+endpoints:
+  dag_runs:
+    list: GET /api/dag-runs
+    get: GET /api/dag-runs/{id}
+    create: POST /api/dag-runs
+    update_status: PATCH /api/dag-runs/{id}/status
+    
+websocket:
+  endpoint: ws://localhost:8000/ws
+  events:
+    - dag.run.created
+    - dag.run.status.updated
+    - dag.step.status.updated
+    - dag.run.completed 

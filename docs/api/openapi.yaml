@@ -1,0 +1,230 @@
+openapi: 3.0.0
+info:
+  title: Bluelabel Autopilot DAG API
+  version: 1.0.0
+  description: API for DAG visualization and monitoring
+
+servers:
+  - url: /api/v1
+    description: API v1
+
+paths:
+  /dags:
+    get:
+      summary: List all DAGs
+      description: Get a paginated list of all DAGs
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of DAGs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DAG'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+
+  /dags/{dagId}/runs:
+    get:
+      summary: List DAG runs
+      description: Get a paginated list of runs for a specific DAG
+      parameters:
+        - name: dagId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of DAG runs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DAGRun'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+
+  /dags/{dagId}/runs/{runId}:
+    get:
+      summary: Get DAG run details
+      description: Get detailed information about a specific DAG run
+      parameters:
+        - name: dagId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: runId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: DAG run details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DAGRun'
+
+  /dags/{dagId}/runs/{runId}/steps:
+    get:
+      summary: Get DAG run steps
+      description: Get detailed information about steps in a DAG run
+      parameters:
+        - name: dagId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: runId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: DAG run steps
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DAGStep'
+
+components:
+  schemas:
+    DAG:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        owner:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        schedule:
+          type: string
+        lastRun:
+          type: string
+          format: date-time
+        nextRun:
+          type: string
+          format: date-time
+
+    DAGRun:
+      type: object
+      properties:
+        id:
+          type: string
+        dagId:
+          type: string
+        runId:
+          type: string
+        executionDate:
+          type: string
+          format: date-time
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, running, success, failed, skipped]
+        conf:
+          type: object
+          additionalProperties: true
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/DAGStep'
+        metadata:
+          type: object
+          properties:
+            owner:
+              type: string
+            description:
+              type: string
+            tags:
+              type: array
+              items:
+                type: string
+
+    DAGStep:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, success, failed, skipped]
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        duration:
+          type: integer
+          description: Duration in milliseconds
+        retryCount:
+          type: integer
+        error:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true 

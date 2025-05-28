@@ -1,0 +1,35 @@
+task_id: SPRINT4-001
+assigned_to: CC
+priority: HIGH
+blocked_by: []
+blocks: [SPRINT4-002, SPRINT4-003]
+status: PLANNED
+
+title: Create UnifiedWorkflowEngine Adapter
+description: |
+  Create an adapter that bridges the existing WorkflowEngine and the isolated 
+  StatefulDAGRunner, allowing us to gradually migrate to the better architecture
+  while maintaining backward compatibility.
+  
+acceptance_criteria:
+  - Create IWorkflowEngine interface that both engines can implement
+  - UnifiedWorkflowEngine adapter that can delegate to either engine
+  - Feature flag system to control which engine is used
+  - All existing tests continue to pass
+  - Performance overhead <100ms per workflow execution
+  - Comprehensive unit tests for adapter
+  
+technical_notes:
+  - Start by analyzing common methods between both engines
+  - Use strategy pattern for engine selection
+  - Implement logging to track which engine is being used
+  - Consider using dependency injection for engine instances
+  
+  Key files to modify:
+  - core/workflow_engine.py
+  - services/workflow/dag_runner.py
+  - New file: core/unified_workflow_engine.py
+  - New file: interfaces/workflow_engine_interface.py
+  
+estimated_hours: 16
+due_date: 2025-06-02

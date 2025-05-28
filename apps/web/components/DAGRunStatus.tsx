@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DAGRun, DAGStep, DAGStatus } from '@/lib/types';
 import { formatDistanceToNow, parseISO, format } from 'date-fns';
+import { useDAGRun, useDAGRunSteps, useDAGRunUpdates } from '../lib/api/hooks';
 
 interface DAGRunStatusProps {
-  dagRun: DAGRun;
+  dagId: string;
+  runId: string;
   className?: string;
 }
 
@@ -102,9 +104,55 @@ const StepRow: React.FC<{ step: DAGStep }> = ({ step }) => {
   );
 };
 
-const DAGRunStatus: React.FC<DAGRunStatusProps> = ({ dagRun, className = '' }) => {
-  const statusColor = statusColors[dagRun.status] || 'bg-gray-100 text-gray-800';
-  const icon = statusIcons[dagRun.status] || null;
+const DAGRunStatus: React.FC<DAGRunStatusProps> = ({ dagId, runId, className = '' }) => {
+  // Fetch initial DAG run data
+  const { data: dagRun, error: apiError, loading: runLoading } = useDAGRun(dagId, runId);
+  
+  // Fetch initial steps data
+  const { data: steps, error: stepsError, loading: stepsLoading } = useDAGRunSteps(dagId, runId);
+  
+  // Subscribe to real-time updates
+  const { status, steps: updatedSteps, error: wsError } = useDAGRunUpdates(dagId, runId);
+
+  // Update steps when real-time updates arrive
+  useEffect(() => {
+    if (Object.keys(updatedSteps).length > 0 && steps) {
+      const updatedStepsList = steps.map(step => 
+        updatedSteps[step.id] || step
+      );
+      // Update steps state here if needed
+    }
+  }, [updatedSteps, steps]);
+
+  if (runLoading || stepsLoading) {
+    return (
+      <div className={`bg-white shadow overflow-hidden sm:rounded-lg ${className} flex items-center justify-center`}>
+        <div className="text-gray-500">Loading DAG run status...</div>
+      </div>
+    );
+  }
+
+  if (apiError || stepsError || wsError) {
+    return (
+      <div className={`bg-white shadow overflow-hidden sm:rounded-lg ${className} flex items-center justify-center`}>
+        <div className="text-red-500">
+          Error: {apiError?.message || stepsError?.message || wsError || 'Failed to load DAG run status'}
+        </div>
+      </div>
+    );
+  }
+
+  if (!dagRun || !steps) {
+    return (
+      <div className={`bg-white shadow overflow-hidden sm:rounded-lg ${className} flex items-center justify-center`}>
+        <div className="text-gray-500">No DAG run found</div>
+      </div>
+    );
+  }
+
+  const currentStatus = status || dagRun.status;
+  const statusColor = statusColors[currentStatus] || 'bg-gray-100 text-gray-800';
+  const icon = statusIcons[currentStatus] || null;
 
   return (
     <div className={`bg-white shadow overflow-hidden sm:rounded-lg ${className}`}>
@@ -121,7 +169,7 @@ const DAGRunStatus: React.FC<DAGRunStatusProps> = ({ dagRun, className = '' }) =
           <div className="mt-2 sm:mt-0">
             <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusColor}`}>
               {icon}
-              <span className="ml-1 capitalize">{dagRun.status}</span>
+              <span className="ml-1 capitalize">{currentStatus}</span>
             </div>
           </div>
         </div>
@@ -160,8 +208,8 @@ const DAGRunStatus: React.FC<DAGRunStatusProps> = ({ dagRun, className = '' }) =
         <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
           <h4 className="text-sm font-medium text-gray-900">Steps</h4>
         </div>
-        {dagRun.steps.length > 0 ? (
-          dagRun.steps.map((step) => (
+        {steps.length > 0 ? (
+          steps.map((step) => (
             <StepRow key={step.id} step={step} />
           ))
         ) : (

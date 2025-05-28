@@ -1,0 +1,33 @@
+task_id: SPRINT4-005
+assigned_to: CA
+priority: HIGH
+blocked_by: []
+blocks: [SPRINT4-008]
+status: PLANNED
+
+title: Audit UI Components and Define API Requirements
+description: |
+  Comprehensive audit of existing UI components to document all backend API
+  endpoints needed for full functionality. Create detailed API specification.
+  
+acceptance_criteria:
+  - Document every API call currently mocked in the UI
+  - Create OpenAPI specification for all endpoints
+  - Define WebSocket events for real-time updates
+  - Identify missing UI functionality that needs backend support
+  - Create Postman/Thunder Client collection for API testing
+  
+technical_notes:
+  - Review all components in apps/web/components/
+  - Check pages in apps/web/pages/
+  - Look for TODO comments about API integration
+  - Consider pagination needs for DAG run lists
+  - Plan for error states and loading states
+  
+  Deliverables:
+  - /docs/api/openapi.yaml
+  - /docs/api/websocket-events.md
+  - /docs/api/ui-backend-mapping.md
+  
+estimated_hours: 8
+due_date: 2025-06-01

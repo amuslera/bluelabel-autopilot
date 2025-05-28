@@ -1,0 +1,35 @@
+task_id: SPRINT4-006
+assigned_to: CA
+priority: MEDIUM
+blocked_by: [SPRINT4-005]
+blocks: [SPRINT4-009]
+status: PLANNED
+
+title: Set Up API Client Infrastructure
+description: |
+  Create a robust API client layer in the frontend with proper error handling,
+  authentication, and real-time capabilities.
+  
+acceptance_criteria:
+  - Axios or Fetch API client with interceptors
+  - Centralized error handling
+  - Authentication token management
+  - Request/response logging in dev mode
+  - TypeScript types for all API responses
+  - React Query or SWR for data fetching
+  - WebSocket client wrapper
+  
+technical_notes:
+  - Consider using React Query for caching and synchronization
+  - Implement exponential backoff for retries
+  - Add request cancellation support
+  - Create mock server for development
+  
+  Key files to create:
+  - apps/web/lib/api/client.ts
+  - apps/web/lib/api/types.ts
+  - apps/web/lib/api/hooks.ts
+  - apps/web/lib/websocket/client.ts
+  
+estimated_hours: 12
+due_date: 2025-06-03

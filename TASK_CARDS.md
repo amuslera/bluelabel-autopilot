@@ -44,6 +44,26 @@ Brief description of the task objective.
 
 ---
 
+## Sprint 4 - Integration Sprint (May 29 - June 25, 2025)
+
+### Week 1 Tasks (May 29 - June 4)
+
+#### CC Tasks
+- [ ] SPRINT4-001: Create UnifiedWorkflowEngine Adapter (HIGH, 16h)
+- [ ] SPRINT4-002: Implement Dependency Injection for Agent Registry (HIGH, 12h) 
+- [ ] SPRINT4-003: Add Comprehensive Integration Test Suite (HIGH, 12h)
+- [ ] SPRINT4-004: Migrate Existing Workflows to Unified System (MEDIUM, 8h)
+
+#### CA Tasks  
+- [ ] SPRINT4-005: Audit UI Components and Define API Requirements (HIGH, 8h)
+- [ ] SPRINT4-006: Set Up API Client Infrastructure (MEDIUM, 12h)
+- [ ] SPRINT4-007: Design Real-time Update System Architecture (MEDIUM, 8h)
+
+#### ARCH Tasks
+- [ ] Daily orchestration and blocker resolution
+- [ ] Architecture Decision Records (ADRs)
+- [ ] Code review and integration oversight
+
 ## Active Tasks
 
 ### TASK-161J: Unify Agent Models and Standardize Imports
@@ -651,7 +671,37 @@ Merge the finalized updates to the sprint closeout protocol — specifically the
 - Sprint closeout template now includes all required steps
 - Ready for Sprint 3 activities
 
----
+### TASK-163T: Launch Sprint 3 – End-to-End MVP Focus
+Status: COMPLETED ✅
+Assigned: CA
+Priority: HIGH
+Created: 2025-05-27
+Completed: 2025-05-27
+
+**Description:**
+Launch and document Sprint 3 with a focus on completing and validating the MVP pipeline. Ensure all agents are synchronized, key context is accessible, and the sprint plan is ready for execution.
+
+**Deliverables:**
+- ✅ Created `/docs/devphases/PHASE_6.13/sprints/SPRINT_3_PLAN.md`
+- ✅ Updated `/docs/system/SPRINT_HISTORY.md` with Sprint 3 details
+- ✅ Updated `/docs/system/ARCH_CONTINUITY.md` with Sprint 3 status
+- ✅ Updated `/TASK_CARDS.md` with task completion
+- ✅ Updated `/postbox/CA/outbox.json` with completion report
+
+**Files Created/Modified:**
+- `/docs/devphases/PHASE_6.13/sprints/SPRINT_3_PLAN.md` (new)
+- `/docs/system/SPRINT_HISTORY.md`
+- `/docs/system/ARCH_CONTINUITY.md`
+- `/TASK_CARDS.md`
+- `/postbox/CA/outbox.json`
+
+**Time Spent:** 1 hour
+
+**Next Steps:**
+- Sprint 3 officially started
+- Tasks ready for assignment
+- Documentation up to date
+- Agent context synchronized
 
 ## Completed Tasks Archive
 
@@ -668,3 +718,39 @@ Merge the finalized updates to the sprint closeout protocol — specifically the
 ---
 
 *Last Updated: 2025-05-28*
+
+## TASK-161GE: DAG Graph UI Component
+- **Status:** COMPLETED ✅
+- **Assigned:** CA
+- **Priority:** HIGH
+- **Created:** 2025-05-27
+- **Completed:** 2025-05-27
+
+### Description
+Re-implement the DAG Graph UI component that visually displays the structure of a DAG run. The component should provide an interactive visualization of the DAG steps, their dependencies, and current status.
+
+### Deliverables
+- Created `/apps/web/components/DAGGraph.tsx` - Main component for DAG visualization
+- Created `/apps/web/components/__tests__/DAGGraph.test.tsx` - Test suite for the component
+- Created `/apps/web/utils/dagUtils.ts` - Utility functions for DAG operations
+- Created `/apps/web/types/dag.ts` - Type definitions for DAG data structures
+- Created `/apps/web/styles/dagGraph.css` - Styling for the DAG graph
+- Created `/apps/web/__mocks__/mockDagRun.ts` - Mock data for testing
+
+### Technical Details
+- Implemented using React Flow for graph visualization
+- Added support for node status colors and animations
+- Included metrics display for DAG progress
+- Added interactive features (node click, zoom, pan)
+- Implemented comprehensive test coverage
+- Added TypeScript type safety
+
+### Files Modified
+- Created: 6 new files
+- Modified: None
+
+### Time Spent
+- Implementation: 2 hours
+- Testing: 1 hour
+- Documentation: 30 minutes
+- Total: 3.5 hours
