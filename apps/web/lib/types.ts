@@ -9,6 +9,14 @@ export type DAGStatus =
   | 'failed'
   | 'skipped';
 
+export interface DAGStepOutput {
+  type: 'text' | 'file' | 'error' | 'json';
+  content: string;
+  timestamp: string; // ISO string
+  size?: string;
+  downloadUrl?: string;
+}
+
 export interface DAGStep {
   id: string;
   name: string;
@@ -18,6 +26,7 @@ export interface DAGStep {
   duration?: number;  // in milliseconds
   retryCount: number;
   error?: string;
+  output?: DAGStepOutput;
   metadata?: Record<string, unknown>;
 }
 
@@ -65,6 +74,13 @@ export function generateMockDAGRun(overrides: Partial<DAGRun> = {}): DAGRun {
         endTime: new Date(oneHourAgo.getTime() + 5 * 60 * 1000).toISOString(),
         duration: 5 * 60 * 1000,
         retryCount: 0,
+        output: {
+          type: 'file',
+          content: 'data/extracted_data_20230101.csv',
+          timestamp: new Date(oneHourAgo.getTime() + 5 * 60 * 1000).toISOString(),
+          size: '2.5 MB',
+          downloadUrl: 'https://example.com/data/extracted_data_20230101.csv'
+        }
       },
       {
         id: 'transform_data',
@@ -74,6 +90,19 @@ export function generateMockDAGRun(overrides: Partial<DAGRun> = {}): DAGRun {
         endTime: new Date(oneHourAgo.getTime() + 15 * 60 * 1000).toISOString(),
         duration: 10 * 60 * 1000,
         retryCount: 1,
+        output: {
+          type: 'json',
+          content: JSON.stringify({
+            recordsProcessed: 1250,
+            transformationsApplied: 5,
+            dataQualityChecks: {
+              passed: 1245,
+              failed: 5,
+              successRate: 0.996
+            }
+          }, null, 2),
+          timestamp: new Date(oneHourAgo.getTime() + 15 * 60 * 1000).toISOString()
+        }
       },
       {
         id: 'load_data',
@@ -83,6 +112,11 @@ export function generateMockDAGRun(overrides: Partial<DAGRun> = {}): DAGRun {
         endTime: undefined,
         duration: undefined,
         retryCount: 0,
+        output: {
+          type: 'text',
+          content: 'Loading data into the target database...\nProcessed 45% (625/1250 records)',
+          timestamp: new Date().toISOString()
+        }
       },
       {
         id: 'send_notifications',
@@ -92,6 +126,12 @@ export function generateMockDAGRun(overrides: Partial<DAGRun> = {}): DAGRun {
         endTime: undefined,
         duration: undefined,
         retryCount: 0,
+        error: 'Dependencies not met - waiting for previous steps to complete',
+        output: {
+          type: 'error',
+          content: 'Dependencies not met - waiting for previous steps to complete',
+          timestamp: new Date().toISOString()
+        }
       },
     ],
     metadata: {

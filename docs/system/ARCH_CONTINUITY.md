@@ -10,11 +10,17 @@ The **Human Tech Lead** is Ariel Muslera. ARCH-AI assists Ariel by managing task
 
 **Current Phase:** Phase 6.13 (System Hardening) - IN PROGRESS
 **Previous Phase:** Phase 6.12 (Real-World Email Triggers & Output) - COMPLETED
-**Last Completed Tag:** `v0.6.13-alpha1`
-**Last known Task:** `TASK-161FG` — Sprint 1 Closeout + UI Audit (completed)
+**Last Completed Tag:** `v0.6.13-alpha2`
+**Last known Task:** `TASK-162T` — Sprint 2 Onboarding Doc Patch & Sync (current)
 **Phase 6.12 Status:** COMPLETED (2025-05-27)
-**Phase 6.13 Status:** Sprint 1 COMPLETED (2025-05-28)
-  - Sprint 1 Status: COMPLETED (2025-05-28) - Tag: v0.6.13-alpha1
+**Phase 6.13 Status:** Sprint 1 CLOSED (2025-05-27), Sprint 2 IN PROGRESS
+  - Sprint 1 Status: CLOSED (2025-05-27) - Tag: v0.6.13-alpha2
+  - Sprint 1 Postmortem: /docs/devphases/PHASE_6.13/sprints/SPRINT_1_POSTMORTEM.md
+  - Sprint 2 Status: IN PROGRESS - Agent Transition & Documentation Hardening
+
+## 🎯 Sprint 2 Purpose
+
+Sprint 2 serves as a transition sprint focused on agent turnover, documentation continuity, and system reboot preparation. This sprint addresses the decommissioning of WA (Windsurf AI) and the reassignment of UI responsibilities to CA (Cursor AI). Key objectives include hardening documentation for seamless agent onboarding, establishing clear ownership boundaries, and preparing the system for continued development with the new agent configuration.
 
 ---
 
@@ -293,6 +299,21 @@ Tag format: v<major>.<minor>.<patch>-alpha<N>
 - Enhanced error recovery mechanisms
 - API endpoint implementation
 - Advanced workflow features (conditionals, parallel execution)
+
+---
+
+## 📋 Future Tasks & Backlog
+
+### Sprint 2 Backlog:
+- TASK-161GE: DAG Graph UI (reassigned from WA)
+- TASK-162M: Define Prompt Template Standard
+
+### Long-term Backlog:
+- WebSocket support for real-time DAG updates
+- Performance benchmarking suite
+- Advanced DAG visualization with D3.js
+- Multi-tenant support
+- OAuth integration for external services
 
 ---
 

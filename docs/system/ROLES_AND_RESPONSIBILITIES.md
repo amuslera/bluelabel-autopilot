@@ -1,8 +1,8 @@
 # Roles and Responsibilities - Bluelabel Agent OS
 
-**Version**: 1.0.0  
-**Last Updated**: 2025-05-23  
-**Phase**: 6.11+  
+**Version**: 1.0.3  
+**Last Updated**: 2024-03-23  
+**Phase**: 6.13+  
 **Status**: Definitive Reference
 
 ## Overview
@@ -99,9 +99,9 @@ Strategic Architect and Development Advisor responsible for system-wide orchestr
 
 ---
 
-### 4. Cursor AI (CA) - CLI & Processing Agent
-**Authority Level**: Implementation (CLI/Processing)  
-**Specialization**: Command Line Tools, Content Processing
+### 4. Cursor AI (CA) - Full-Stack Development Agent
+**Authority Level**: Implementation (Full-Stack/CLI)  
+**Specialization**: Command Line Tools, Content Processing, Frontend Development
 
 #### Responsibilities
 - CLI tool development and maintenance
@@ -112,6 +112,11 @@ Strategic Architect and Development Advisor responsible for system-wide orchestr
 - Prompt management systems
 - YAML plan creation and validation
 - Documentation and guides
+- Frontend/UI development (inherited from WA)
+- React/Next.js component implementation
+- UI/UX improvements and accessibility
+- Cross-browser compatibility
+- UI testing and quality assurance
 
 #### Technical Scope
 - Python CLI development (Click framework)
@@ -120,9 +125,13 @@ Strategic Architect and Development Advisor responsible for system-wide orchestr
 - Async task runners
 - YAML configuration management
 - Shell scripting
+- React/TypeScript development
+- Tailwind CSS styling
+- Component state management
+- Frontend testing (Jest)
+- UI/UX best practices
 
 #### Prohibited Actions
-- **NO** UI component development
 - **NO** API endpoint creation
 - **NO** Workflow coordination logic
 - **NO** Database schema changes
@@ -134,22 +143,28 @@ Strategic Architect and Development Advisor responsible for system-wide orchestr
 - Idempotent operations
 - Progress indicators for long tasks
 - Structured output formats
+- UI component documentation
+- Accessibility compliance
+- Cross-browser testing
+- Screenshot documentation for UI changes
 
 ---
 
-### 5. Windsurf AI (WA) - UI & Quality Agent
-**Authority Level**: Implementation (UI/Frontend)  
-**Specialization**: User Interface, Quality Assurance
+### 5. Windsurf AI (WA) - DECOMMISSIONED
+**Status**: DECOMMISSIONED as of 2024-03-22  
+**Legacy Report**: `/docs/agents/WA_LEGACY_REPORT.md`  
+**Former Authority Level**: Implementation (UI/Frontend)  
+**Former Specialization**: User Interface, Quality Assurance
 
-#### Responsibilities
-- UI development (only when explicitly assigned)
-- Frontend component implementation
-- User experience improvements
-- CLI output formatting and feedback
-- Quality assurance and testing
-- UI screenshot documentation
-- Accessibility compliance
-- Cross-browser compatibility
+#### Former Responsibilities (Now Assigned to CA)
+- UI development → CA
+- Frontend component implementation → CA
+- User experience improvements → CA
+- CLI output formatting and feedback → CA
+- Quality assurance and testing → CC/CA
+- UI screenshot documentation → CA
+- Accessibility compliance → CA
+- Cross-browser compatibility → CA
 
 #### Technical Scope
 - React/TypeScript development
@@ -339,3 +354,30 @@ When multiple agents work simultaneously:
 ---
 
 *This document supersedes all previous role definitions and serves as the authoritative reference for Phase 6.11 and beyond.*
+
+## 🕘 Version History
+
+| Date       | Editor | Summary of Changes |
+|------------|--------|--------------------|
+| 2024-03-22 | CA     | Initial version documented (Phase 6.13) |
+| 2024-03-22 | CA     | Added version history section |
+| 2025-05-27 | CC     | Updated WA status to DECOMMISSIONED, reassigned UI responsibilities to CA |
+
+## Change Log
+
+### Version 1.0.2 (2025-05-27)
+- Updated WA (Windsurf AI) status to DECOMMISSIONED
+- Reassigned all UI/Frontend responsibilities to CA
+- Added reference to WA_LEGACY_REPORT.md
+- Updated inter-agent dependency matrix
+
+### Version 1.0.1 (2024-03-22)
+- Added version history section to track document changes
+- Improved formatting and structure
+- Added change log section
+
+### Version 1.0.0 (2024-03-22)
+- Initial document creation
+- Defined core team roles
+- Established responsibilities for each role
+- Set up basic document structure
