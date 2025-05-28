@@ -1,0 +1,57 @@
+name: Autonomous Sprint Orchestrator
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Every 5 minutes
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  orchestrate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Check Agent Status
+      id: check_status
+      run: |
+        # Check when agents last updated
+        CC_LAST_UPDATE=$(git log -1 --format=%ct -- CC_LIVE_STATUS.md 2>/dev/null || echo 0)
+        CA_LAST_UPDATE=$(git log -1 --format=%ct -- CA_LIVE_STATUS.md 2>/dev/null || echo 0)
+        CURRENT_TIME=$(date +%s)
+        
+        # If no update in 15 minutes, agents need prompting
+        CC_STALE=$((CURRENT_TIME - CC_LAST_UPDATE > 900))
+        CA_STALE=$((CURRENT_TIME - CA_LAST_UPDATE > 900))
+        
+        echo "cc_stale=$CC_STALE" >> $GITHUB_OUTPUT
+        echo "ca_stale=$CA_STALE" >> $GITHUB_OUTPUT
+    
+    - name: Prompt CC if Stalled
+      if: steps.check_status.outputs.cc_stale == '1'
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      run: |
+        python3 scripts/prompt_agent.py CC "Check /postbox/CC/inbox/ for new tasks"
+    
+    - name: Prompt CA if Stalled
+      if: steps.check_status.outputs.ca_stale == '1'
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        python3 scripts/prompt_agent.py CA "Check /postbox/CA/inbox/ for new tasks"
+    
+    - name: Check Wave Progression
+      run: |
+        # Auto-progress waves based on completion
+        python3 scripts/check_wave_progress.py
+    
+    - name: Commit Updates
+      run: |
+        git config --global user.name 'Autonomous Orchestrator'
+        git config --global user.email 'orchestrator@bluelabel.ai'
+        git add -A
+        git diff --staged --quiet || git commit -m "🤖 Autonomous orchestration update"
+        git push

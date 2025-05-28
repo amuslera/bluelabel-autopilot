@@ -35,6 +35,7 @@ from apps.api.models import (
 )
 from apps.api.websocket_manager import WebSocketManager
 from apps.api.middleware import log_requests, handle_errors, metrics
+from apps.api.routes import email_processor
 
 
 logger = logging.getLogger(__name__)
@@ -84,6 +85,9 @@ app.add_middleware(
 app.middleware("http")(log_requests)
 app.middleware("http")(handle_errors)
 app.middleware("http")(metrics)
+
+# Include routers
+app.include_router(email_processor.router)
 
 # Store active runs in memory (in production, use a database)
 active_runs: Dict[str, WorkflowRunResult] = {}

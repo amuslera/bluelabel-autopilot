@@ -19,6 +19,7 @@ from core.workflow_engine import WorkflowEngine
 from services.workflow.dag_runner import StatefulDAGRunner, DAGRunnerFactory
 from services.workflow.dag_run_tracker import DAGRunStatus, DAGStepStatus
 from runner.workflow_loader import WorkflowLoader
+from core.performance import workflow_cache, with_cache, measure_performance, performance_monitor
 
 
 logger = logging.getLogger(__name__)
@@ -92,6 +93,8 @@ class UnifiedWorkflowEngine(IWorkflowEngine):
         else:
             raise ValueError(f"Unsupported engine type: {self.engine_type}")
     
+    @with_cache(workflow_cache)
+    @measure_performance("UnifiedWorkflowEngine.execute_workflow")
     async def execute_workflow(
         self,
         workflow_path: Path,
@@ -147,6 +150,12 @@ class UnifiedWorkflowEngine(IWorkflowEngine):
             execution_end_time = datetime.utcnow()
             overhead_ms = int((execution_end_time - self._execution_start_time).total_seconds() * 1000) - result.duration_ms
             logger.info(f"Workflow execution completed with {overhead_ms}ms adapter overhead")
+            
+            # Record performance metrics
+            performance_monitor.record("adapter_overhead_ms", overhead_ms)
+            performance_monitor.record("workflow_duration_ms", result.duration_ms)
+            performance_monitor.record("total_execution_ms", 
+                int((execution_end_time - self._execution_start_time).total_seconds() * 1000))
             
             # Verify performance requirement (<100ms overhead)
             if overhead_ms > 100:

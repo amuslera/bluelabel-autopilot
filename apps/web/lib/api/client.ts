@@ -16,7 +16,7 @@ export class APIError extends Error {
 export class APIClient {
   private client: AxiosInstance;
 
-  constructor(baseURL: string = '/api/v1') {
+  constructor(baseURL: string = 'http://localhost:8000/api') {
     this.client = axios.create({
       baseURL,
       timeout: 10000,
@@ -48,14 +48,14 @@ export class APIClient {
     page: number;
     limit: number;
   }> {
-    const response = await this.client.get('/dags', {
+    const response = await this.client.get('/dag-runs', {
       params: { page, limit },
     });
     return response.data;
   }
 
   async getDAGRun(dagId: string, runId: string): Promise<DAGRun> {
-    const response = await this.client.get(`/dags/${dagId}/runs/${runId}`);
+    const response = await this.client.get(`/dag-runs/${runId}`);
     return response.data;
   }
 
@@ -69,14 +69,30 @@ export class APIClient {
     page: number;
     limit: number;
   }> {
-    const response = await this.client.get(`/dags/${dagId}/runs`, {
-      params: { page, limit },
+    const response = await this.client.get(`/dag-runs`, {
+      params: { page, limit, dag_id: dagId },
     });
     return response.data;
   }
 
   async getDAGRunSteps(dagId: string, runId: string): Promise<DAGStep[]> {
-    const response = await this.client.get(`/dags/${dagId}/runs/${runId}/steps`);
+    const response = await this.client.get(`/dag-runs/${runId}/steps`);
+    return response.data;
+  }
+
+  async createDAGRun(workflowPath: string, engineType: string = 'sequential'): Promise<DAGRun> {
+    const response = await this.client.post('/dag-runs', {
+      workflow_path: workflowPath,
+      engine_type: engineType,
+      persist: true,
+    });
+    return response.data;
+  }
+
+  async updateDAGRunStatus(runId: string, status: string): Promise<DAGRun> {
+    const response = await this.client.patch(`/dag-runs/${runId}/status`, {
+      status,
+    });
     return response.data;
   }
 }
@@ -91,7 +107,7 @@ export class WebSocketClient {
   private subscribedDAGs: Set<string> = new Set();
 
   constructor(
-    private url: string = 'ws://localhost:3000/api/v1/ws',
+    private url: string = 'ws://localhost:8000/ws',
     private token?: string
   ) {}
 
@@ -123,7 +139,7 @@ export class WebSocketClient {
     this.ws.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
-        const handlers = this.messageHandlers.get(message.type) || [];
+        const handlers = this.messageHandlers.get(message.event) || [];
         handlers.forEach((handler) => handler(message.data));
       } catch (error) {
         console.error('Failed to parse WebSocket message:', error);

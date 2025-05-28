@@ -168,16 +168,16 @@ export function useDAGRunUpdates(dagId: string, runId: string) {
     };
 
     // Register event handlers
-    wsClient.on('dag_run_status', handleStatusUpdate);
-    wsClient.on('step_status', handleStepUpdate);
-    wsClient.on('dag_run_progress', handleProgressUpdate);
+    wsClient.on('dag.run.status.updated', handleStatusUpdate);
+    wsClient.on('dag.step.status.updated', handleStepUpdate);
+    wsClient.on('dag.run.completed', handleProgressUpdate);
     wsClient.on('error', handleError);
 
     // Cleanup
     return () => {
-      wsClient.off('dag_run_status', handleStatusUpdate);
-      wsClient.off('step_status', handleStepUpdate);
-      wsClient.off('dag_run_progress', handleProgressUpdate);
+      wsClient.off('dag.run.status.updated', handleStatusUpdate);
+      wsClient.off('dag.step.status.updated', handleStepUpdate);
+      wsClient.off('dag.run.completed', handleProgressUpdate);
       wsClient.off('error', handleError);
       wsClient.unsubscribe([dagId]);
     };

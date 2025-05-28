@@ -43,6 +43,14 @@ class AgentCapability(BaseModel):
     parameters: Dict[str, Any] = Field(default_factory=dict, description="Expected parameters")
 
 
+class AgentCapabilities(BaseModel):
+    """Collection of agent capabilities."""
+    can_process_files: bool = Field(False, description="Can process files")
+    can_process_urls: bool = Field(False, description="Can process URLs")
+    can_generate_summaries: bool = Field(False, description="Can generate summaries")
+    supported_formats: List[str] = Field(default_factory=list, description="Supported file formats")
+
+
 class ContentMetadata(BaseModel):
     """Common metadata for processed content."""
     content_id: str = Field(..., description="Unique content identifier")
