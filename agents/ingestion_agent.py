@@ -19,11 +19,12 @@ from urllib.parse import urlparse
 from interfaces.agent_models import (
     AgentInput, AgentOutput, AgentCapability, ContentMetadata
 )
+from agents.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 
 
-class IngestionAgent:
+class IngestionAgent(BaseAgent):
     """Agent that processes URL and PDF content for ingestion."""
     
     def __init__(
@@ -39,10 +40,12 @@ class IngestionAgent:
             storage_path: Path to content storage (defaults to ./data/knowledge)
             temp_path: Path for temporary files (defaults to ./data/temp)
         """
-        self.agent_id = agent_id
-        self.name = "Ingestion Agent"
-        self.description = "Processes URL and PDF content for ingestion"
-        self.version = "1.0.0"
+        super().__init__(
+            name="Ingestion Agent",
+            description="Processes URL and PDF content for ingestion",
+            agent_id=agent_id,
+            version="1.0.0"
+        )
         
         # Set default paths
         self.storage_path = storage_path or Path("./data/knowledge")

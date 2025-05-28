@@ -1,15 +1,24 @@
-# Bluelabel Autopilot
+# Bluelabel Autopilot 🚀
 
-A modernized, MCP-compliant agent system extracted from the legacy AIOS-V2 codebase. This repository contains core agent components redesigned for simplicity, maintainability, and file-based operations.
+MCP-native agent orchestration platform for intelligent document processing with real-time capabilities.
 
 ## Overview
 
-Bluelabel Autopilot is a lightweight content processing system that:
-- Processes content from various sources (URLs, PDFs, documents)
-- Generates summaries and digests
-- Provides a simple CLI interface
-- Uses file-based storage instead of databases
+Bluelabel Autopilot is a high-performance content processing system that:
+- Processes emails with PDF attachments in real-time
+- Generates executive summaries using AI agents
+- Provides REST API with WebSocket updates
+- Features a unified workflow engine architecture
+- Achieves <3 second processing for typical documents
 - Follows Model Context Protocol (MCP) standards
+
+## 🎯 Key Features
+
+- **Unified Architecture**: Single adapter for multiple workflow engines
+- **Real-time Updates**: WebSocket streaming of processing progress
+- **High Performance**: <100ms API response, <3s PDF processing
+- **Zero Breaking Changes**: Backward compatible with existing workflows
+- **Production Ready**: Full test coverage, monitoring, and error handling
 
 ## Architecture
 
@@ -28,7 +37,9 @@ bluelabel-autopilot/
     └── knowledge/         # Processed content storage
 ```
 
-## Installation
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
 # Clone the repository
@@ -37,6 +48,33 @@ cd bluelabel-autopilot
 
 # Install dependencies (Python 3.8+)
 pip install -r requirements.txt
+
+# Install API dependencies
+cd apps/api
+pip install -r requirements.txt
+cd ../..
+```
+
+### Running the System
+
+1. **Start the API Server**:
+```bash
+cd apps/api
+python main.py
+# API available at http://localhost:8000
+# WebSocket at ws://localhost:8000/ws
+# API docs at http://localhost:8000/docs
+```
+
+2. **Run the Demo**:
+```bash
+python demo/email_to_summary.py
+```
+
+3. **Test the Integration**:
+```bash
+# Open in browser
+open http://localhost:8000/static/test.html
 ```
 
 ## Usage

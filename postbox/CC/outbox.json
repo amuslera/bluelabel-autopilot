@@ -1963,6 +1963,24 @@
         },
         "status": "completed"
       }
+    },
+    {
+      "task_id": "DEMO_COORDINATION",
+      "timestamp": "2025-05-28T02:00:00Z",
+      "agent": "CC",
+      "message_type": "coordination",
+      "content": {
+        "summary": "Wave 3 Demo Coordination Message",
+        "message": "CC: Check your inbox for DEMO_COORDINATION_PROTOCOL.md and start monitoring the demo_signals folder. CA will signal when ready.\n\nCA is currently doing Wave 3 demo preparation (UI polish, demo environment setup, recording configuration). They'll use the file-based signaling system to coordinate with you when ready to record.\n\nYour backend is ready with 4 test scenarios. When CA creates the signal file with a scenario number, trigger that workflow immediately and respond with status. Stay alert for their signals!",
+        "action_required": [
+          "Check inbox for coordination protocol",
+          "Monitor demo_signals folder",
+          "Wait for CA signal",
+          "Trigger workflow on signal",
+          "Respond with status"
+        ],
+        "status": "sent"
+      }
     }
   ]
 }

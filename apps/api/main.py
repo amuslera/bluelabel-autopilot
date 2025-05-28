@@ -7,8 +7,9 @@ This module provides REST API endpoints and WebSocket support for:
 - Integration with UnifiedWorkflowEngine
 """
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Query
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Query, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from typing import Dict, List, Optional, Any
 import asyncio
@@ -86,12 +87,18 @@ app.middleware("http")(log_requests)
 app.middleware("http")(handle_errors)
 app.middleware("http")(metrics)
 
-# Include routers
-app.include_router(email_processor.router)
+# Mount static files for test page
+app.mount("/static", StaticFiles(directory="apps/api/static", html=True), name="static")
 
 # Store active runs in memory (in production, use a database)
 active_runs: Dict[str, WorkflowRunResult] = {}
 run_engines: Dict[str, UnifiedWorkflowEngine] = {}
+
+# Initialize email processor router with dependencies
+email_processor.init_router(ws_manager, active_runs)
+
+# Include routers
+app.include_router(email_processor.router)
 
 
 @app.get("/api/dag-runs", response_model=DAGRunListResponse)
@@ -395,6 +402,77 @@ async def get_metrics():
             "connected_clients": ws_manager.get_connection_count()
         }
     }
+
+
+@app.post("/api/test/create-sample-workflow")
+async def create_test_workflow(background_tasks: BackgroundTasks):
+    """Create a sample workflow for testing. Used by CA for integration testing."""
+    # Create a simple test workflow
+    workflow_yaml = """
+name: test-integration-workflow
+version: 1.0.0
+description: Test workflow for frontend integration
+
+steps:
+  - name: analyze_text
+    agent: ingestion
+    input:
+      text: "This is a test document for integration testing. The quick brown fox jumps over the lazy dog."
+    output: analysis_result
+
+  - name: generate_summary
+    agent: digest
+    input:
+      content: "{{analysis_result}}"
+      format: "brief"
+    output: summary_result
+"""
+    
+    # Create workflow request
+    request = CreateDAGRunRequest(
+        workflow=workflow_yaml,
+        inputs={"test_mode": True},
+        metadata={"source": "integration_test", "created_by": "CA"}
+    )
+    
+    # Use existing create endpoint logic
+    run_id = str(uuid.uuid4())
+    
+    # Store run info
+    run_result = WorkflowRunResult(
+        run_id=run_id,
+        workflow_name="test-integration-workflow",
+        workflow_version="1.0.0",
+        status=WorkflowStatus.RUNNING,
+        started_at=datetime.utcnow(),
+        step_outputs={},
+        errors=[]
+    )
+    active_runs[run_id] = run_result
+    
+    # Execute workflow asynchronously
+    background_tasks.add_task(execute_workflow_task, run_id, request.workflow, request.inputs)
+    
+    # Send initial WebSocket update
+    await ws_manager.broadcast(WebSocketMessage(
+        event="dag.run.created",
+        data={
+            "run_id": run_id,
+            "workflow_name": "test-integration-workflow",
+            "status": "running",
+            "message": "Test workflow created for integration testing"
+        }
+    ))
+    
+    return DAGRunResponse(
+        id=run_id,
+        workflow_name="test-integration-workflow",
+        workflow_version="1.0.0",
+        status="running",
+        started_at=datetime.utcnow().isoformat(),
+        step_count=2,
+        message="Test workflow started successfully"
+    )
 
 
 if __name__ == "__main__":

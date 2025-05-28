@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Connection Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .status { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .pending { background: #fff3cd; color: #856404; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { 
+            background: #6c757d; 
+            cursor: not-allowed;
+        }
+        .event {
+            margin: 2px 0;
+            padding: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Bluelabel Autopilot API Test</h1>
+        
+        <h2>API Status</h2>
+        <div id="apiStatus" class="status pending">Checking API...</div>
+        
+        <h2>WebSocket Status</h2>
+        <div id="wsStatus" class="status pending">Not connected</div>
+        
+        <h2>Actions</h2>
+        <button onclick="connectWebSocket()">Connect WebSocket</button>
+        <button onclick="createDagRun()">Create Test DAG Run</button>
+        <button onclick="listDagRuns()">List DAG Runs</button>
+        <button onclick="clearLog()">Clear Log</button>
+        
+        <h2>Event Log</h2>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let ws = null;
+
+        // Log helper
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const event = document.createElement('div');
+            event.className = 'event';
+            event.innerHTML = `<strong>[${time}]</strong> ${message}`;
+            logDiv.appendChild(event);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        // Check API health
+        async function checkAPI() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                document.getElementById('apiStatus').className = 'status success';
+                document.getElementById('apiStatus').textContent = 
+                    `✅ API Online - ${data.active_runs} active runs, ${data.connected_clients} WebSocket clients`;
+                log('API health check passed');
+            } catch (error) {
+                document.getElementById('apiStatus').className = 'status error';
+                document.getElementById('apiStatus').textContent = '❌ API Offline - ' + error.message;
+                log('API health check failed: ' + error.message, 'error');
+            }
+        }
+
+        // WebSocket connection
+        function connectWebSocket() {
+            if (ws) {
+                ws.close();
+            }
+
+            const wsUrl = 'ws://localhost:8000/ws';
+            log(`Connecting to ${wsUrl}...`);
+            
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = () => {
+                document.getElementById('wsStatus').className = 'status success';
+                document.getElementById('wsStatus').textContent = '✅ WebSocket Connected';
+                log('WebSocket connected successfully');
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                log(`📨 Event: ${data.event} - ${JSON.stringify(data.data)}`);
+            };
+            
+            ws.onerror = (error) => {
+                document.getElementById('wsStatus').className = 'status error';
+                document.getElementById('wsStatus').textContent = '❌ WebSocket Error';
+                log('WebSocket error: ' + error, 'error');
+            };
+            
+            ws.onclose = () => {
+                document.getElementById('wsStatus').className = 'status error';
+                document.getElementById('wsStatus').textContent = '❌ WebSocket Disconnected';
+                log('WebSocket disconnected');
+            };
+        }
+
+        // Create DAG run
+        async function createDagRun() {
+            try {
+                log('Creating test DAG run...');
+                
+                const response = await fetch(`${API_BASE}/api/dag-runs`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        workflow_path: 'workflows/sample_ingestion_digest.yaml',
+                        persist: false,
+                        engine_type: 'sequential'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`✅ DAG Run created: ${data.id}`);
+                } else {
+                    log(`❌ Failed to create DAG run: ${data.detail}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Error creating DAG run: ${error.message}`, 'error');
+            }
+        }
+
+        // List DAG runs
+        async function listDagRuns() {
+            try {
+                log('Fetching DAG runs...');
+                
+                const response = await fetch(`${API_BASE}/api/dag-runs?limit=5`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`Found ${data.total} DAG runs (showing ${data.items.length}):`);
+                    data.items.forEach(run => {
+                        log(`  - ${run.id}: ${run.status} (${run.workflow_name})`);
+                    });
+                } else {
+                    log(`❌ Failed to list DAG runs: ${data.detail}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Error listing DAG runs: ${error.message}`, 'error');
+            }
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            checkAPI();
+            // Auto-refresh API status every 5 seconds
+            setInterval(checkAPI, 5000);
+        };
+    </script>
+</body>
+</html>

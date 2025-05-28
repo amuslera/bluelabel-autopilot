@@ -1,0 +1,33 @@
+{
+  "api_latency": [
+    {
+      "endpoint": "/",
+      "method": "GET",
+      "avg_ms": 1.7287015914916992,
+      "min_ms": 1.0030269622802734,
+      "max_ms": 6.223917007446289
+    },
+    {
+      "endpoint": "/api/dag-runs",
+      "method": "GET",
+      "avg_ms": 1.7475128173828125,
+      "min_ms": 1.0287761688232422,
+      "max_ms": 3.759145736694336
+    },
+    {
+      "endpoint": "/api/test/create-sample-workflow",
+      "method": "POST",
+      "avg_ms": 1.8062829971313477,
+      "min_ms": 1.2607574462890625,
+      "max_ms": 2.5548934936523438
+    }
+  ],
+  "websocket_latency": [],
+  "workflow_completion": {
+    "avg_ms": 4091.1120414733887,
+    "min_ms": 3908.8220596313477,
+    "max_ms": 4322.221040725708,
+    "runs": 5
+  },
+  "concurrent_capacity": 20
+}

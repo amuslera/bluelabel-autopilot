@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import { DAG, DAGRun, DAGStep } from '../types';
+import { DAGRun, DAGStep } from '../types';
 
 export class APIError extends Error {
   constructor(
@@ -30,9 +30,9 @@ export class APIClient {
       (error: AxiosError) => {
         if (error.response) {
           throw new APIError(
-            error.response.data?.message || 'API request failed',
+            (error.response.data as any)?.message || 'API request failed',
             error.response.status,
-            error.response.data?.code,
+            (error.response.data as any)?.code,
             error.response.data
           );
         }
@@ -43,7 +43,7 @@ export class APIClient {
 
   // DAG Operations
   async listDAGs(page: number = 1, limit: number = 20): Promise<{
-    items: DAG[];
+    items: any[];
     total: number;
     page: number;
     limit: number;
@@ -54,7 +54,7 @@ export class APIClient {
     return response.data;
   }
 
-  async getDAGRun(dagId: string, runId: string): Promise<DAGRun> {
+  async getDAGRun(runId: string): Promise<DAGRun> {
     const response = await this.client.get(`/dag-runs/${runId}`);
     return response.data;
   }

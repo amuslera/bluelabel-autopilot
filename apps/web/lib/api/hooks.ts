@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiClient, wsClient, APIError } from './client';
-import { DAG, DAGRun, DAGStep } from '../types';
+import { DAGRun, DAGStep } from '../types';
 
 // Hook for fetching DAGs with pagination
 export function useDAGs(page: number = 1, limit: number = 20) {
   const [data, setData] = useState<{
-    items: DAG[];
+    items: any[];
     total: number;
     page: number;
     limit: number;
@@ -34,7 +34,7 @@ export function useDAGs(page: number = 1, limit: number = 20) {
 }
 
 // Hook for fetching a single DAG run
-export function useDAGRun(dagId: string, runId: string) {
+export function useDAGRun(runId: string) {
   const [data, setData] = useState<DAGRun | null>(null);
   const [error, setError] = useState<APIError | null>(null);
   const [loading, setLoading] = useState(true);
@@ -43,14 +43,14 @@ export function useDAGRun(dagId: string, runId: string) {
     try {
       setLoading(true);
       setError(null);
-      const result = await apiClient.getDAGRun(dagId, runId);
+      const result = await apiClient.getDAGRun(runId);
       setData(result);
     } catch (err) {
       setError(err instanceof APIError ? err : new APIError('Failed to fetch DAG run'));
     } finally {
       setLoading(false);
     }
-  }, [dagId, runId]);
+  }, [runId]);
 
   useEffect(() => {
     fetchDAGRun();
@@ -117,7 +117,7 @@ export function useDAGRunSteps(dagId: string, runId: string) {
 }
 
 // Hook for real-time DAG run updates
-export function useDAGRunUpdates(dagId: string, runId: string) {
+export function useDAGRunUpdates(runId: string) {
   const [status, setStatus] = useState<DAGRun['status'] | null>(null);
   const [steps, setSteps] = useState<Record<string, DAGStep>>({});
   const [progress, setProgress] = useState<{
@@ -135,7 +135,7 @@ export function useDAGRunUpdates(dagId: string, runId: string) {
     wsClient.connect();
 
     // Subscribe to DAG updates
-    wsClient.subscribe([dagId]);
+    wsClient.subscribe([runId]);
 
     // Handle DAG run status updates
     const handleStatusUpdate = (data: { status: DAGRun['status'] }) => {
@@ -179,9 +179,9 @@ export function useDAGRunUpdates(dagId: string, runId: string) {
       wsClient.off('dag.step.status.updated', handleStepUpdate);
       wsClient.off('dag.run.completed', handleProgressUpdate);
       wsClient.off('error', handleError);
-      wsClient.unsubscribe([dagId]);
+      wsClient.unsubscribe([runId]);
     };
-  }, [dagId, runId]);
+  }, [runId]);
 
   return { status, steps, progress, error };
 } 

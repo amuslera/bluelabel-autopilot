@@ -1,84 +1,102 @@
 import React from 'react';
-import { render, screen, within } from '@testing-library/react';
-import DAGRunStatus from '@/components/DAGRunStatus';
-import { generateMockDAGRun } from '@/lib/types';
+import { render, screen } from '@testing-library/react';
+import DAGRunStatus from '../../components/DAGRunStatus';
+import { useDAGRun, useDAGRunSteps, useDAGRunUpdates } from '../../lib/api/hooks';
 
-// Mock the date-fns functions to have consistent test results
-jest.mock('date-fns', () => ({
-  formatDistanceToNow: () => '2 hours ago',
-  parseISO: (date: string) => new Date(date),
-  format: (date: Date) => `Formatted: ${date.toISOString()}`,
+// Mock the hooks
+jest.mock('../../lib/api/hooks', () => ({
+  useDAGRun: jest.fn(),
+  useDAGRunSteps: jest.fn(),
+  useDAGRunUpdates: jest.fn()
 }));
 
 describe('DAGRunStatus', () => {
-  const mockDAGRun = generateMockDAGRun();
+  const mockDagRun = {
+    dag_id: 'test',
+    run_id: 'test-run',
+    status: 'running',
+    start_date: new Date().toISOString(),
+    end_date: null,
+    execution_date: new Date().toISOString()
+  };
 
-  it('renders the DAG run details correctly', () => {
-    render(<DAGRunStatus dagRun={mockDAGRun} />);
-    
-    // Check if the DAG ID and run ID are displayed
-    expect(screen.getByText(mockDAGRun.dagId)).toBeInTheDocument();
-    expect(screen.getByText(`#${mockDAGRun.runId}`, { exact: false })).toBeInTheDocument();
-    
-    // Check if the status is displayed with the correct color
-    const statusBadge = screen.getByText(mockDAGRun.status);
-    expect(statusBadge).toBeInTheDocument();
-    expect(statusBadge.closest('div')).toHaveClass('bg-green-100');
-    
-    // Check if the description is displayed
-    if (mockDAGRun.metadata?.description) {
-      expect(screen.getByText(mockDAGRun.metadata.description)).toBeInTheDocument();
+  const mockSteps = [
+    {
+      step_id: 'step1',
+      task_id: 'task1',
+      status: 'running',
+      start_time: new Date().toISOString(),
+      end_time: null,
+      retry_count: 0
     }
-  });
+  ];
 
-  it('displays the execution details', () => {
-    render(<DAGRunStatus dagRun={mockDAGRun} />);
-    
-    // Check if the execution date is displayed
-    expect(screen.getByText('Execution Date')).toBeInTheDocument();
-    expect(screen.getByText('Formatted:', { exact: false })).toBeInTheDocument();
-    
-    // Check if the started time is displayed
-    expect(screen.getByText('Started')).toBeInTheDocument();
-    expect(screen.getByText('2 hours ago')).toBeInTheDocument();
-  });
-
-  it('displays the list of steps', () => {
-    render(<DAGRunStatus dagRun={mockDAGRun} />);
-    
-    // Check if the steps section header is displayed
-    expect(screen.getByText('Steps')).toBeInTheDocument();
-    
-    // Check if all steps are displayed
-    mockDAGRun.steps.forEach(step => {
-      expect(screen.getByText(step.name)).toBeInTheDocument();
-      
-      // Check if the status is displayed with the correct color
-      const statusBadge = screen.getByText(step.status);
-      expect(statusBadge).toBeInTheDocument();
-      
-      // Check retry count
-      if (step.retryCount > 0) {
-        expect(screen.getByText(`${step.retryCount} retries`)).toBeInTheDocument();
-      } else {
-        expect(screen.getByText('No retries')).toBeInTheDocument();
-      }
+  beforeEach(() => {
+    (useDAGRun as jest.Mock).mockReturnValue({
+      data: mockDagRun,
+      error: null,
+      isLoading: false
+    });
+    (useDAGRunSteps as jest.Mock).mockReturnValue({
+      data: mockSteps,
+      error: null
+    });
+    (useDAGRunUpdates as jest.Mock).mockReturnValue({
+      status: null,
+      steps: null,
+      error: null
     });
   });
 
-  it('handles missing optional fields gracefully', () => {
-    const minimalDAGRun = {
-      ...mockDAGRun,
-      metadata: undefined,
-      steps: [],
-      startDate: undefined,
-      endDate: undefined,
-    };
+  it('renders the component with real data', () => {
+    render(<DAGRunStatus dagId="test" runId="test-run" />);
+    expect(screen.getByText('DAG Run Status')).toBeInTheDocument();
+    expect(screen.getByText('Run ID: test-run')).toBeInTheDocument();
+  });
+
+  it('displays step information correctly', () => {
+    render(<DAGRunStatus dagId="test" runId="test-run" />);
+    expect(screen.getByText('step1')).toBeInTheDocument();
+    expect(screen.getByText('task1')).toBeInTheDocument();
+    expect(screen.getByText('running')).toBeInTheDocument();
+  });
+
+  it('shows loading state', () => {
+    (useDAGRun as jest.Mock).mockReturnValue({
+      data: null,
+      error: null,
+      isLoading: true
+    });
+    render(<DAGRunStatus dagId="test" runId="test-run" />);
+    expect(screen.getByText('Loading DAG run...')).toBeInTheDocument();
+  });
+
+  it('shows error state', () => {
+    (useDAGRun as jest.Mock).mockReturnValue({
+      data: null,
+      error: new Error('Failed to load DAG run'),
+      isLoading: false
+    });
+    render(<DAGRunStatus dagId="test" runId="test-run" />);
+    expect(screen.getByText('Error: Failed to load DAG run')).toBeInTheDocument();
+  });
+
+  it('updates with real-time data', () => {
+    render(<DAGRunStatus dagId="test" runId="test-run" />);
     
-    render(<DAGRunStatus dagRun={minimalDAGRun} />);
-    
-    // Should still render without errors
-    expect(screen.getByText(mockDAGRun.dagId)).toBeInTheDocument();
-    expect(screen.getByText('No steps found in this DAG run.')).toBeInTheDocument();
+    // Simulate real-time update
+    (useDAGRunUpdates as jest.Mock).mockReturnValue({
+      status: 'completed',
+      steps: [{
+        ...mockSteps[0],
+        status: 'completed',
+        end_time: new Date().toISOString()
+      }],
+      error: null
+    });
+
+    // Re-render to apply updates
+    render(<DAGRunStatus dagId="test" runId="test-run" />);
+    expect(screen.getByText('completed')).toBeInTheDocument();
   });
 });

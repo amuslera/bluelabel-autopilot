@@ -1,0 +1,3 @@
+# Signal file for CC
+# Please trigger a new workflow scenario for the live DAG UI demo recording (Scenario 2).
+# CA is ready and recording the UI. 

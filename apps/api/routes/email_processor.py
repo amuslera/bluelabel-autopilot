@@ -35,8 +35,15 @@ from apps.api.models import WebSocketMessage
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api", tags=["email"])
 
-# Get WebSocket manager instance
-from apps.api.main import ws_manager, active_runs
+# WebSocket manager and active runs will be injected
+ws_manager = None
+active_runs = None
+
+def init_router(websocket_manager, runs_dict):
+    """Initialize router with dependencies."""
+    global ws_manager, active_runs
+    ws_manager = websocket_manager
+    active_runs = runs_dict
 
 
 class EmailProcessRequest(BaseModel):
