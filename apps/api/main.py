@@ -23,8 +23,8 @@ import uuid
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from core.unified_workflow_engine import UnifiedWorkflowEngine, EngineType
-from core.agent_registry import registry, register_agent
+from core.unified_workflow_adapter import UnifiedWorkflowAdapter
+from core.agent_registry import register_agent
 from interfaces.run_models import WorkflowRunResult, WorkflowStatus
 from agents.ingestion_agent import IngestionAgent
 from agents.digest_agent import DigestAgent
@@ -36,7 +36,7 @@ from apps.api.models import (
 )
 from apps.api.websocket_manager import WebSocketManager
 from apps.api.middleware import log_requests, handle_errors, metrics
-from apps.api.routes import email_processor
+from apps.api.routes import email_processor, workflows
 
 
 logger = logging.getLogger(__name__)
@@ -53,8 +53,8 @@ async def lifespan(app: FastAPI):
     logger.info("Starting Bluelabel Autopilot API")
     
     # Register agents with the registry
-    register_agent('ingestion_agent', IngestionAgent, version="1.0.0", tags=["ingestion", "pdf", "url"])
-    register_agent('digest_agent', DigestAgent, version="1.0.0", tags=["digest", "summary"])
+    register_agent('ingestion_agent', IngestionAgent)
+    register_agent('digest_agent', DigestAgent)
     
     logger.info("Agents registered successfully")
     
@@ -76,7 +76,7 @@ app = FastAPI(
 # Add CORS middleware for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],  # Frontend URLs
+    allow_origins=["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"],  # Frontend URLs
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -88,17 +88,20 @@ app.middleware("http")(handle_errors)
 app.middleware("http")(metrics)
 
 # Mount static files for test page
-app.mount("/static", StaticFiles(directory="apps/api/static", html=True), name="static")
+# app.mount("/static", StaticFiles(directory="apps/api/static", html=True), name="static")
+
+# Initialize unified workflow adapter
+unified_adapter = UnifiedWorkflowAdapter()
 
 # Store active runs in memory (in production, use a database)
 active_runs: Dict[str, WorkflowRunResult] = {}
-run_engines: Dict[str, UnifiedWorkflowEngine] = {}
 
 # Initialize email processor router with dependencies
 email_processor.init_router(ws_manager, active_runs)
 
 # Include routers
 app.include_router(email_processor.router)
+app.include_router(workflows.router, prefix="/api")
 
 
 @app.get("/api/dag-runs", response_model=DAGRunListResponse)
@@ -108,36 +111,31 @@ async def list_dag_runs(
     status: Optional[str] = None
 ) -> DAGRunListResponse:
     """List all DAG runs with optional filtering."""
-    # Filter runs by status if provided
-    filtered_runs = active_runs.values()
-    if status:
-        try:
-            status_enum = WorkflowStatus(status.lower())
-            filtered_runs = [r for r in filtered_runs if r.status == status_enum]
-        except ValueError:
-            raise HTTPException(status_code=400, detail=f"Invalid status: {status}")
+    # Get all runs from unified adapter
+    all_runs = unified_adapter.list_runs(limit=100)  # Get more than needed for filtering
     
-    # Sort by start time (newest first)
-    sorted_runs = sorted(filtered_runs, key=lambda r: r.started_at, reverse=True)
+    # Filter by status if provided
+    if status:
+        all_runs = [r for r in all_runs if r["status"] == status.lower()]
     
     # Apply pagination
-    total = len(sorted_runs)
-    paginated = sorted_runs[offset:offset + limit]
+    total = len(all_runs)
+    paginated = all_runs[offset:offset + limit]
     
     # Convert to response format
     items = []
     for run in paginated:
         items.append(DAGRunResponse(
-            id=run.run_id,
-            workflow_name=run.workflow_name,
-            workflow_version=run.workflow_version,
-            status=run.status.value,
-            started_at=run.started_at.isoformat(),
-            completed_at=run.completed_at.isoformat() if run.completed_at else None,
-            duration_ms=run.duration_ms,
-            step_count=len(run.step_outputs),
-            failed_step=run.failed_step,
-            errors=run.errors
+            id=run["run_id"],
+            workflow_name=run["dag_id"],
+            workflow_version="1.0.0",
+            status=run["status"],
+            started_at=run["created_at"],
+            completed_at=run["updated_at"] if run["status"] != "running" else None,
+            duration_ms=0,  # TODO: Calculate duration
+            step_count=0,  # TODO: Get step count
+            failed_step=None,
+            errors=[]
         ))
     
     return DAGRunListResponse(
@@ -151,159 +149,138 @@ async def list_dag_runs(
 @app.get("/api/dag-runs/{run_id}", response_model=DAGRunResponse)
 async def get_dag_run(run_id: str) -> DAGRunResponse:
     """Get a specific DAG run by ID."""
-    if run_id not in active_runs:
+    status = unified_adapter.get_run_status(run_id)
+    if not status:
         raise HTTPException(status_code=404, detail=f"DAG run {run_id} not found")
     
-    run = active_runs[run_id]
-    
-    # Include detailed step information
+    # Convert step information to expected format
     steps = []
-    for step_id, step_result in run.step_outputs.items():
+    for step_id, step_info in status.get("steps", {}).items():
         steps.append({
             "id": step_id,
-            "name": step_result.step_name,
-            "status": step_result.status,
-            "duration_ms": step_result.duration_ms,
-            "error": step_result.error,
-            "timestamp": step_result.timestamp.isoformat()
+            "name": step_id,  # TODO: Get proper step names
+            "status": step_info["status"],
+            "duration_ms": 0,  # TODO: Calculate from timestamps
+            "error": step_info.get("error"),
+            "timestamp": step_info.get("started_at", "")
         })
     
+    # Calculate duration if completed
+    duration_ms = 0
+    if status.get("started_at") and status["status"] in ["success", "failed", "cancelled"]:
+        # TODO: Calculate actual duration
+        duration_ms = 1000  # Placeholder
+    
     return DAGRunResponse(
-        id=run.run_id,
-        workflow_name=run.workflow_name,
-        workflow_version=run.workflow_version,
-        status=run.status.value,
-        started_at=run.started_at.isoformat(),
-        completed_at=run.completed_at.isoformat() if run.completed_at else None,
-        duration_ms=run.duration_ms,
-        step_count=len(run.step_outputs),
+        id=run_id,
+        workflow_name=status.get("dag_id", "unknown"),
+        workflow_version="1.0.0",
+        status=status["status"],
+        started_at=status["started_at"],
+        completed_at=status.get("updated_at") if status["status"] != "running" else None,
+        duration_ms=duration_ms,
+        step_count=len(steps),
         steps=steps,
-        failed_step=run.failed_step,
-        errors=run.errors,
-        execution_order=run.execution_order
+        failed_step=None,  # TODO: Determine from step statuses
+        errors=[status.get("error")] if status.get("error") else [],
+        execution_order=list(status.get("steps", {}).keys())
     )
 
 
 @app.post("/api/dag-runs", response_model=DAGRunResponse)
 async def create_dag_run(request: DAGRunCreateRequest) -> DAGRunResponse:
     """Create a new DAG run."""
-    # Validate workflow file exists
-    workflow_path = Path(request.workflow_path)
-    if not workflow_path.exists():
-        raise HTTPException(status_code=404, detail=f"Workflow file not found: {request.workflow_path}")
+    # Extract workflow name from path or YAML
+    workflow_name = request.workflow_path
+    workflow_yaml = None
     
-    # Check if a run is already active for this workflow
-    active_workflow_runs = [
-        r for r in active_runs.values() 
-        if r.workflow_file == request.workflow_path and r.status == WorkflowStatus.RUNNING
-    ]
-    if active_workflow_runs and not request.force:
-        raise HTTPException(
-            status_code=409, 
-            detail=f"Workflow already running. Use force=true to start anyway."
+    # If workflow_path ends with .yaml, it's a file path
+    if workflow_name.endswith('.yaml'):
+        workflow_path = Path(workflow_name)
+        if not workflow_path.exists():
+            raise HTTPException(status_code=404, detail=f"Workflow file not found: {workflow_name}")
+        workflow_name = workflow_path.stem
+    else:
+        # Otherwise it might be inline YAML
+        if hasattr(request, 'workflow_yaml'):
+            workflow_yaml = request.workflow_yaml
+    
+    # Start workflow with unified adapter
+    try:
+        run_id = await unified_adapter.run_workflow(
+            workflow_name=workflow_name,
+            inputs=request.initial_input or {},
+            workflow_yaml=workflow_yaml
         )
-    
-    # Create engine with specified type
-    engine_type = EngineType(request.engine_type) if request.engine_type else None
-    engine = UnifiedWorkflowEngine(
-        engine_type=engine_type,
-        storage_path=Path(request.storage_path) if request.storage_path else None
-    )
-    
-    # Generate run ID
-    run_id = str(uuid.uuid4())
-    
-    # Store engine reference
-    run_engines[run_id] = engine
-    
-    # Define callback for real-time updates
-    async def on_step_complete(result: WorkflowRunResult):
-        """Send WebSocket updates as steps complete."""
-        # Update stored result
-        active_runs[result.run_id] = result
         
-        # Send WebSocket update
+        # Get initial status
+        status = unified_adapter.get_run_status(run_id)
+        if not status:
+            raise HTTPException(status_code=500, detail="Failed to get workflow status")
+    
+        # Send creation event via WebSocket
         await ws_manager.broadcast(WebSocketMessage(
-            event="dag.step.status.updated",
+            event="dag.run.created",
             data={
-                "run_id": result.run_id,
-                "status": result.status.value,
-                "steps_completed": len([s for s in result.step_outputs.values() if s.status == "success"]),
-                "steps_total": len(result.step_outputs)
+                "run_id": run_id,
+                "workflow_name": workflow_name,
+                "status": status["status"]
             }
         ))
-    
-    # Start workflow execution in background
-    async def execute_workflow():
-        try:
-            # Send creation event
-            await ws_manager.broadcast(WebSocketMessage(
-                event="dag.run.created",
-                data={
-                    "run_id": run_id,
-                    "workflow_name": request.workflow_path,
-                    "engine_type": request.engine_type or "sequential"
-                }
-            ))
-            
-            # Execute workflow
-            result = await engine.execute_workflow(
-                workflow_path=workflow_path,
-                persist=request.persist,
-                initial_input=request.initial_input,
-                on_complete=on_step_complete
-            )
-            
-            # Store result
-            active_runs[run_id] = result
-            
-            # Send completion event
-            await ws_manager.broadcast(WebSocketMessage(
-                event="dag.run.completed",
-                data={
-                    "run_id": result.run_id,
-                    "status": result.status.value,
-                    "duration_ms": result.duration_ms
-                }
-            ))
-            
-        except Exception as e:
-            logger.error(f"Workflow execution failed: {e}")
-            # Create error result
-            error_result = WorkflowRunResult(
-                run_id=run_id,
-                workflow_name=workflow_path.name,
-                workflow_version="0.0.0",
-                status=WorkflowStatus.FAILED,
-                started_at=datetime.utcnow(),
-                completed_at=datetime.utcnow(),
-                duration_ms=0,
-                workflow_file=str(workflow_path),
-                errors=[str(e)]
-            )
-            active_runs[run_id] = error_result
-            
-            # Send error event
-            await ws_manager.broadcast(WebSocketMessage(
-                event="dag.run.completed",
-                data={
-                    "run_id": run_id,
-                    "status": "failed",
-                    "error": str(e)
-                }
-            ))
-    
-    # Start execution in background
-    asyncio.create_task(execute_workflow())
+        
+        # Start monitoring workflow status in background
+        async def monitor_workflow():
+            try:
+                prev_status = None
+                while True:
+                    await asyncio.sleep(0.5)  # Poll every 500ms
+                    
+                    current_status = unified_adapter.get_run_status(run_id)
+                    if not current_status:
+                        break
+                    
+                    # Send updates when status changes
+                    if current_status != prev_status:
+                        await ws_manager.broadcast(WebSocketMessage(
+                            event="dag.step.status.updated",
+                            data={
+                                "run_id": run_id,
+                                "status": current_status["status"],
+                                "steps": current_status["steps"]
+                            }
+                        ))
+                        prev_status = current_status
+                    
+                    # Check if workflow is complete
+                    if current_status["status"] in ["success", "failed", "cancelled"]:
+                        await ws_manager.broadcast(WebSocketMessage(
+                            event="dag.run.completed",
+                            data={
+                                "run_id": run_id,
+                                "status": current_status["status"],
+                                "error": current_status.get("error")
+                            }
+                        ))
+                        break
+                        
+            except Exception as e:
+                logger.error(f"Error monitoring workflow: {e}")
+        
+        # Start monitoring in background
+        asyncio.create_task(monitor_workflow())
+        
+    except Exception as e:
+        logger.error(f"Failed to create workflow: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
     
     # Return immediate response with run ID
     return DAGRunResponse(
         id=run_id,
-        workflow_name=workflow_path.name,
-        workflow_version="0.0.0",  # Will be updated when workflow loads
-        status="running",
-        started_at=datetime.utcnow().isoformat(),
-        step_count=0
+        workflow_name=workflow_name,
+        workflow_version="1.0.0",  # TODO: Get from workflow definition
+        status=status["status"],
+        started_at=status["started_at"],
+        step_count=len(status.get("steps", {}))
     )
 
 
@@ -405,7 +382,7 @@ async def get_metrics():
 
 
 @app.post("/api/test/create-sample-workflow")
-async def create_test_workflow(background_tasks: BackgroundTasks):
+async def create_test_workflow():
     """Create a sample workflow for testing. Used by CA for integration testing."""
     # Create a simple test workflow
     workflow_yaml = """
@@ -428,51 +405,40 @@ steps:
     output: summary_result
 """
     
-    # Create workflow request
-    request = CreateDAGRunRequest(
-        workflow=workflow_yaml,
-        inputs={"test_mode": True},
-        metadata={"source": "integration_test", "created_by": "CA"}
-    )
-    
-    # Use existing create endpoint logic
-    run_id = str(uuid.uuid4())
-    
-    # Store run info
-    run_result = WorkflowRunResult(
-        run_id=run_id,
-        workflow_name="test-integration-workflow",
-        workflow_version="1.0.0",
-        status=WorkflowStatus.RUNNING,
-        started_at=datetime.utcnow(),
-        step_outputs={},
-        errors=[]
-    )
-    active_runs[run_id] = run_result
-    
-    # Execute workflow asynchronously
-    background_tasks.add_task(execute_workflow_task, run_id, request.workflow, request.inputs)
-    
-    # Send initial WebSocket update
-    await ws_manager.broadcast(WebSocketMessage(
-        event="dag.run.created",
-        data={
-            "run_id": run_id,
-            "workflow_name": "test-integration-workflow",
-            "status": "running",
-            "message": "Test workflow created for integration testing"
-        }
-    ))
-    
-    return DAGRunResponse(
-        id=run_id,
-        workflow_name="test-integration-workflow",
-        workflow_version="1.0.0",
-        status="running",
-        started_at=datetime.utcnow().isoformat(),
-        step_count=2,
-        message="Test workflow started successfully"
-    )
+    # Run workflow using unified adapter
+    try:
+        run_id = await unified_adapter.run_workflow(
+            workflow_name="test-integration-workflow",
+            inputs={"test_mode": True},
+            workflow_yaml=workflow_yaml
+        )
+        
+        # Get initial status
+        status = unified_adapter.get_run_status(run_id)
+        
+        # Send initial WebSocket update
+        await ws_manager.broadcast(WebSocketMessage(
+            event="dag.run.created",
+            data={
+                "run_id": run_id,
+                "workflow_name": "test-integration-workflow",
+                "status": status["status"],
+                "message": "Test workflow created for integration testing"
+            }
+        ))
+        
+        return DAGRunResponse(
+            id=run_id,
+            workflow_name="test-integration-workflow",
+            workflow_version="1.0.0",
+            status=status["status"],
+            started_at=status["started_at"],
+            step_count=2,
+            message="Test workflow started successfully"
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":

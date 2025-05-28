@@ -1,363 +1,334 @@
 """
-Agent Registry - Dynamic agent registration and discovery system.
+Agent Registry - Dynamic agent registration and dependency injection
 
-This module provides a dependency injection system for agents, replacing
-hardcoded agent dictionaries with a flexible, extensible registry.
+This module provides a centralized registry for agent discovery and instantiation,
+enabling flexible agent configuration and dependency injection throughout the system.
 """
 
-import threading
 import logging
-from typing import Dict, Type, Optional, List, Any, Callable
-from datetime import datetime
-from enum import Enum
+from typing import Dict, Type, Optional, Any, List, Callable
+from pathlib import Path
 import inspect
 
 from agents.base_agent import BaseAgent
 from interfaces.agent_models import AgentCapabilities
 
-
 logger = logging.getLogger(__name__)
-
-
-class AgentStatus(Enum):
-    """Status of registered agents."""
-    REGISTERED = "registered"
-    INITIALIZED = "initialized"
-    HEALTHY = "healthy"
-    UNHEALTHY = "unhealthy"
-    DISABLED = "disabled"
-
-
-class AgentMetadata:
-    """Metadata for a registered agent."""
-    
-    def __init__(
-        self,
-        agent_id: str,
-        agent_class: Type[BaseAgent],
-        version: str = "1.0.0",
-        capabilities: Optional[AgentCapabilities] = None,
-        description: Optional[str] = None,
-        tags: Optional[List[str]] = None
-    ):
-        self.agent_id = agent_id
-        self.agent_class = agent_class
-        self.version = version
-        self.capabilities = capabilities or AgentCapabilities()
-        self.description = description or ""
-        self.tags = tags or []
-        self.status = AgentStatus.REGISTERED
-        self.registered_at = datetime.utcnow()
-        self.last_health_check = None
-        self.health_check_errors = []
-        self.instance: Optional[BaseAgent] = None
-        
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert metadata to dictionary."""
-        return {
-            'agent_id': self.agent_id,
-            'agent_class': f"{self.agent_class.__module__}.{self.agent_class.__name__}",
-            'version': self.version,
-            'capabilities': self.capabilities.model_dump() if hasattr(self.capabilities, 'model_dump') else {},
-            'description': self.description,
-            'tags': self.tags,
-            'status': self.status.value,
-            'registered_at': self.registered_at.isoformat(),
-            'last_health_check': self.last_health_check.isoformat() if self.last_health_check else None
-        }
 
 
 class AgentRegistry:
     """
-    Thread-safe registry for agent discovery and management.
+    Singleton registry for dynamic agent registration and discovery.
     
-    Implements singleton pattern to ensure single registry instance.
+    Provides dependency injection capabilities for agents with
+    configuration management and capability-based discovery.
     """
     
     _instance = None
-    _lock = threading.Lock()
+    _agents: Dict[str, Type[BaseAgent]] = {}
+    _agent_configs: Dict[str, Dict[str, Any]] = {}
+    _agent_instances: Dict[str, BaseAgent] = {}
+    _agent_capabilities: Dict[str, AgentCapabilities] = {}
     
     def __new__(cls):
-        """Ensure singleton instance."""
+        """Ensure singleton pattern."""
         if cls._instance is None:
-            with cls._lock:
-                if cls._instance is None:
-                    cls._instance = super().__new__(cls)
-                    cls._instance._initialized = False
+            cls._instance = super().__new__(cls)
         return cls._instance
     
-    def __init__(self):
-        """Initialize the registry (only runs once due to singleton)."""
-        if self._initialized:
-            return
-            
-        self._agents: Dict[str, AgentMetadata] = {}
-        self._observers: List[Callable] = []
-        self._lock = threading.RLock()  # Reentrant lock for thread safety
-        self._initialized = True
-        
-        logger.info("AgentRegistry initialized")
-    
-    def register(
-        self,
-        agent_id: str,
-        agent_class: Type[BaseAgent],
-        version: str = "1.0.0",
-        capabilities: Optional[AgentCapabilities] = None,
-        description: Optional[str] = None,
-        tags: Optional[List[str]] = None,
-        replace: bool = False
-    ) -> None:
+    @classmethod
+    def register(cls, 
+                 agent_type: str, 
+                 agent_class: Type[BaseAgent],
+                 config: Optional[Dict[str, Any]] = None,
+                 capabilities: Optional[AgentCapabilities] = None):
         """
-        Register an agent with the registry.
+        Register an agent class with the registry.
         
         Args:
-            agent_id: Unique identifier for the agent
-            agent_class: Class type that extends BaseAgent
-            version: Agent version string
-            capabilities: Agent capabilities specification
-            description: Human-readable description
-            tags: List of tags for categorization
-            replace: Whether to replace existing registration
-            
-        Raises:
-            ValueError: If agent_id already registered and replace=False
-            TypeError: If agent_class doesn't extend BaseAgent
+            agent_type: Unique identifier for the agent type
+            agent_class: The agent class to register
+            config: Default configuration for the agent
+            capabilities: Agent capabilities for discovery
         """
-        # Validate agent class
-        if not inspect.isclass(agent_class) or not issubclass(agent_class, BaseAgent):
+        if not issubclass(agent_class, BaseAgent):
             raise TypeError(f"{agent_class} must be a subclass of BaseAgent")
         
-        with self._lock:
-            if agent_id in self._agents and not replace:
-                raise ValueError(f"Agent '{agent_id}' already registered. Use replace=True to override.")
-            
-            # Create metadata
-            metadata = AgentMetadata(
-                agent_id=agent_id,
-                agent_class=agent_class,
-                version=version,
-                capabilities=capabilities,
-                description=description,
-                tags=tags
-            )
-            
-            # Store in registry
-            self._agents[agent_id] = metadata
-            
-            logger.info(f"Registered agent '{agent_id}' version {version}")
-            
-            # Notify observers
-            self._notify_observers('register', agent_id, metadata)
+        cls._agents[agent_type] = agent_class
+        cls._agent_configs[agent_type] = config or {}
+        
+        if capabilities:
+            cls._agent_capabilities[agent_type] = capabilities
+        
+        logger.info(f"Registered agent: {agent_type} -> {agent_class.__name__}")
     
-    def discover(
-        self,
-        tags: Optional[List[str]] = None,
-        capabilities: Optional[Dict[str, Any]] = None,
-        status: Optional[AgentStatus] = None
-    ) -> List[str]:
+    @classmethod
+    def get_agent(cls, 
+                  agent_type: str, 
+                  config_override: Optional[Dict[str, Any]] = None,
+                  force_new: bool = False) -> BaseAgent:
         """
-        Discover agents matching criteria.
+        Get or create an agent instance.
         
         Args:
-            tags: Filter by tags (matches any)
-            capabilities: Filter by capabilities
-            status: Filter by status
+            agent_type: Type of agent to retrieve
+            config_override: Configuration to override defaults
+            force_new: Force creation of new instance
             
         Returns:
-            List of matching agent IDs
+            Agent instance
         """
-        with self._lock:
-            matches = []
+        if agent_type not in cls._agents:
+            raise ValueError(f"Unknown agent type: {agent_type}")
+        
+        # Check for existing instance if not forcing new
+        if not force_new and agent_type in cls._agent_instances:
+            return cls._agent_instances[agent_type]
+        
+        # Merge configurations
+        config = cls._agent_configs.get(agent_type, {}).copy()
+        if config_override:
+            config.update(config_override)
+        
+        # Create agent instance
+        agent_class = cls._agents[agent_type]
+        
+        # Inspect constructor to determine required parameters
+        sig = inspect.signature(agent_class.__init__)
+        params = sig.parameters
+        
+        # Build kwargs based on what the agent accepts
+        kwargs = {}
+        for param_name, param in params.items():
+            if param_name == 'self':
+                continue
             
-            for agent_id, metadata in self._agents.items():
-                # Check status filter
-                if status and metadata.status != status:
-                    continue
-                
-                # Check tag filter
-                if tags and not any(tag in metadata.tags for tag in tags):
-                    continue
-                
-                # Check capabilities filter
-                if capabilities:
-                    # Simple capability matching - could be enhanced
-                    agent_caps = metadata.capabilities.model_dump() if hasattr(metadata.capabilities, 'model_dump') else {}
-                    if not all(agent_caps.get(k) == v for k, v in capabilities.items()):
-                        continue
-                
-                matches.append(agent_id)
-            
-            return matches
+            # Check config for parameter
+            if param_name in config:
+                kwargs[param_name] = config[param_name]
+            elif param.default is not inspect.Parameter.empty:
+                # Has default value, skip
+                continue
+            else:
+                # Try common parameters
+                if param_name == 'storage_path' and 'storage_path' not in kwargs:
+                    kwargs['storage_path'] = Path("./data/knowledge")
+                elif param_name == 'temp_path' and 'temp_path' not in kwargs:
+                    kwargs['temp_path'] = Path("./data/temp")
+        
+        # Create instance
+        agent = agent_class(**kwargs)
+        
+        # Cache instance if not forced new
+        if not force_new:
+            cls._agent_instances[agent_type] = agent
+        
+        logger.info(f"Created agent instance: {agent_type}")
+        return agent
     
-    def get(self, agent_id: str, initialize: bool = True) -> Optional[BaseAgent]:
+    @classmethod
+    def discover(cls, 
+                 capability: Optional[str] = None,
+                 tags: Optional[List[str]] = None) -> List[str]:
         """
-        Get an agent instance by ID.
+        Discover agents by capability or tags.
         
         Args:
-            agent_id: Agent identifier
-            initialize: Whether to initialize the agent if not already done
+            capability: Required capability
+            tags: Required tags
             
         Returns:
-            Agent instance or None if not found
+            List of agent types matching criteria
         """
-        with self._lock:
-            metadata = self._agents.get(agent_id)
-            if not metadata:
-                logger.warning(f"Agent '{agent_id}' not found in registry")
-                return None
+        matching_agents = []
+        
+        for agent_type, capabilities in cls._agent_capabilities.items():
+            # Check capability match
+            if capability and capability not in capabilities.capabilities:
+                continue
             
-            # Create instance if needed
-            if metadata.instance is None and initialize:
-                try:
-                    metadata.instance = metadata.agent_class()
-                    metadata.status = AgentStatus.INITIALIZED
-                    logger.info(f"Initialized agent '{agent_id}'")
-                    
-                    # Notify observers
-                    self._notify_observers('initialize', agent_id, metadata)
-                    
-                except Exception as e:
-                    logger.error(f"Failed to initialize agent '{agent_id}': {e}")
-                    metadata.status = AgentStatus.UNHEALTHY
-                    metadata.health_check_errors.append(str(e))
-                    return None
+            # Check tag match
+            if tags:
+                agent_tags = getattr(capabilities, 'tags', [])
+                if not all(tag in agent_tags for tag in tags):
+                    continue
             
-            return metadata.instance
+            matching_agents.append(agent_type)
+        
+        return matching_agents
     
-    def get_metadata(self, agent_id: str) -> Optional[AgentMetadata]:
-        """Get metadata for an agent."""
-        with self._lock:
-            return self._agents.get(agent_id)
-    
-    def list_agents(self) -> Dict[str, Dict[str, Any]]:
-        """List all registered agents with their metadata."""
-        with self._lock:
-            return {
-                agent_id: metadata.to_dict()
-                for agent_id, metadata in self._agents.items()
+    @classmethod
+    def list_agents(cls) -> Dict[str, Dict[str, Any]]:
+        """List all registered agents with their info."""
+        agents_info = {}
+        
+        for agent_type, agent_class in cls._agents.items():
+            info = {
+                "class": agent_class.__name__,
+                "module": agent_class.__module__,
+                "config": cls._agent_configs.get(agent_type, {}),
+                "instantiated": agent_type in cls._agent_instances
             }
-    
-    async def health_check(self, agent_id: str) -> bool:
-        """
-        Perform health check on an agent.
+            
+            if agent_type in cls._agent_capabilities:
+                info["capabilities"] = cls._agent_capabilities[agent_type].dict()
+            
+            agents_info[agent_type] = info
         
-        Args:
-            agent_id: Agent to check
-            
-        Returns:
-            True if healthy, False otherwise
-        """
-        with self._lock:
-            metadata = self._agents.get(agent_id)
-            if not metadata:
-                return False
-            
-            metadata.last_health_check = datetime.utcnow()
-            
-            # Get or create instance
-            agent = self.get(agent_id)
-            if not agent:
-                metadata.status = AgentStatus.UNHEALTHY
-                return False
-            
-            try:
-                # Check if agent has health check method
-                if hasattr(agent, 'health_check'):
-                    is_healthy = await agent.health_check()
-                else:
-                    # Basic check - can we call process?
-                    is_healthy = callable(getattr(agent, 'process', None))
-                
-                metadata.status = AgentStatus.HEALTHY if is_healthy else AgentStatus.UNHEALTHY
-                
-                if not is_healthy:
-                    metadata.health_check_errors.append(f"Health check failed at {metadata.last_health_check}")
-                else:
-                    # Clear errors on successful check
-                    metadata.health_check_errors = []
-                
-                # Notify observers
-                self._notify_observers('health_check', agent_id, metadata)
-                
-                return is_healthy
-                
-            except Exception as e:
-                logger.error(f"Health check failed for agent '{agent_id}': {e}")
-                metadata.status = AgentStatus.UNHEALTHY
-                metadata.health_check_errors.append(str(e))
-                return False
+        return agents_info
     
-    async def health_check_all(self) -> Dict[str, bool]:
-        """Perform health checks on all agents."""
-        results = {}
-        for agent_id in list(self._agents.keys()):
-            results[agent_id] = await self.health_check(agent_id)
-        return results
-    
-    def add_observer(self, callback: Callable) -> None:
-        """
-        Add an observer for registry events.
-        
-        Callback signature: callback(event: str, agent_id: str, metadata: AgentMetadata)
-        """
-        with self._lock:
-            self._observers.append(callback)
-    
-    def remove_observer(self, callback: Callable) -> None:
-        """Remove an observer."""
-        with self._lock:
-            if callback in self._observers:
-                self._observers.remove(callback)
-    
-    def _notify_observers(self, event: str, agent_id: str, metadata: AgentMetadata) -> None:
-        """Notify all observers of an event."""
-        for observer in self._observers:
-            try:
-                observer(event, agent_id, metadata)
-            except Exception as e:
-                logger.error(f"Observer notification failed: {e}")
-    
-    def clear(self) -> None:
+    @classmethod
+    def clear(cls):
         """Clear all registrations (useful for testing)."""
-        with self._lock:
-            self._agents.clear()
-            logger.info("AgentRegistry cleared")
+        cls._agents.clear()
+        cls._agent_configs.clear()
+        cls._agent_instances.clear()
+        cls._agent_capabilities.clear()
+        logger.info("Agent registry cleared")
     
-    def disable(self, agent_id: str) -> None:
-        """Disable an agent."""
-        with self._lock:
-            metadata = self._agents.get(agent_id)
-            if metadata:
-                metadata.status = AgentStatus.DISABLED
-                logger.info(f"Disabled agent '{agent_id}'")
-                self._notify_observers('disable', agent_id, metadata)
+    @classmethod
+    def update_config(cls, agent_type: str, config: Dict[str, Any]):
+        """Update configuration for a registered agent."""
+        if agent_type not in cls._agents:
+            raise ValueError(f"Unknown agent type: {agent_type}")
+        
+        cls._agent_configs[agent_type].update(config)
+        
+        # Invalidate cached instance
+        if agent_type in cls._agent_instances:
+            del cls._agent_instances[agent_type]
+        
+        logger.info(f"Updated config for agent: {agent_type}")
     
-    def enable(self, agent_id: str) -> None:
-        """Enable a disabled agent."""
-        with self._lock:
-            metadata = self._agents.get(agent_id)
-            if metadata and metadata.status == AgentStatus.DISABLED:
-                metadata.status = AgentStatus.REGISTERED
-                logger.info(f"Enabled agent '{agent_id}'")
-                self._notify_observers('enable', agent_id, metadata)
+    @classmethod
+    def health_check(cls, agent_type: str) -> Dict[str, Any]:
+        """Perform health check on an agent."""
+        try:
+            agent = cls.get_agent(agent_type)
+            
+            # Basic health check
+            health = {
+                "status": "healthy",
+                "agent_type": agent_type,
+                "class": agent.__class__.__name__,
+                "instance_id": id(agent)
+            }
+            
+            # Check if agent has custom health check
+            if hasattr(agent, 'health_check'):
+                custom_health = agent.health_check()
+                health.update(custom_health)
+            
+            return health
+            
+        except Exception as e:
+            return {
+                "status": "unhealthy",
+                "agent_type": agent_type,
+                "error": str(e)
+            }
 
 
-# Global registry instance
-registry = AgentRegistry()
-
-
-# Convenience functions
-def register_agent(agent_id: str, agent_class: Type[BaseAgent], **kwargs) -> None:
+# Convenience functions for module-level access
+def register_agent(agent_type: str, 
+                   agent_class: Type[BaseAgent],
+                   config: Optional[Dict[str, Any]] = None,
+                   capabilities: Optional[AgentCapabilities] = None):
     """Register an agent with the global registry."""
-    registry.register(agent_id, agent_class, **kwargs)
+    AgentRegistry.register(agent_type, agent_class, config, capabilities)
 
 
-def get_agent(agent_id: str) -> Optional[BaseAgent]:
+def get_agent(agent_type: str, 
+              config_override: Optional[Dict[str, Any]] = None,
+              force_new: bool = False) -> BaseAgent:
     """Get an agent from the global registry."""
-    return registry.get(agent_id)
+    return AgentRegistry.get_agent(agent_type, config_override, force_new)
 
 
-def discover_agents(**kwargs) -> List[str]:
-    """Discover agents from the global registry."""
-    return registry.discover(**kwargs)
+def discover_agents(capability: Optional[str] = None,
+                   tags: Optional[List[str]] = None) -> List[str]:
+    """Discover agents by capability or tags."""
+    return AgentRegistry.discover(capability, tags)
+
+
+# Auto-register built-in agents when module is imported
+def _auto_register_agents():
+    """Auto-register built-in agents."""
+    try:
+        from agents.ingestion_agent import IngestionAgent
+        from agents.digest_agent import DigestAgent
+        
+        # Register ingestion agent
+        register_agent(
+            "ingestion",
+            IngestionAgent,
+            config={
+                "storage_path": Path("./data/knowledge"),
+                "temp_path": Path("./data/temp")
+            },
+            capabilities=AgentCapabilities(
+                agent_id="ingestion",
+                name="Ingestion Agent",
+                description="Processes URLs and PDFs to extract content",
+                version="1.0.0",
+                capabilities=["url_processing", "pdf_extraction", "content_storage"],
+                input_schema={
+                    "type": "object",
+                    "properties": {
+                        "url": {"type": "string"},
+                        "pdf_path": {"type": "string"},
+                        "text": {"type": "string"}
+                    }
+                },
+                output_schema={
+                    "type": "object",
+                    "properties": {
+                        "content": {"type": "string"},
+                        "metadata": {"type": "object"},
+                        "output_path": {"type": "string"}
+                    }
+                }
+            )
+        )
+        
+        # Register digest agent
+        register_agent(
+            "digest",
+            DigestAgent,
+            config={
+                "model": "claude-3-haiku-20240307",
+                "max_tokens": 1024
+            },
+            capabilities=AgentCapabilities(
+                agent_id="digest",
+                name="Digest Agent",
+                description="Creates summaries and digests from content",
+                version="1.0.0",
+                capabilities=["summarization", "digest_creation", "content_analysis"],
+                input_schema={
+                    "type": "object",
+                    "properties": {
+                        "content": {"type": "string"},
+                        "content_type": {"type": "string"},
+                        "digest_type": {"type": "string"}
+                    }
+                },
+                output_schema={
+                    "type": "object",
+                    "properties": {
+                        "summary": {"type": "string"},
+                        "key_points": {"type": "array"},
+                        "output_path": {"type": "string"}
+                    }
+                }
+            )
+        )
+        
+        logger.info("Auto-registered built-in agents")
+        
+    except ImportError as e:
+        logger.warning(f"Could not auto-register agents: {e}")
+
+
+# Perform auto-registration on import
+_auto_register_agents()

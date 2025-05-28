@@ -21,11 +21,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 # Import models and agents
 from interfaces.agent_models import AgentInput, AgentOutput
 from interfaces.run_models import WorkflowRunResult, StepResult, WorkflowStatus
-from agents.digest_agent import DigestAgent
-from agents.ingestion_agent import IngestionAgent
 from runner.workflow_loader import WorkflowLoader, WorkflowStep
 from runner.workflow_storage import WorkflowStorage
 from services.validation import validate_workflow_file, WorkflowValidationError
+from core.agent_registry import AgentRegistry, get_agent
 
 
 class WorkflowEngine:
@@ -42,14 +41,14 @@ class WorkflowEngine:
         self.temp_path = temp_path or Path("./data/temp")
         self.workflow_storage = WorkflowStorage()
         
-        # Initialize agents
-        self.agents = {
-            'ingestion_agent': IngestionAgent(
-                storage_path=self.storage_path,
-                temp_path=self.temp_path
-            ),
-            'digest_agent': DigestAgent()
-        }
+        # Use agent registry instead of hardcoded agents
+        self.agent_registry = AgentRegistry()
+        
+        # Update agent configurations with paths
+        self.agent_registry.update_config('ingestion', {
+            'storage_path': self.storage_path,
+            'temp_path': self.temp_path
+        })
         
         # Setup logging
         self.logger = logging.getLogger('workflow_engine')
@@ -149,10 +148,19 @@ class WorkflowEngine:
             # Load input data
             input_data = self._load_step_input(step, step_outputs)
             
-            # Get agent
-            if step.agent not in self.agents:
+            # Get agent from registry
+            # Map agent names to registry types
+            agent_type_map = {
+                'ingestion_agent': 'ingestion',
+                'digest_agent': 'digest'
+            }
+            
+            agent_type = agent_type_map.get(step.agent, step.agent)
+            
+            try:
+                agent = get_agent(agent_type)
+            except ValueError:
                 raise ValueError(f"Unknown agent: {step.agent}")
-            agent = self.agents[step.agent]
             
             # Create agent input
             agent_input = AgentInput.model_validate(input_data)

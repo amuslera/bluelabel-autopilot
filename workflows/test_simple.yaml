@@ -1,0 +1,12 @@
+workflow:
+  name: "Simple Test Workflow"
+  description: "A minimal test workflow"
+  version: "1.0.0"
+
+steps:
+  - id: test_step
+    name: "Test Step"
+    agent: digest_agent
+    input_file: /Users/arielmuslera/Development/Projects/bluelabel-autopilot/tests/sample_digest_input.json
+    outputs:
+      - digest

@@ -39,13 +39,15 @@ const DAGGraph: React.FC<DAGGraphProps> = ({
   onNodeClick,
   className = '',
 }) => {
-  const { data: dagRun, error: apiError, loading: isLoading } = useDAGRun(runId);
+  const { data: dagRun, error: apiError, isLoading } = useDAGRun('', runId);
+  
+  console.log('DAGGraph render:', { runId, dagRun, apiError, isLoading });
   const { 
     status: currentStatus,
     steps: updatedSteps,
     progress: currentProgress,
     error: wsError 
-  } = useDAGRunUpdates(runId);
+  } = useDAGRunUpdates('', runId);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -53,7 +55,10 @@ const DAGGraph: React.FC<DAGGraphProps> = ({
   // Convert DAG run to nodes and edges
   useEffect(() => {
     if (dagRun) {
+      console.log('DAGGraph: dagRun received:', dagRun);
       const { nodes: newNodes, edges: newEdges } = convertDagToNodesAndEdges(dagRun);
+      console.log('DAGGraph: converted nodes:', newNodes);
+      console.log('DAGGraph: converted edges:', newEdges);
       setNodes(newNodes);
       setEdges(newEdges);
     }

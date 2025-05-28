@@ -1,187 +1,256 @@
 import { useState, useEffect, useCallback } from 'react';
-import { apiClient, wsClient, APIError } from './client';
+import { apiClient } from './client';
 import { DAGRun, DAGStep } from '../types';
 
-// Hook for fetching DAGs with pagination
-export function useDAGs(page: number = 1, limit: number = 20) {
-  const [data, setData] = useState<{
-    items: any[];
-    total: number;
-    page: number;
-    limit: number;
-  } | null>(null);
-  const [error, setError] = useState<APIError | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchDAGs = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const result = await apiClient.listDAGs(page, limit);
-      setData(result);
-    } catch (err) {
-      setError(err instanceof APIError ? err : new APIError('Failed to fetch DAGs'));
-    } finally {
-      setLoading(false);
-    }
-  }, [page, limit]);
-
-  useEffect(() => {
-    fetchDAGs();
-  }, [fetchDAGs]);
-
-  return { data, error, loading, refetch: fetchDAGs };
+export interface UseDAGRunResult {
+  data: DAGRun | null;
+  error: Error | null;
+  isLoading: boolean;
+  refetch: () => void;
 }
 
-// Hook for fetching a single DAG run
-export function useDAGRun(runId: string) {
+export function useDAGRun(dagId: string, runId: string): UseDAGRunResult {
   const [data, setData] = useState<DAGRun | null>(null);
-  const [error, setError] = useState<APIError | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const fetchDAGRun = useCallback(async () => {
+  const fetchData = useCallback(async () => {
+    if (!runId) return;
+
+    setIsLoading(true);
+    setError(null);
+
     try {
-      setLoading(true);
-      setError(null);
-      const result = await apiClient.getDAGRun(runId);
+      const result = await apiClient.getDAGRun(dagId, runId);
       setData(result);
     } catch (err) {
-      setError(err instanceof APIError ? err : new APIError('Failed to fetch DAG run'));
+      setError(err instanceof Error ? err : new Error('Failed to fetch DAG run'));
     } finally {
-      setLoading(false);
-    }
-  }, [runId]);
-
-  useEffect(() => {
-    fetchDAGRun();
-  }, [fetchDAGRun]);
-
-  return { data, error, loading, refetch: fetchDAGRun };
-}
-
-// Hook for fetching DAG runs with pagination
-export function useDAGRuns(dagId: string, page: number = 1, limit: number = 20) {
-  const [data, setData] = useState<{
-    items: DAGRun[];
-    total: number;
-    page: number;
-    limit: number;
-  } | null>(null);
-  const [error, setError] = useState<APIError | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchDAGRuns = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const result = await apiClient.listDAGRuns(dagId, page, limit);
-      setData(result);
-    } catch (err) {
-      setError(err instanceof APIError ? err : new APIError('Failed to fetch DAG runs'));
-    } finally {
-      setLoading(false);
-    }
-  }, [dagId, page, limit]);
-
-  useEffect(() => {
-    fetchDAGRuns();
-  }, [fetchDAGRuns]);
-
-  return { data, error, loading, refetch: fetchDAGRuns };
-}
-
-// Hook for fetching DAG run steps
-export function useDAGRunSteps(dagId: string, runId: string) {
-  const [data, setData] = useState<DAGStep[] | null>(null);
-  const [error, setError] = useState<APIError | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchSteps = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const result = await apiClient.getDAGRunSteps(dagId, runId);
-      setData(result);
-    } catch (err) {
-      setError(err instanceof APIError ? err : new APIError('Failed to fetch DAG run steps'));
-    } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, [dagId, runId]);
 
   useEffect(() => {
-    fetchSteps();
-  }, [fetchSteps]);
+    fetchData();
+  }, [fetchData]);
 
-  return { data, error, loading, refetch: fetchSteps };
+  return {
+    data,
+    error,
+    isLoading,
+    refetch: fetchData,
+  };
 }
 
-// Hook for real-time DAG run updates
-export function useDAGRunUpdates(runId: string) {
-  const [status, setStatus] = useState<DAGRun['status'] | null>(null);
-  const [steps, setSteps] = useState<Record<string, DAGStep>>({});
-  const [progress, setProgress] = useState<{
-    totalSteps: number;
-    completedSteps: number;
-    runningSteps: number;
-    failedSteps: number;
-    pendingSteps: number;
-    completionPercentage: number;
-  } | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export interface UseDAGRunsResult {
+  data: DAGRun[];
+  error: Error | null;
+  isLoading: boolean;
+  refetch: () => void;
+}
+
+export function useDAGRuns(dagId: string, limit: number = 20): UseDAGRunsResult {
+  const [data, setData] = useState<DAGRun[]>([]);
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchData = useCallback(async () => {
+    if (!dagId) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await apiClient.listDAGRuns(dagId, limit);
+      setData(result);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to fetch DAG runs'));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [dagId, limit]);
 
   useEffect(() => {
-    // Connect to WebSocket
-    wsClient.connect();
+    fetchData();
+  }, [fetchData]);
 
-    // Subscribe to DAG updates
-    wsClient.subscribe([runId]);
+  return {
+    data,
+    error,
+    isLoading,
+    refetch: fetchData,
+  };
+}
 
-    // Handle DAG run status updates
-    const handleStatusUpdate = (data: { status: DAGRun['status'] }) => {
-      setStatus(data.status);
+export interface UseDAGRunStepsResult {
+  data: DAGStep[];
+  error: Error | null;
+  isLoading: boolean;
+  refetch: () => void;
+}
+
+export function useDAGRunSteps(dagId: string, runId: string): UseDAGRunStepsResult {
+  const [data, setData] = useState<DAGStep[]>([]);
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchData = useCallback(async () => {
+    if (!runId) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await apiClient.getDAGRunSteps(dagId, runId);
+      setData(result);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to fetch DAG run steps'));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [dagId, runId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return {
+    data,
+    error,
+    isLoading,
+    refetch: fetchData,
+  };
+}
+
+export interface UseDAGRunUpdatesResult {
+  status: string | null;
+  steps: DAGStep[];
+  progress: any | null;
+  error: Error | null;
+  isConnected: boolean;
+}
+
+export function useDAGRunUpdates(dagId: string, runId: string): UseDAGRunUpdatesResult {
+  const [status, setStatus] = useState<string | null>(null);
+  const [steps, setSteps] = useState<DAGStep[]>([]);
+  const [progress, setProgress] = useState<any | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    if (!dagId || !runId) return;
+
+    let ws: WebSocket;
+
+    const connectWebSocket = () => {
+      ws = apiClient.connectWebSocket(
+        (data) => {
+          // Handle different event types
+          switch (data.event) {
+            case 'connected':
+              setIsConnected(true);
+              setError(null);
+              // Subscribe to specific DAG run
+              apiClient.subscribeToDAGRun(runId);
+              break;
+
+            case 'dag_run_status':
+            case 'dag.run.status.updated':
+              if (data.run_id === runId) {
+                setStatus(data.data?.status);
+                if (data.data?.steps) {
+                  setSteps(Object.values(data.data.steps));
+                }
+              }
+              break;
+
+            case 'step_status':
+            case 'dag.step.status.updated':
+              if (data.run_id === runId) {
+                setSteps(prevSteps => {
+                  const updatedSteps = [...prevSteps];
+                  const stepIndex = updatedSteps.findIndex(s => s.step_id === data.data?.step_id);
+                  if (stepIndex !== -1) {
+                    updatedSteps[stepIndex] = { ...updatedSteps[stepIndex], ...data.data };
+                  }
+                  return updatedSteps;
+                });
+              }
+              break;
+
+            case 'dag_run_progress':
+            case 'dag.run.completed':
+              if (data.run_id === runId) {
+                setProgress(data.data);
+              }
+              break;
+
+            case 'error':
+              setError(new Error(data.message || 'WebSocket error'));
+              break;
+
+            case 'ping':
+              // Keep-alive, no action needed
+              break;
+
+            default:
+              console.log('Unknown WebSocket event:', data.event);
+          }
+        },
+        (error) => {
+          setError(new Error('WebSocket connection error'));
+          setIsConnected(false);
+        }
+      );
     };
 
-    // Handle step status updates
-    const handleStepUpdate = (data: DAGStep) => {
-      setSteps((prev) => ({
-        ...prev,
-        [data.id]: data,
-      }));
-    };
+    connectWebSocket();
 
-    // Handle progress updates
-    const handleProgressUpdate = (data: {
-      totalSteps: number;
-      completedSteps: number;
-      runningSteps: number;
-      failedSteps: number;
-      pendingSteps: number;
-      completionPercentage: number;
-    }) => {
-      setProgress(data);
-    };
-
-    // Handle errors
-    const handleError = (data: { error: string }) => {
-      setError(data.error);
-    };
-
-    // Register event handlers
-    wsClient.on('dag.run.status.updated', handleStatusUpdate);
-    wsClient.on('dag.step.status.updated', handleStepUpdate);
-    wsClient.on('dag.run.completed', handleProgressUpdate);
-    wsClient.on('error', handleError);
-
-    // Cleanup
     return () => {
-      wsClient.off('dag.run.status.updated', handleStatusUpdate);
-      wsClient.off('dag.step.status.updated', handleStepUpdate);
-      wsClient.off('dag.run.completed', handleProgressUpdate);
-      wsClient.off('error', handleError);
-      wsClient.unsubscribe([runId]);
+      setIsConnected(false);
+      apiClient.disconnectWebSocket();
     };
-  }, [runId]);
+  }, [dagId, runId]);
 
-  return { status, steps, progress, error };
+  return {
+    status,
+    steps,
+    progress,
+    error,
+    isConnected,
+  };
+}
+
+// Workflow execution hooks
+export interface UseRunWorkflowResult {
+  runWorkflow: (workflowPath: string, inputs?: Record<string, any>) => Promise<{ run_id: string; status: string }>;
+  isLoading: boolean;
+  error: Error | null;
+}
+
+export function useRunWorkflow(): UseRunWorkflowResult {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const runWorkflow = useCallback(async (workflowPath: string, inputs: Record<string, any> = {}) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await apiClient.runWorkflow(workflowPath, inputs);
+      return result;
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Failed to run workflow');
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  return {
+    runWorkflow,
+    isLoading,
+    error,
+  };
 } 

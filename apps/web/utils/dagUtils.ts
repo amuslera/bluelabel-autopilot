@@ -24,14 +24,21 @@ export const convertDagToNodesAndEdges = (dagRun: any): {
   nodes: Node[];
   edges: Edge[];
 } => {
-  const nodes: Node[] = dagRun.steps.map((step: any, index: number) => ({
-    id: step.name || step.id || `step-${index}`,
+  // Convert steps object to array
+  const stepsArray = dagRun.steps 
+    ? (Array.isArray(dagRun.steps) 
+        ? dagRun.steps 
+        : Object.values(dagRun.steps))
+    : [];
+
+  const nodes: Node[] = stepsArray.map((step: any, index: number) => ({
+    id: step.step_id || step.name || step.id || `step-${index}`,
     type: 'default',
-    position: { x: index * 200, y: 0 },
+    position: { x: index * 200, y: 100 },
     data: {
-      label: step.name || step.id || `Step ${index + 1}`,
+      label: step.metadata?.name || step.name || step.step_id || `Step ${index + 1}`,
       status: step.status,
-      duration: step.duration_ms,
+      duration: step.duration_seconds || step.duration_ms,
       error: step.error,
     },
     style: {
@@ -47,15 +54,15 @@ export const convertDagToNodesAndEdges = (dagRun: any): {
   const edges: Edge[] = [];
   
   // Create sequential edges for now (can be enhanced later for complex dependencies)
-  for (let i = 0; i < dagRun.steps.length - 1; i++) {
-    const sourceId = dagRun.steps[i].name || dagRun.steps[i].id || `step-${i}`;
-    const targetId = dagRun.steps[i + 1].name || dagRun.steps[i + 1].id || `step-${i + 1}`;
+  for (let i = 0; i < stepsArray.length - 1; i++) {
+    const sourceId = stepsArray[i].step_id || stepsArray[i].name || stepsArray[i].id || `step-${i}`;
+    const targetId = stepsArray[i + 1].step_id || stepsArray[i + 1].name || stepsArray[i + 1].id || `step-${i + 1}`;
     edges.push({
       id: `${sourceId}-${targetId}`,
       source: sourceId,
       target: targetId,
       type: 'smoothstep',
-      animated: dagRun.steps[i + 1].status === 'running',
+      animated: stepsArray[i + 1].status === 'running',
       style: { stroke: '#6B7280' },
     });
   }
@@ -64,14 +71,21 @@ export const convertDagToNodesAndEdges = (dagRun: any): {
 };
 
 export const calculateDagMetrics = (dagRun: any) => {
-  const totalSteps = dagRun.steps.length;
-  const completedSteps = dagRun.steps.filter(
-    (step: any) => step.status === 'completed' || step.status === 'SUCCESS'
+  // Convert steps object to array
+  const stepsArray = dagRun.steps 
+    ? (Array.isArray(dagRun.steps) 
+        ? dagRun.steps 
+        : Object.values(dagRun.steps))
+    : [];
+
+  const totalSteps = stepsArray.length;
+  const completedSteps = stepsArray.filter(
+    (step: any) => step.status === 'completed' || step.status === 'SUCCESS' || step.status === 'success'
   ).length;
-  const failedSteps = dagRun.steps.filter(
+  const failedSteps = stepsArray.filter(
     (step: any) => step.status === 'failed' || step.status === 'FAILED'
   ).length;
-  const runningSteps = dagRun.steps.filter(
+  const runningSteps = stepsArray.filter(
     (step: any) => step.status === 'running' || step.status === 'RUNNING'
   ).length;
 
@@ -80,6 +94,6 @@ export const calculateDagMetrics = (dagRun: any) => {
     completedSteps,
     failedSteps,
     runningSteps,
-    completionPercentage: (completedSteps / totalSteps) * 100,
+    completionPercentage: totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0,
   };
 }; 

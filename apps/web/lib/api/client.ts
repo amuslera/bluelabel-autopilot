@@ -1,13 +1,8 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import { DAGRun, DAGStep } from '../types';
+import { DAG, DAGRun, DAGStep } from '../types';
 
 export class APIError extends Error {
-  constructor(
-    message: string,
-    public status?: number,
-    public code?: string,
-    public data?: any
-  ) {
+  constructor(message: string, public status?: number) {
     super(message);
     this.name = 'APIError';
   }
@@ -15,6 +10,7 @@ export class APIError extends Error {
 
 export class APIClient {
   private client: AxiosInstance;
+  private wsClient: WebSocket | null = null;
 
   constructor(baseURL: string = 'http://localhost:8000/api') {
     this.client = axios.create({
@@ -25,200 +21,123 @@ export class APIClient {
       },
     });
 
+    // Response interceptor for error handling
     this.client.interceptors.response.use(
       (response) => response,
       (error: AxiosError) => {
-        if (error.response) {
-          throw new APIError(
-            (error.response.data as any)?.message || 'API request failed',
-            error.response.status,
-            (error.response.data as any)?.code,
-            error.response.data
-          );
-        }
-        throw new APIError('Network error', undefined, 'NETWORK_ERROR');
+        const message = error.response?.data?.detail || error.message;
+        const status = error.response?.status;
+        throw new APIError(message, status);
       }
     );
   }
 
-  // DAG Operations
-  async listDAGs(page: number = 1, limit: number = 20): Promise<{
-    items: any[];
-    total: number;
-    page: number;
-    limit: number;
-  }> {
-    const response = await this.client.get('/dag-runs', {
-      params: { page, limit },
-    });
-    return response.data;
+  // DAG operations
+  async listDAGs(): Promise<DAG[]> {
+    const response = await this.client.get('/workflows/dag-runs');
+    return response.data.items || [];
   }
 
-  async getDAGRun(runId: string): Promise<DAGRun> {
-    const response = await this.client.get(`/dag-runs/${runId}`);
-    return response.data;
+  async getDAGRun(dagId: string, runId: string): Promise<DAGRun | null> {
+    try {
+      const response = await this.client.get(`/workflows/dag-runs/${runId}`);
+      return response.data;
+    } catch (error) {
+      if (error instanceof APIError && error.status === 404) {
+        return null;
+      }
+      throw error;
+    }
   }
 
-  async listDAGRuns(
-    dagId: string,
-    page: number = 1,
-    limit: number = 20
-  ): Promise<{
-    items: DAGRun[];
-    total: number;
-    page: number;
-    limit: number;
-  }> {
-    const response = await this.client.get(`/dag-runs`, {
-      params: { page, limit, dag_id: dagId },
-    });
-    return response.data;
+  async listDAGRuns(dagId: string, limit: number = 20, offset: number = 0): Promise<DAGRun[]> {
+    const response = await this.client.get(`/workflows/dag-runs?limit=${limit}&offset=${offset}`);
+    return response.data.items || [];
   }
 
   async getDAGRunSteps(dagId: string, runId: string): Promise<DAGStep[]> {
-    const response = await this.client.get(`/dag-runs/${runId}/steps`);
-    return response.data;
+    const dagRun = await this.getDAGRun(dagId, runId);
+    if (!dagRun || !dagRun.steps) {
+      return [];
+    }
+    
+    // Convert steps object to array
+    return Object.values(dagRun.steps);
   }
 
-  async createDAGRun(workflowPath: string, engineType: string = 'sequential'): Promise<DAGRun> {
-    const response = await this.client.post('/dag-runs', {
+  // Workflow execution
+  async runWorkflow(workflowPath: string, inputs: Record<string, any> = {}): Promise<{ run_id: string; status: string }> {
+    const response = await this.client.post('/workflows/run', {
       workflow_path: workflowPath,
-      engine_type: engineType,
-      persist: true,
+      inputs
     });
     return response.data;
   }
 
-  async updateDAGRunStatus(runId: string, status: string): Promise<DAGRun> {
-    const response = await this.client.patch(`/dag-runs/${runId}/status`, {
-      status,
+  async uploadPDF(file: File): Promise<{ run_id: string; status: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await this.client.post('/workflows/upload-pdf', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
     return response.data;
   }
-}
 
-// WebSocket Client
-export class WebSocketClient {
-  private ws: WebSocket | null = null;
-  private reconnectAttempts = 0;
-  private maxReconnectAttempts = 5;
-  private reconnectTimeout: NodeJS.Timeout | null = null;
-  private messageHandlers: Map<string, ((data: any) => void)[]> = new Map();
-  private subscribedDAGs: Set<string> = new Set();
+  // WebSocket operations
+  connectWebSocket(onMessage: (data: any) => void, onError?: (error: Event) => void): WebSocket {
+    if (this.wsClient) {
+      this.wsClient.close();
+    }
 
-  constructor(
-    private url: string = 'ws://localhost:8000/ws',
-    private token?: string
-  ) {}
-
-  connect() {
-    if (this.ws?.readyState === WebSocket.OPEN) return;
-
-    this.ws = new WebSocket(this.url);
-    this.setupEventHandlers();
-  }
-
-  private setupEventHandlers() {
-    if (!this.ws) return;
-
-    this.ws.onopen = () => {
+    this.wsClient = new WebSocket('ws://localhost:8000/ws');
+    
+    this.wsClient.onopen = () => {
       console.log('WebSocket connected');
-      this.reconnectAttempts = 0;
-      if (this.token) {
-        this.send({ type: 'auth', token: this.token });
-      }
-      // Resubscribe to DAGs
-      if (this.subscribedDAGs.size > 0) {
-        this.send({
-          type: 'subscribe',
-          dagIds: Array.from(this.subscribedDAGs),
-        });
-      }
     };
 
-    this.ws.onmessage = (event) => {
+    this.wsClient.onmessage = (event) => {
       try {
-        const message = JSON.parse(event.data);
-        const handlers = this.messageHandlers.get(message.event) || [];
-        handlers.forEach((handler) => handler(message.data));
+        const data = JSON.parse(event.data);
+        onMessage(data);
       } catch (error) {
         console.error('Failed to parse WebSocket message:', error);
       }
     };
 
-    this.ws.onclose = () => {
-      console.log('WebSocket disconnected');
-      this.attemptReconnect();
-    };
-
-    this.ws.onerror = (error) => {
+    this.wsClient.onerror = (error) => {
       console.error('WebSocket error:', error);
+      if (onError) {
+        onError(error);
+      }
     };
+
+    this.wsClient.onclose = () => {
+      console.log('WebSocket disconnected');
+      this.wsClient = null;
+    };
+
+    return this.wsClient;
   }
 
-  private attemptReconnect() {
-    if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error('Max reconnection attempts reached');
-      return;
-    }
-
-    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
-    this.reconnectTimeout = setTimeout(() => {
-      this.reconnectAttempts++;
-      this.connect();
-    }, delay);
-  }
-
-  subscribe(dagIds: string[]) {
-    dagIds.forEach((id) => this.subscribedDAGs.add(id));
-    this.send({
-      type: 'subscribe',
-      dagIds,
-    });
-  }
-
-  unsubscribe(dagIds: string[]) {
-    dagIds.forEach((id) => this.subscribedDAGs.delete(id));
-    this.send({
-      type: 'unsubscribe',
-      dagIds,
-    });
-  }
-
-  on(event: string, handler: (data: any) => void) {
-    const handlers = this.messageHandlers.get(event) || [];
-    handlers.push(handler);
-    this.messageHandlers.set(event, handlers);
-  }
-
-  off(event: string, handler: (data: any) => void) {
-    const handlers = this.messageHandlers.get(event) || [];
-    const index = handlers.indexOf(handler);
-    if (index !== -1) {
-      handlers.splice(index, 1);
-      this.messageHandlers.set(event, handlers);
+  subscribeToDAGRun(runId: string): void {
+    if (this.wsClient && this.wsClient.readyState === WebSocket.OPEN) {
+      this.wsClient.send(JSON.stringify({
+        action: 'subscribe',
+        run_id: runId
+      }));
     }
   }
 
-  private send(data: any) {
-    if (this.ws?.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify(data));
-    } else {
-      console.warn('WebSocket not connected, message not sent:', data);
-    }
-  }
-
-  disconnect() {
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout);
-    }
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
+  disconnectWebSocket(): void {
+    if (this.wsClient) {
+      this.wsClient.close();
+      this.wsClient = null;
     }
   }
 }
 
-// Create singleton instances
-export const apiClient = new APIClient();
-export const wsClient = new WebSocketClient(); 
+// Global client instance
+export const apiClient = new APIClient(); 
