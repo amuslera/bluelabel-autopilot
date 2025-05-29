@@ -1,0 +1,150 @@
+{
+  "name": "Parallel Processing Workflow",
+  "version": "1.0.0", 
+  "description": "Execute multiple tasks in parallel with synchronization points",
+  "metadata": {
+    "template_type": "parallel_processing",
+    "use_cases": ["Data processing", "Multi-agent analysis", "Concurrent operations"]
+  },
+  "tasks": {
+    "initialization": {
+      "name": "Initialize Processing Job",
+      "agent_id": "system",
+      "action": "file_operation",
+      "parameters": {
+        "operation": "write",
+        "path": "workflow/jobs/{{job_id}}_init.json",
+        "content": "{{job_config}}"
+      },
+      "dependencies": [],
+      "timeout_seconds": 300
+    },
+    "data_preparation": {
+      "name": "Prepare Data Sets",
+      "agent_id": "{{data_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Prepare and partition data for parallel processing",
+        "estimated_hours": 0.5,
+        "input_data": "{{input_source}}",
+        "partition_count": "{{parallel_count}}"
+      },
+      "dependencies": ["initialization"],
+      "timeout_seconds": 1800
+    },
+    "parallel_task_1": {
+      "name": "Process Partition 1",
+      "agent_id": "{{worker_agent_1}}",
+      "action": "agent_task",
+      "execution_mode": "parallel",
+      "parameters": {
+        "description": "Process data partition 1",
+        "estimated_hours": 2,
+        "partition_id": 1,
+        "data_subset": "{{partition_1_data}}"
+      },
+      "dependencies": ["data_preparation"],
+      "timeout_seconds": 7200
+    },
+    "parallel_task_2": {
+      "name": "Process Partition 2", 
+      "agent_id": "{{worker_agent_2}}",
+      "action": "agent_task",
+      "execution_mode": "parallel",
+      "parameters": {
+        "description": "Process data partition 2",
+        "estimated_hours": 2,
+        "partition_id": 2,
+        "data_subset": "{{partition_2_data}}"
+      },
+      "dependencies": ["data_preparation"],
+      "timeout_seconds": 7200
+    },
+    "parallel_task_3": {
+      "name": "Process Partition 3",
+      "agent_id": "{{worker_agent_3}}",
+      "action": "agent_task", 
+      "execution_mode": "parallel",
+      "parameters": {
+        "description": "Process data partition 3",
+        "estimated_hours": 2,
+        "partition_id": 3,
+        "data_subset": "{{partition_3_data}}"
+      },
+      "dependencies": ["data_preparation"],
+      "timeout_seconds": 7200
+    },
+    "quality_check_1": {
+      "name": "Quality Check Partition 1",
+      "agent_id": "{{qa_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Validate results from partition 1",
+        "estimated_hours": 0.5,
+        "validation_rules": "{{qa_rules}}"
+      },
+      "dependencies": ["parallel_task_1"],
+      "timeout_seconds": 1800
+    },
+    "quality_check_2": {
+      "name": "Quality Check Partition 2",
+      "agent_id": "{{qa_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Validate results from partition 2", 
+        "estimated_hours": 0.5,
+        "validation_rules": "{{qa_rules}}"
+      },
+      "dependencies": ["parallel_task_2"],
+      "timeout_seconds": 1800
+    },
+    "quality_check_3": {
+      "name": "Quality Check Partition 3",
+      "agent_id": "{{qa_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Validate results from partition 3",
+        "estimated_hours": 0.5,
+        "validation_rules": "{{qa_rules}}"
+      },
+      "dependencies": ["parallel_task_3"],
+      "timeout_seconds": 1800
+    },
+    "aggregation": {
+      "name": "Aggregate Results",
+      "agent_id": "{{aggregator_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Combine and aggregate all partition results",
+        "estimated_hours": 1,
+        "aggregation_method": "{{aggregation_strategy}}"
+      },
+      "dependencies": ["quality_check_1", "quality_check_2", "quality_check_3"],
+      "timeout_seconds": 3600
+    },
+    "final_validation": {
+      "name": "Final Result Validation",
+      "agent_id": "{{validator_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Validate final aggregated results",
+        "estimated_hours": 0.5,
+        "validation_level": "comprehensive"
+      },
+      "dependencies": ["aggregation"],
+      "timeout_seconds": 1800
+    },
+    "results_export": {
+      "name": "Export Final Results",
+      "agent_id": "system",
+      "action": "file_operation",
+      "parameters": {
+        "operation": "write",
+        "path": "workflow/results/{{job_id}}_final.json",
+        "content": "{{final_results}}"
+      },
+      "dependencies": ["final_validation"],
+      "timeout_seconds": 600
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "sprint": "current",
+  "last_updated": "2025-05-29T08:30:22Z",
+  "tasks": [
+    {
+      "id": "TASK-165A",
+      "title": "Sprint infrastructure setup",
+      "status": "pending",
+      "priority": "HIGH",
+      "assigned_to": "ARCH",
+      "estimated_hours": 1,
+      "created_at": "2025-05-29T10:00:00Z"
+    },
+    {
+      "id": "TASK-165D",
+      "title": "Morning kickoff automation",
+      "status": "pending",
+      "priority": "MEDIUM",
+      "assigned_to": "CA",
+      "estimated_hours": 3,
+      "created_at": "2025-05-29T10:00:00Z"
+    },
+    {
+      "id": "TASK-165B",
+      "title": "Outbox format standardization",
+      "status": "pending",
+      "priority": "HIGH",
+      "assigned_to": "CB",
+      "estimated_hours": 2,
+      "created_at": "2025-05-29T10:00:00Z"
+    },
+    {
+      "id": "TASK-165C",
+      "title": "Task completion scripts",
+      "status": "pending",
+      "priority": "HIGH",
+      "assigned_to": "CC",
+      "estimated_hours": 2,
+      "created_at": "2025-05-29T10:00:00Z"
+    },
+    {
+      "id": "TEST-SAMPLE-001",
+      "title": "Sample test task",
+      "status": "completed",
+      "priority": "HIGH",
+      "assigned_to": "TEST",
+      "estimated_hours": 1,
+      "created_at": "2025-05-29T08:29:49Z",
+      "completed_at": "2025-05-29T08:30:09Z",
+      "completed_by": "TEST"
+    },
+    {
+      "id": "TASK-165D",
+      "title": "Morning kickoff automation",
+      "status": "pending",
+      "priority": "MEDIUM",
+      "assigned_to": "WA",
+      "estimated_hours": 3,
+      "created_at": "2025-05-29T10:00:00Z"
+    }
+  ]
+}

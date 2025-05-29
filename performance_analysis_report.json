@@ -1,0 +1,87 @@
+{
+  "bottlenecks": [],
+  "distribution": [
+    {
+      "agent_id": "CC",
+      "workload_score": 37.5,
+      "pending_tasks": 1,
+      "estimated_hours": 3,
+      "avg_completion_time": 0,
+      "efficiency_score": 0,
+      "recommendations": [
+        "Review task assignments for better agent-task matching"
+      ]
+    },
+    {
+      "agent_id": "CB",
+      "workload_score": 37.5,
+      "pending_tasks": 1,
+      "estimated_hours": 3,
+      "avg_completion_time": 0,
+      "efficiency_score": 100,
+      "recommendations": []
+    },
+    {
+      "agent_id": "CA",
+      "workload_score": 25.0,
+      "pending_tasks": 1,
+      "estimated_hours": 2,
+      "avg_completion_time": 0,
+      "efficiency_score": 0,
+      "recommendations": [
+        "Review task assignments for better agent-task matching"
+      ]
+    },
+    {
+      "agent_id": "ARCH",
+      "workload_score": 12.5,
+      "pending_tasks": 1,
+      "estimated_hours": 1,
+      "avg_completion_time": 0,
+      "efficiency_score": 0,
+      "recommendations": [
+        "Agent has capacity for additional tasks",
+        "Review task assignments for better agent-task matching"
+      ]
+    },
+    {
+      "agent_id": "BLUE",
+      "workload_score": 0.0,
+      "pending_tasks": 0,
+      "estimated_hours": 0,
+      "avg_completion_time": 0,
+      "efficiency_score": 0,
+      "recommendations": [
+        "Agent has capacity for additional tasks",
+        "Review task assignments for better agent-task matching"
+      ]
+    },
+    {
+      "agent_id": "WA",
+      "workload_score": 0.0,
+      "pending_tasks": 0,
+      "estimated_hours": 0,
+      "avg_completion_time": 0,
+      "efficiency_score": 0,
+      "recommendations": [
+        "Agent has capacity for additional tasks",
+        "Review task assignments for better agent-task matching"
+      ]
+    }
+  ],
+  "recommendations": {
+    "timestamp": "2025-05-29T02:02:35.589014Z",
+    "critical_issues": [],
+    "optimizations": [],
+    "tuning_parameters": {
+      "max_concurrent_tasks": 5,
+      "cache_ttl_seconds": 300
+    },
+    "action_items": [
+      "Review and implement critical issue resolutions",
+      "Apply recommended tuning parameters",
+      "Schedule regular performance reviews",
+      "Consider implementing auto-scaling for peak loads"
+    ]
+  }
+}

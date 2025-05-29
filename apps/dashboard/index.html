@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Status Dashboard | BlueLabel Autopilot</title>
+    <link rel="stylesheet" href="static/css/dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-robot nav-icon"></i>
+            <span class="brand-text">Agent Status Dashboard</span>
+        </div>
+        <div class="nav-controls">
+            <button id="refresh-btn" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i>
+                Refresh
+            </button>
+            <div class="connection-status" id="connection-status">
+                <i class="fas fa-circle"></i>
+                <span>Connecting...</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- System Overview Section -->
+        <section class="overview-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> System Overview</h2>
+                <div class="last-updated" id="last-updated">Last updated: --</div>
+            </div>
+            
+            <div class="overview-cards">
+                <div class="overview-card">
+                    <div class="card-icon total">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-value" id="total-tasks">--</div>
+                        <div class="card-label">Total Tasks</div>
+                    </div>
+                </div>
+                
+                <div class="overview-card">
+                    <div class="card-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-value" id="completed-tasks">--</div>
+                        <div class="card-label">Completed</div>
+                    </div>
+                </div>
+                
+                <div class="overview-card">
+                    <div class="card-icon progress">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-value" id="progress-tasks">--</div>
+                        <div class="card-label">In Progress</div>
+                    </div>
+                </div>
+                
+                <div class="overview-card">
+                    <div class="card-icon efficiency">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-value" id="efficiency-rate">--%</div>
+                        <div class="card-label">Efficiency</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sprint Progress Bar -->
+            <div class="sprint-progress">
+                <div class="progress-header">
+                    <h3>Sprint Progress</h3>
+                    <span class="progress-text" id="progress-text">0% Complete</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="main-progress-bar"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agent Status Cards Section -->
+        <section class="agents-section">
+            <div class="section-header">
+                <h2><i class="fas fa-users"></i> Agent Status</h2>
+                <div class="section-controls">
+                    <button class="btn btn-secondary" id="expand-all">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                        Expand All
+                    </button>
+                </div>
+            </div>
+            
+            <div class="agents-grid" id="agents-grid">
+                <!-- Agent cards will be dynamically populated -->
+            </div>
+        </section>
+
+        <!-- Task History Section -->
+        <section class="history-section">
+            <div class="section-header">
+                <h2><i class="fas fa-history"></i> Recent Task Activity</h2>
+                <div class="section-controls">
+                    <select id="history-filter" class="select-input">
+                        <option value="all">All Agents</option>
+                        <option value="CA">CA - Frontend</option>
+                        <option value="CB">CB - Backend</option>
+                        <option value="CC">CC - Testing</option>
+                        <option value="WA">WA - Infrastructure</option>
+                        <option value="ARCH">ARCH - Architecture</option>
+                        <option value="BLUE">BLUE - Analysis</option>
+                    </select>
+                    <button class="btn btn-secondary" id="export-history">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+            </div>
+            
+            <div class="history-timeline" id="history-timeline">
+                <!-- Task history will be dynamically populated -->
+            </div>
+        </section>
+
+        <!-- Performance Metrics Section -->
+        <section class="metrics-section">
+            <div class="section-header">
+                <h2><i class="fas fa-analytics"></i> Performance Metrics</h2>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>Average Task Duration</h4>
+                    <div class="metric-value" id="avg-duration">-- hours</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-arrow-up trend-up"></i>
+                        <span>+12% from last week</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h4>Success Rate</h4>
+                    <div class="metric-value" id="success-rate">--%</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-arrow-up trend-up"></i>
+                        <span>+5% from last week</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h4>Tasks This Week</h4>
+                    <div class="metric-value" id="tasks-week">--</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-arrow-down trend-down"></i>
+                        <span>-3% from last week</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h4>Active Agents</h4>
+                    <div class="metric-value" id="active-agents">--</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-minus trend-neutral"></i>
+                        <span>No change</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-cog fa-spin"></i>
+            <p>Loading dashboard data...</p>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal-overlay" id="error-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Connection Error</h3>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Unable to connect to the dashboard server. Please check that the server is running.</p>
+                <div class="error-details" id="error-details"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="retry-connection">
+                    <i class="fas fa-redo"></i>
+                    Retry Connection
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="static/js/dashboard.js"></script>
+</body>
+</html> 

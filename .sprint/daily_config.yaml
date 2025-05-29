@@ -1,0 +1,60 @@
+# Daily Task Configuration
+# This file defines the daily task distribution strategy
+
+sprint:
+  id: "PHASE_6.15_SPRINT_1"
+  start_date: "2025-05-29"
+  duration_days: 7
+  
+daily_tasks:
+  - id: "DAILY-STANDUP"
+    title: "Daily standup and progress review"
+    priority: "HIGH"
+    agent: "ARCH"
+    estimated_hours: 0.5
+    
+  - id: "DAILY-MONITORING"
+    title: "System monitoring and health checks"
+    priority: "MEDIUM"
+    agent: "WA"
+    estimated_hours: 1
+    
+  - id: "DAILY-TESTING"
+    title: "Automated test suite execution"
+    priority: "MEDIUM"
+    agent: "CC"
+    estimated_hours: 1
+
+task_pool:
+  # Available tasks for distribution
+  frontend:
+    - id: "UI-DASHBOARD"
+      title: "Dashboard UI improvements"
+      priority: "MEDIUM"
+      estimated_hours: 3
+      
+  backend:
+    - id: "API-OPTIMIZATION"
+      title: "API performance optimization"
+      priority: "MEDIUM"
+      estimated_hours: 4
+      
+  testing:
+    - id: "E2E-TESTS"
+      title: "End-to-end test coverage"
+      priority: "HIGH"
+      estimated_hours: 3
+      
+  infrastructure:
+    - id: "DEPLOYMENT-PIPELINE"
+      title: "CI/CD pipeline improvements"
+      priority: "LOW"
+      estimated_hours: 2
+
+distribution_rules:
+  max_hours_per_agent: 8
+  min_hours_per_agent: 2
+  priority_weights:
+    HIGH: 3
+    MEDIUM: 2
+    LOW: 1

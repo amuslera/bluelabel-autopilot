@@ -1,0 +1,18 @@
+{
+  "signal_id": "SIG-20250529-015429-YKK",
+  "signal_type": "COMPLETED",
+  "timestamp": "2025-05-29T08:54:29.629420Z",
+  "from_agent": "CA",
+  "message": "Agent communication protocol implemented successfully",
+  "priority": "MEDIUM",
+  "response_required": false,
+  "context": {
+    "completed_task": "TASK-165I",
+    "deliverables": [
+      "Protocol documentation",
+      "Signal tools",
+      "Example workflows"
+    ],
+    "follow_up_available": true
+  }
+}

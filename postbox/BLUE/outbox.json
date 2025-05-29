@@ -1,5 +1,10 @@
 {
-  "agent": "BLUE",
+  "agent_id": "BLUE",
+  "agent_name": "Blue Label API Integration",
+  "agent_type": "ai",
+  "version": "1.0.0",
   "role": "API Integration Specialist (replacing CA)",
-  "messages": []
+  "tasks": [],
+  "messages": [],
+  "history": []
 }

@@ -1,0 +1,6 @@
+Agent,Status,Current_Task,Pending_Tasks,Completed_Tasks,Success_Rate,Avg_Duration,Last_Active,Export_Time
+CA,ready,,1,3,0,0,2025-05-29T08:57:17.541202Z,2025-05-29T02:04:53.953092
+CB,idle,,0,3,0,0,2025-05-29T02:15:00Z,2025-05-29T02:04:53.953572
+CC,ready,,1,3,0,0,2025-05-29T08:58:16Z,2025-05-29T02:04:53.954033
+ARCH,ready,,1,0,0,0,,2025-05-29T02:04:53.954539
+WA,inactive,,0,0,0,0,,2025-05-29T02:04:53.954732

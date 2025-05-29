@@ -1,0 +1,18 @@
+{
+  "signal_id": "SIG-20250529-015455-5YS",
+  "signal_type": "NEEDS_HELP",
+  "timestamp": "2025-05-29T08:54:55.538567Z",
+  "from_agent": "CB",
+  "message": "Need assistance optimizing database queries for metrics dashboard",
+  "priority": "HIGH",
+  "response_required": true,
+  "context": {
+    "current_task": "TASK-165E",
+    "issue_type": "performance",
+    "expertise_needed": [
+      "optimization",
+      "database"
+    ],
+    "urgency": "MEDIUM"
+  }
+}

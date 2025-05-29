@@ -1,0 +1,210 @@
+{
+  "name": "Conditional Logic Workflow",
+  "version": "1.0.0",
+  "description": "Complex conditional workflow with multiple execution paths",
+  "metadata": {
+    "template_type": "conditional_workflow",
+    "use_cases": ["Decision trees", "Conditional processing", "Adaptive workflows"]
+  },
+  "tasks": {
+    "initial_assessment": {
+      "name": "Initial Assessment",
+      "agent_id": "{{assessment_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Perform initial assessment to determine workflow path",
+        "estimated_hours": 0.5,
+        "assessment_criteria": "{{assessment_criteria}}"
+      },
+      "dependencies": [],
+      "timeout_seconds": 1800
+    },
+    "condition_evaluation": {
+      "name": "Evaluate Conditions",
+      "agent_id": "system",
+      "action": "condition_check",
+      "parameters": {
+        "evaluation_type": "multi_condition",
+        "conditions": "{{decision_conditions}}"
+      },
+      "dependencies": ["initial_assessment"],
+      "timeout_seconds": 300
+    },
+    "path_a_task_1": {
+      "name": "Path A: High Priority Processing",
+      "agent_id": "{{priority_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "High priority processing path",
+        "estimated_hours": 2,
+        "priority_level": "high"
+      },
+      "dependencies": ["condition_evaluation"],
+      "timeout_seconds": 7200,
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "workflow.tasks['initial_assessment'].result.get('priority') == 'high'"
+        }
+      ]
+    },
+    "path_a_task_2": {
+      "name": "Path A: Expedited Review",
+      "agent_id": "{{review_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Expedited review for high priority items",
+        "estimated_hours": 0.5,
+        "review_type": "expedited"
+      },
+      "dependencies": ["path_a_task_1"],
+      "timeout_seconds": 1800
+    },
+    "path_b_task_1": {
+      "name": "Path B: Standard Processing",
+      "agent_id": "{{standard_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Standard processing path",
+        "estimated_hours": 3,
+        "processing_level": "standard"
+      },
+      "dependencies": ["condition_evaluation"],
+      "timeout_seconds": 10800,
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "workflow.tasks['initial_assessment'].result.get('priority') == 'medium'"
+        }
+      ]
+    },
+    "path_b_task_2": {
+      "name": "Path B: Quality Assurance",
+      "agent_id": "{{qa_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Standard quality assurance review",
+        "estimated_hours": 1,
+        "qa_level": "standard"
+      },
+      "dependencies": ["path_b_task_1"],
+      "timeout_seconds": 3600
+    },
+    "path_c_task_1": {
+      "name": "Path C: Batch Processing",
+      "agent_id": "{{batch_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Batch processing for low priority items",
+        "estimated_hours": 4,
+        "batch_size": "{{batch_size}}"
+      },
+      "dependencies": ["condition_evaluation"],
+      "timeout_seconds": 14400,
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "workflow.tasks['initial_assessment'].result.get('priority') == 'low'"
+        }
+      ]
+    },
+    "escalation_check": {
+      "name": "Check for Escalation",
+      "agent_id": "system",
+      "action": "condition_check",
+      "parameters": {
+        "check_type": "escalation_needed",
+        "escalation_criteria": "{{escalation_rules}}"
+      },
+      "dependencies": ["path_a_task_2", "path_b_task_2", "path_c_task_1"],
+      "timeout_seconds": 300,
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "any(task.status == 'completed' for task in [workflow.tasks.get('path_a_task_2'), workflow.tasks.get('path_b_task_2'), workflow.tasks.get('path_c_task_1')] if task)"
+        }
+      ]
+    },
+    "escalation_task": {
+      "name": "Escalation Processing",
+      "agent_id": "{{escalation_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Handle escalated items requiring special attention",
+        "estimated_hours": 1,
+        "escalation_type": "standard"
+      },
+      "dependencies": ["escalation_check"],
+      "timeout_seconds": 3600,
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "workflow.tasks['escalation_check'].result.get('escalation_needed', False)"
+        }
+      ]
+    },
+    "approval_required_check": {
+      "name": "Check if Approval Required",
+      "agent_id": "system",
+      "action": "condition_check",
+      "parameters": {
+        "check_type": "approval_needed",
+        "approval_threshold": "{{approval_threshold}}"
+      },
+      "dependencies": ["escalation_check"],
+      "timeout_seconds": 300
+    },
+    "approval_workflow": {
+      "name": "Trigger Approval Sub-workflow",
+      "agent_id": "system",
+      "action": "workflow_trigger",
+      "parameters": {
+        "workflow_id": "approval_chain_{{instance_id}}",
+        "template": "approval_chain",
+        "parameters": "{{approval_parameters}}"
+      },
+      "dependencies": ["approval_required_check"],
+      "timeout_seconds": 86400,
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "workflow.tasks['approval_required_check'].result.get('approval_needed', False)"
+        }
+      ]
+    },
+    "final_processing": {
+      "name": "Final Processing",
+      "agent_id": "{{final_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Complete final processing steps",
+        "estimated_hours": 0.5,
+        "finalization_type": "{{finalization_type}}"
+      },
+      "dependencies": ["escalation_task", "approval_workflow", "escalation_check"],
+      "timeout_seconds": 1800,
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "any(task.status == 'completed' for task in [workflow.tasks.get('escalation_task'), workflow.tasks.get('approval_workflow')] if task) or not workflow.tasks['escalation_check'].result.get('escalation_needed', False)"
+        }
+      ]
+    },
+    "completion_notification": {
+      "name": "Send Completion Notification",
+      "agent_id": "system",
+      "action": "api_call",
+      "parameters": {
+        "url": "{{notification_endpoint}}",
+        "method": "POST",
+        "data": {
+          "workflow_id": "{{workflow_id}}",
+          "execution_path": "{{execution_path}}",
+          "completion_status": "success"
+        }
+      },
+      "dependencies": ["final_processing"],
+      "timeout_seconds": 300
+    }
+  }
+}

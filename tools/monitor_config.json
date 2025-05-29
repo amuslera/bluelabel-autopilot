@@ -1,0 +1,42 @@
+{
+  "view_mode": "normal",
+  "auto_export": false,
+  "notifications_enabled": true,
+  "refresh_interval": 5,
+  "show_performance": true,
+  "max_history_hours": 24,
+  "export_format": "csv",
+  "notification_sound": true,
+  "compact_view_settings": {
+    "show_task_duration": true,
+    "show_pending_count": true,
+    "show_sprint_progress": true
+  },
+  "export_settings": {
+    "include_historical_data": false,
+    "auto_export_interval": "hourly",
+    "export_location": ".metrics/exports/",
+    "max_export_files": 50
+  },
+  "notification_settings": {
+    "task_completion": true,
+    "agent_status_change": false,
+    "sprint_milestones": true,
+    "error_alerts": true,
+    "sound_enabled": true
+  },
+  "display_settings": {
+    "show_agent_metrics": true,
+    "show_recent_activity": true,
+    "show_alerts": true,
+    "show_next_tasks": true,
+    "color_coding": true,
+    "emoji_icons": true
+  },
+  "advanced_settings": {
+    "debug_mode": false,
+    "log_interactions": false,
+    "performance_tracking": true,
+    "cache_historical_data": true
+  }
+}

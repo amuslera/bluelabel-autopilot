@@ -1,0 +1,152 @@
+{
+  "name": "Sequential Pipeline Workflow",
+  "version": "1.0.0",
+  "description": "Sequential processing pipeline with error handling and checkpointing",
+  "metadata": {
+    "template_type": "sequential_pipeline",
+    "use_cases": ["ETL processes", "Document processing", "Multi-stage analysis"]
+  },
+  "tasks": {
+    "pipeline_start": {
+      "name": "Initialize Pipeline",
+      "agent_id": "system",
+      "action": "file_operation",
+      "parameters": {
+        "operation": "write",
+        "path": "workflow/pipelines/{{pipeline_id}}_log.json",
+        "content": "{\"status\": \"started\", \"timestamp\": \"{{current_time}}\"}"
+      },
+      "dependencies": [],
+      "timeout_seconds": 300
+    },
+    "stage_1_extract": {
+      "name": "Stage 1: Data Extraction",
+      "agent_id": "{{extraction_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Extract data from source systems",
+        "estimated_hours": 1,
+        "source_type": "{{source_type}}",
+        "extraction_config": "{{extraction_config}}"
+      },
+      "dependencies": ["pipeline_start"],
+      "timeout_seconds": 3600,
+      "retry_count": 2,
+      "retry_delay": 10
+    },
+    "checkpoint_1": {
+      "name": "Checkpoint After Extraction",
+      "agent_id": "system",
+      "action": "file_operation",
+      "parameters": {
+        "operation": "write",
+        "path": "workflow/checkpoints/{{pipeline_id}}_cp1.json",
+        "content": "{{stage_1_results}}"
+      },
+      "dependencies": ["stage_1_extract"],
+      "timeout_seconds": 300
+    },
+    "stage_2_transform": {
+      "name": "Stage 2: Data Transformation",
+      "agent_id": "{{transformation_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Transform and clean extracted data",
+        "estimated_hours": 2,
+        "transformation_rules": "{{transformation_rules}}",
+        "quality_checks": "{{quality_checks}}"
+      },
+      "dependencies": ["checkpoint_1"],
+      "timeout_seconds": 7200,
+      "retry_count": 2,
+      "retry_delay": 15
+    },
+    "checkpoint_2": {
+      "name": "Checkpoint After Transformation",
+      "agent_id": "system",
+      "action": "file_operation",
+      "parameters": {
+        "operation": "write",
+        "path": "workflow/checkpoints/{{pipeline_id}}_cp2.json",
+        "content": "{{stage_2_results}}"
+      },
+      "dependencies": ["stage_2_transform"],
+      "timeout_seconds": 300
+    },
+    "stage_3_validation": {
+      "name": "Stage 3: Data Validation",
+      "agent_id": "{{validation_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Validate transformed data quality and completeness",
+        "estimated_hours": 0.5,
+        "validation_suite": "{{validation_suite}}",
+        "error_threshold": "{{error_threshold}}"
+      },
+      "dependencies": ["checkpoint_2"],
+      "timeout_seconds": 1800,
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "workflow.metadata.get('validation_required', True)"
+        }
+      ]
+    },
+    "stage_4_load": {
+      "name": "Stage 4: Data Loading",
+      "agent_id": "{{loading_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Load validated data into target systems",
+        "estimated_hours": 1,
+        "target_config": "{{target_config}}",
+        "load_strategy": "{{load_strategy}}"
+      },
+      "dependencies": ["stage_3_validation"],
+      "timeout_seconds": 3600,
+      "retry_count": 3,
+      "retry_delay": 30
+    },
+    "final_checkpoint": {
+      "name": "Final Pipeline Checkpoint",
+      "agent_id": "system", 
+      "action": "file_operation",
+      "parameters": {
+        "operation": "write",
+        "path": "workflow/checkpoints/{{pipeline_id}}_final.json",
+        "content": "{{final_results}}"
+      },
+      "dependencies": ["stage_4_load"],
+      "timeout_seconds": 300
+    },
+    "success_notification": {
+      "name": "Pipeline Success Notification",
+      "agent_id": "system",
+      "action": "api_call",
+      "parameters": {
+        "url": "{{notification_webhook}}",
+        "method": "POST",
+        "data": {
+          "pipeline_id": "{{pipeline_id}}",
+          "status": "completed",
+          "duration": "{{execution_duration}}",
+          "records_processed": "{{record_count}}"
+        }
+      },
+      "dependencies": ["final_checkpoint"],
+      "timeout_seconds": 300
+    },
+    "cleanup": {
+      "name": "Pipeline Cleanup",
+      "agent_id": "system",
+      "action": "file_operation",
+      "parameters": {
+        "operation": "cleanup",
+        "paths": ["workflow/temp/{{pipeline_id}}_*"],
+        "keep_checkpoints": true
+      },
+      "dependencies": ["success_notification"],
+      "timeout_seconds": 600
+    }
+  }
+}

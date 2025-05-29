@@ -1,0 +1,38 @@
+{
+  "agent_id": "CA",
+  "last_updated": "2025-05-29T01:40:52.692725Z",
+  "summary": {
+    "total_tasks": 2,
+    "completed_tasks": 1,
+    "failed_tasks": 0,
+    "success_rate": 100.0,
+    "avg_execution_time_hours": 0,
+    "avg_efficiency_score": 0
+  },
+  "metrics": [
+    {
+      "task_id": "TASK-165G",
+      "agent_id": "CA",
+      "status": "pending",
+      "created_at": "2025-05-29T10:35:00Z",
+      "started_at": null,
+      "completed_at": null,
+      "estimated_hours": 4,
+      "actual_hours": null,
+      "deliverables_completed": 0,
+      "deliverables_total": 7
+    },
+    {
+      "task_id": "TASK-165D",
+      "agent_id": "CA",
+      "status": "completed",
+      "created_at": "2025-05-29T08:34:11Z",
+      "started_at": "2025-05-29T08:34:11Z",
+      "completed_at": "2025-05-29T08:34:11Z",
+      "estimated_hours": 0,
+      "actual_hours": null,
+      "deliverables_completed": 0,
+      "deliverables_total": 0
+    }
+  ]
+}

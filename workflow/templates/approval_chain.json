@@ -1,0 +1,120 @@
+{
+  "name": "Approval Chain Workflow",
+  "version": "1.0.0",
+  "description": "Multi-level approval workflow with escalation",
+  "metadata": {
+    "template_type": "approval_chain",
+    "use_cases": ["Code reviews", "Budget approvals", "Policy changes"]
+  },
+  "tasks": {
+    "initial_request": {
+      "name": "Initial Request Submission",
+      "agent_id": "system",
+      "action": "file_operation",
+      "parameters": {
+        "operation": "write",
+        "path": "workflow/requests/{{request_id}}.json",
+        "content": "{{request_data}}"
+      },
+      "dependencies": [],
+      "timeout_seconds": 300
+    },
+    "level1_approval": {
+      "name": "Level 1 Approval",
+      "agent_id": "{{level1_approver}}",
+      "action": "approval_gate",
+      "parameters": {
+        "request": "Please review and approve: {{request_title}}",
+        "details": "{{request_details}}",
+        "level": 1
+      },
+      "dependencies": ["initial_request"],
+      "timeout_seconds": 86400,
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "workflow.metadata.get('approval_level', 1) >= 1"
+        }
+      ]
+    },
+    "level2_approval": {
+      "name": "Level 2 Approval",
+      "agent_id": "{{level2_approver}}",
+      "action": "approval_gate",
+      "parameters": {
+        "request": "Level 2 approval required for: {{request_title}}",
+        "details": "{{request_details}}",
+        "level": 2,
+        "previous_approver": "{{level1_approver}}"
+      },
+      "dependencies": ["level1_approval"],
+      "timeout_seconds": 86400,
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "workflow.metadata.get('approval_level', 1) >= 2"
+        }
+      ]
+    },
+    "escalation_check": {
+      "name": "Check Escalation Required",
+      "agent_id": "system",
+      "action": "condition_check",
+      "parameters": {
+        "check_type": "escalation",
+        "threshold_hours": 24
+      },
+      "dependencies": ["level1_approval"],
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "workflow.metadata.get('auto_escalate', False)"
+        }
+      ]
+    },
+    "auto_escalation": {
+      "name": "Automatic Escalation",
+      "agent_id": "{{escalation_approver}}",
+      "action": "approval_gate",
+      "parameters": {
+        "request": "ESCALATED: {{request_title}}",
+        "details": "Auto-escalated due to timeout",
+        "escalation": true
+      },
+      "dependencies": ["escalation_check"],
+      "timeout_seconds": 86400
+    },
+    "final_processing": {
+      "name": "Process Approved Request",
+      "agent_id": "{{processor_agent}}",
+      "action": "agent_task",
+      "parameters": {
+        "description": "Process the approved request",
+        "estimated_hours": 1
+      },
+      "dependencies": ["level2_approval", "auto_escalation"],
+      "conditions": [
+        {
+          "type": "expression",
+          "expression": "any(task.status == 'completed' for task in [workflow.tasks.get('level2_approval'), workflow.tasks.get('auto_escalation')] if task)"
+        }
+      ]
+    },
+    "notification": {
+      "name": "Send Completion Notification",
+      "agent_id": "system",
+      "action": "api_call",
+      "parameters": {
+        "url": "{{notification_endpoint}}",
+        "method": "POST",
+        "data": {
+          "request_id": "{{request_id}}",
+          "status": "completed",
+          "approvers": "{{approver_list}}"
+        }
+      },
+      "dependencies": ["final_processing"],
+      "timeout_seconds": 300
+    }
+  }
+}

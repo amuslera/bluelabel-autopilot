@@ -1,0 +1,61 @@
+{
+  "date": "20250529",
+  "total_signals": 5,
+  "signals_by_type": {
+    "COMPLETED": 3,
+    "READY": 1,
+    "NEEDS_HELP": 1
+  },
+  "signals_by_agent": {
+    "CA": 4,
+    "CB": 1
+  },
+  "signals": [
+    {
+      "signal_id": "SIG-20250529-015429-YKK",
+      "type": "COMPLETED",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T08:54:29.629420Z",
+      "priority": "MEDIUM",
+      "response_required": false
+    },
+    {
+      "signal_id": "SIG-20250529-015449-SXX",
+      "type": "READY",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T08:54:49.479067Z",
+      "priority": "MEDIUM",
+      "response_required": false
+    },
+    {
+      "signal_id": "SIG-20250529-015455-5YS",
+      "type": "NEEDS_HELP",
+      "from": "CB",
+      "to": null,
+      "timestamp": "2025-05-29T08:54:55.538567Z",
+      "priority": "HIGH",
+      "response_required": true
+    },
+    {
+      "signal_id": "SIG-20250529-015717-QL4",
+      "type": "COMPLETED",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T08:57:17.610960Z",
+      "priority": "HIGH",
+      "response_required": false
+    },
+    {
+      "signal_id": "SIG-20250529-020514-RRC",
+      "type": "COMPLETED",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T09:05:14.674892Z",
+      "priority": "HIGH",
+      "response_required": false
+    }
+  ],
+  "last_updated": "2025-05-29T09:05:14.677894Z"
+}

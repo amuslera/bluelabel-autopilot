@@ -1,0 +1,75 @@
+{
+  "version": "1.0",
+  "created": "2025-05-29T08:54:29.627868Z",
+  "total_signals": 5,
+  "last_signal_id": "SIG-20250529-020514-RRC",
+  "agents": {
+    "CA": {
+      "signals_sent": 4,
+      "last_activity": "2025-05-29T09:05:14.674892Z"
+    },
+    "CB": {
+      "signals_sent": 1,
+      "last_activity": "2025-05-29T08:54:55.538567Z"
+    },
+    "CC": {
+      "signals_sent": 0,
+      "last_activity": null
+    },
+    "WA": {
+      "signals_sent": 0,
+      "last_activity": null
+    },
+    "ARCH": {
+      "signals_sent": 0,
+      "last_activity": null
+    },
+    "BLUE": {
+      "signals_sent": 0,
+      "last_activity": null
+    }
+  },
+  "last_updated": "2025-05-29T09:05:14.677479Z",
+  "recent_signals": [
+    {
+      "signal_id": "SIG-20250529-015429-YKK",
+      "type": "COMPLETED",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T08:54:29.629420Z",
+      "priority": "MEDIUM"
+    },
+    {
+      "signal_id": "SIG-20250529-015449-SXX",
+      "type": "READY",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T08:54:49.479067Z",
+      "priority": "MEDIUM"
+    },
+    {
+      "signal_id": "SIG-20250529-015455-5YS",
+      "type": "NEEDS_HELP",
+      "from": "CB",
+      "to": null,
+      "timestamp": "2025-05-29T08:54:55.538567Z",
+      "priority": "HIGH"
+    },
+    {
+      "signal_id": "SIG-20250529-015717-QL4",
+      "type": "COMPLETED",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T08:57:17.610960Z",
+      "priority": "HIGH"
+    },
+    {
+      "signal_id": "SIG-20250529-020514-RRC",
+      "type": "COMPLETED",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T09:05:14.674892Z",
+      "priority": "HIGH"
+    }
+  ]
+}

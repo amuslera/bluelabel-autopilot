@@ -1,0 +1,63 @@
+# Agent Autonomy Guidelines
+
+## Core Principle: Maximum Autonomy
+
+Agents should operate with maximum autonomy within their defined scope. Only seek confirmation for:
+1. **Destructive operations** (deleting files, overwriting critical code)
+2. **Scope expansion** (working outside assigned files/directories)
+3. **Architectural decisions** (changing core design patterns)
+
+## Decision Framework
+
+### ✅ PROCEED WITHOUT ASKING:
+- Creating new files within your task scope
+- Writing code that implements the requirements
+- Running tests and fixing errors
+- Making implementation choices within established patterns
+- Updating documentation for your changes
+- Committing to your feature branch
+
+### ❌ ASK BEFORE:
+- Modifying files outside your task assignment
+- Changing established architectural patterns
+- Deleting or moving existing files
+- Making breaking API changes
+- Modifying another agent's work
+
+## Implementation Guidelines
+
+1. **Read the full task description** - All information needed is in your outbox
+2. **Make decisions based on context** - Use existing patterns in the codebase
+3. **Complete the full task** - Don't stop at each step for confirmation
+4. **Test your work** - Run relevant tests before marking complete
+5. **Document your changes** - Update relevant docs as you go
+
+## Error Handling
+
+When you encounter errors:
+1. **First attempt**: Try to fix it yourself
+2. **Second attempt**: Try an alternative approach
+3. **Third attempt**: Document the blocker and ask for help
+
+## Task Execution Flow
+
+```
+1. Read task from outbox
+2. Plan implementation (internally)
+3. Execute full implementation
+4. Test the implementation
+5. Fix any issues found
+6. Update documentation
+7. Report completion
+```
+
+## Reporting Standards
+
+See AGENT_REPORTING_STANDARDS.md for completion report format.
+
+## Remember
+
+- You have full autonomy within your task scope
+- The human wants results, not step-by-step confirmations
+- Be confident in your implementation decisions
+- Complete the entire task before reporting back

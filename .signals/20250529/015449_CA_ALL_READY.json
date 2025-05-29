@@ -1,0 +1,17 @@
+{
+  "signal_id": "SIG-20250529-015449-SXX",
+  "signal_type": "READY",
+  "timestamp": "2025-05-29T08:54:49.479067Z",
+  "from_agent": "CA",
+  "message": "Available for new frontend tasks after protocol completion",
+  "priority": "MEDIUM",
+  "response_required": false,
+  "context": {
+    "available_for": [
+      "frontend",
+      "ui",
+      "integration"
+    ],
+    "estimated_capacity": "6 hours"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "generated_at": "2025-05-29T01:40:52.691902Z",
+  "agents": {
+    "CA": {
+      "total_tasks": 2,
+      "completed_tasks": 1,
+      "failed_tasks": 0,
+      "success_rate": 100.0,
+      "avg_execution_time_hours": 0,
+      "avg_efficiency_score": 0
+    },
+    "ARCH": {
+      "total_tasks": 1,
+      "completed_tasks": 0,
+      "failed_tasks": 0,
+      "success_rate": 0,
+      "avg_execution_time_hours": 0,
+      "avg_efficiency_score": 0
+    },
+    "CC": {
+      "total_tasks": 2,
+      "completed_tasks": 1,
+      "failed_tasks": 0,
+      "success_rate": 100.0,
+      "avg_execution_time_hours": 0,
+      "avg_efficiency_score": 0
+    },
+    "CB": {
+      "total_tasks": 2,
+      "completed_tasks": 1,
+      "failed_tasks": 0,
+      "success_rate": 100.0,
+      "avg_execution_time_hours": 0,
+      "avg_efficiency_score": 100
+    }
+  },
+  "overall": {
+    "total_tasks": 7,
+    "completed_tasks": 3,
+    "failed_tasks": 0,
+    "success_rate": 100.0,
+    "avg_execution_time_hours": 0.5,
+    "avg_efficiency_score": 100
+  }
+}
