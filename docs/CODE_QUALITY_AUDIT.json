@@ -1,0 +1,1599 @@
+{
+  "timestamp": "2025-05-29T00:40:12.797437",
+  "summary": {
+    "total_issues": 271,
+    "todos": 13,
+    "memory_leaks": 171,
+    "error_handling": 34,
+    "security": 8,
+    "logging": 45
+  },
+  "issues": {
+    "todos": [
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/workflow_engine.py",
+        "line": "93",
+        "text": "# TODO: Implement streaming for ingestion agent"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/workflow_engine_v2.py",
+        "line": "119",
+        "text": "# TODO: Implement streaming for ingestion agent"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/cli/commands/run_dag.py",
+        "line": "34",
+        "text": "# TODO: Implement actual tracker integration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": "135",
+        "text": "duration_ms=0,  # TODO: Calculate duration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": "136",
+        "text": "step_count=0,  # TODO: Get step count"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": "161",
+        "text": "\"name\": step_id,  # TODO: Get proper step names"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": "163",
+        "text": "\"duration_ms\": 0,  # TODO: Calculate from timestamps"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": "171",
+        "text": "# TODO: Calculate actual duration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": "184",
+        "text": "failed_step=None,  # TODO: Determine from step statuses"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": "280",
+        "text": "workflow_version=\"1.0.0\",  # TODO: Get from workflow definition"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": "304",
+        "text": "# TODO: Implement cancellation in UnifiedWorkflowEngine"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_gateway.py",
+        "line": "259",
+        "text": "# TODO: Implement exponential backoff for repeated errors"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_gateway.py",
+        "line": "413",
+        "text": "# TODO: Implement any cleanup needed"
+      }
+    ],
+    "memory_leaks": [
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/demo_coordinator.py",
+        "line": 236,
+        "type": "Infinite loops without breaks",
+        "code": "while True:"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/email_to_summary.py",
+        "line": 131,
+        "type": "Infinite loops without breaks",
+        "code": "while True:"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/unified_workflow_adapter.py",
+        "line": 268,
+        "type": "Unbounded list growth",
+        "code": "graph[dep].append(step_name)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/unified_workflow_adapter.py",
+        "line": 282,
+        "type": "Unbounded list growth",
+        "code": "graph[dep_name].append(step_name)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/unified_workflow_adapter.py",
+        "line": 296,
+        "type": "Unbounded list growth",
+        "code": "queue.append(neighbor)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/agent_registry.py",
+        "line": 156,
+        "type": "Unbounded list growth",
+        "code": "matching_agents.append(agent_type)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/agent_registry.py",
+        "line": 237,
+        "type": "Global variable accumulation",
+        "code": "\"\"\"Register an agent with the global registry.\"\"\""
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/agent_registry.py",
+        "line": 244,
+        "type": "Global variable accumulation",
+        "code": "\"\"\"Get an agent from the global registry.\"\"\""
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/unified_workflow_engine.py",
+        "line": 348,
+        "type": "Unbounded list growth",
+        "code": "errors.append(f\"Step {step_id} failed: {step_state.error}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/workflow_engine.py",
+        "line": 324,
+        "type": "Unbounded list growth",
+        "code": "result.errors.append(f\"Step {step_id} failed: {step_result.error}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/workflow_engine_v2.py",
+        "line": 40,
+        "type": "Global variable accumulation",
+        "code": "agent_registry: Optional agent registry instance (uses global if None)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/workflow_engine_v2.py",
+        "line": 46,
+        "type": "Global variable accumulation",
+        "code": "# Use provided registry or global instance"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/workflow_engine_v2.py",
+        "line": 339,
+        "type": "Unbounded list growth",
+        "code": "result.errors.append(f\"Step {step_id} failed: {step_result.error}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance_cache.py",
+        "line": 43,
+        "type": "Unbounded list growth",
+        "code": "self._access_order.append(key)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance_cache.py",
+        "line": 68,
+        "type": "Unbounded cache growth",
+        "code": "self._cache[key] = (value, expiry)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance_cache.py",
+        "line": 69,
+        "type": "Unbounded list growth",
+        "code": "self._access_order.append(key)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance_cache.py",
+        "line": 143,
+        "type": "Unbounded list growth",
+        "code": "batch.append(item)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance_cache.py",
+        "line": 144,
+        "type": "Unbounded list growth",
+        "code": "futures.append(future)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance_cache.py",
+        "line": 313,
+        "type": "Unbounded list growth",
+        "code": "metric[\"values\"].append(value)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance.py",
+        "line": 62,
+        "type": "Unbounded cache growth",
+        "code": "self.cache[key] = (result, datetime.utcnow())"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance.py",
+        "line": 223,
+        "type": "Unbounded list growth",
+        "code": "self.metrics[metric_name].append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 28,
+        "type": "Unbounded list growth",
+        "code": "handlers.append(logging.FileHandler(log_file))"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 98,
+        "type": "Unbounded list growth",
+        "code": "errors.append(f\"Missing required field: {field}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 110,
+        "type": "Unbounded list growth",
+        "code": "errors.append(f\"Invalid timestamp format: {timestamp} ({e})\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 117,
+        "type": "Unbounded list growth",
+        "code": "errors.append(f\"Run directory not found: {run_path}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 128,
+        "type": "Unbounded list growth",
+        "code": "warnings.append(f\"Missing {description}: {file_path}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 139,
+        "type": "Unbounded list growth",
+        "code": "errors.append(f\"Run ID mismatch in metadata: {metadata.get('run_id')} != {run_id}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 142,
+        "type": "Unbounded list growth",
+        "code": "warnings.append(f\"Workflow name mismatch: {metadata.get('workflow_name')} != {entry.get('workflow_name')}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 145,
+        "type": "Unbounded list growth",
+        "code": "errors.append(f\"Error reading metadata file: {e}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 150,
+        "type": "Unbounded list growth",
+        "code": "warnings.append(\"No step output files found for successful run\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 158,
+        "type": "Unbounded list growth",
+        "code": "warnings.append(f\"Empty step output: {step_file.name}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 160,
+        "type": "Unbounded list growth",
+        "code": "errors.append(f\"Error reading step output {step_file.name}: {e}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 166,
+        "type": "Unbounded list growth",
+        "code": "warnings.append(f\"Invalid status value: {status}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 172,
+        "type": "Unbounded list growth",
+        "code": "warnings.append(f\"Invalid duration value: {duration}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 177,
+        "type": "Unbounded list growth",
+        "code": "warnings.append(f\"Source should be a dictionary, got: {type(source).__name__}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 219,
+        "type": "Unbounded list growth",
+        "code": "filtered.append(entry)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 222,
+        "type": "Unbounded list growth",
+        "code": "filtered.append(entry)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 272,
+        "type": "Unbounded list growth",
+        "code": "failed_workflows[workflow_id].append(result['entry_id'])"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 352,
+        "type": "Unbounded list growth",
+        "code": "validation_results.append(result)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/workflow_loader.py",
+        "line": 104,
+        "type": "Unbounded list growth",
+        "code": "self.steps.append(step)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/workflow_loader.py",
+        "line": 165,
+        "type": "Unbounded list growth",
+        "code": "order.append(step.id)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/cli_runner.py",
+        "line": 129,
+        "type": "Unbounded list growth",
+        "code": "error_messages.append(f\"{field}: {message}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/workflow_storage.py",
+        "line": 107,
+        "type": "Unbounded list growth",
+        "code": "archive.append(entry)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 84,
+        "type": "Unbounded list growth",
+        "code": "filtered.append(entry)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 112,
+        "type": "Unbounded list growth",
+        "code": "by_workflow[workflow_name].append(entry)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 119,
+        "type": "Unbounded list growth",
+        "code": "by_tag['untagged'].append(entry)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 122,
+        "type": "Unbounded list growth",
+        "code": "by_tag[tag].append(entry)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 136,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"# Weekly Digest ({start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')})\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 137,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 138,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"*Generated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M')} UTC*\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 139,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 142,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"## Summary\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 143,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 144,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- **Total Runs:** {total_runs}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 145,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- **Successful:** {successful_runs} ({successful_runs/total_runs*100:.1f}%)\" if total_runs > 0 else \"- **Successful:** 0\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 146,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- **Failed:** {failed_runs}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 147,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- **Workflows:** {len(by_workflow)}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 148,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 151,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"## Workflows\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 152,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 155,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"### {workflow}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 156,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- Runs: {len(runs)}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 157,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- Success Rate: {success_count/len(runs)*100:.1f}%\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 163,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- Avg Duration: {avg_duration:.0f}ms\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 164,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 167,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"## Tags\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 168,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 170,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- **{tag}:** {len(runs)} runs\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 171,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 175,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"## Sources\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 176,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 178,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- **{source_type}:** {count}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 179,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 182,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"## Recent Summaries\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 183,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 192,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"### {i}. {entry.get('workflow_name', 'Unknown')}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 193,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"*{entry.get('timestamp', 'Unknown time')}*\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 194,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 200,
+        "type": "Unbounded list growth",
+        "code": "lines.append(summary)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 201,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 206,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"## Failed Runs\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 207,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 209,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- **{entry.get('workflow_name', 'Unknown')}** ({entry.get('run_id', 'unknown')[:8]}...)\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 210,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"  - Time: {entry.get('timestamp', 'unknown')}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 211,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"  - Status: {entry.get('status', 'unknown')}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/weekly_digest_generator.py",
+        "line": 212,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/base_agent.py",
+        "line": 85,
+        "type": "Unbounded list growth",
+        "code": "self.capabilities.append(capability)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/base_agent_v2.py",
+        "line": 68,
+        "type": "Global variable accumulation",
+        "code": "\"\"\"Register this agent with the global registry.\"\"\""
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 245,
+        "type": "Unbounded list growth",
+        "code": "summaries.append(data)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 269,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"## {i}. {summary.get('title', 'Untitled')}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 273,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"\\n**Source:** {summary['source']}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 275,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"**Date:** {summary['created_at']}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 277,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"**Tags:** {', '.join(summary['tags'])}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 280,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"\\n{summary.get('summary', summary.get('content', 'No content available'))}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 284,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\\n**Key Points:**\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 286,
+        "type": "Unbounded list growth",
+        "code": "lines.append(f\"- {point}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 288,
+        "type": "Unbounded list growth",
+        "code": "lines.append(\"\\n---\\n\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 303,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append(f\"<h2>{i}. {summary.get('title', 'Untitled')}</h2>\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 308,
+        "type": "Unbounded list growth",
+        "code": "metadata.append(f\"<strong>Source:</strong> {summary['source']}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 310,
+        "type": "Unbounded list growth",
+        "code": "metadata.append(f\"<strong>Date:</strong> {summary['created_at']}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 312,
+        "type": "Unbounded list growth",
+        "code": "metadata.append(f\"<strong>Tags:</strong> {', '.join(summary['tags'])}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 315,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append(\"<p>\" + \" | \".join(metadata) + \"</p>\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 318,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append(f\"<p>{summary.get('summary', summary.get('content', 'No content available'))}</p>\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 322,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append(\"<p><strong>Key Points:</strong></p><ul>\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 324,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append(f\"<li>{point}</li>\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 325,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append(\"</ul>\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 327,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append(\"<hr>\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "line": 329,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append(\"</body></html>\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/scripts/migrate_to_unified_engine.py",
+        "line": 77,
+        "type": "Unbounded list growth",
+        "code": "workflows.append(yaml_file)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/scripts/migrate_to_unified_engine.py",
+        "line": 159,
+        "type": "Unbounded list growth",
+        "code": "self.results['errors'].append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/performance_benchmark.py",
+        "line": 64,
+        "type": "Unbounded list growth",
+        "code": "latencies.append(latency)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/performance_benchmark.py",
+        "line": 67,
+        "type": "Unbounded list growth",
+        "code": "self.results[\"api_latency\"].append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/performance_benchmark.py",
+        "line": 96,
+        "type": "Infinite loops without breaks",
+        "code": "while True:"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/performance_benchmark.py",
+        "line": 108,
+        "type": "Unbounded list growth",
+        "code": "times.append(elapsed)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/performance_benchmark.py",
+        "line": 135,
+        "type": "Unbounded list growth",
+        "code": "tasks.append(task)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/performance_benchmark.py",
+        "line": 142,
+        "type": "Unbounded list growth",
+        "code": "run_ids.append(data[\"id\"])"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/performance_benchmark.py",
+        "line": 177,
+        "type": "Unbounded list growth",
+        "code": "steps.append(f\"\"\"  - name: step_{i}"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": 128,
+        "type": "Unbounded list growth",
+        "code": "items.append(DAGRunResponse("
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": 159,
+        "type": "Unbounded list growth",
+        "code": "steps.append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": 235,
+        "type": "Infinite loops without breaks",
+        "code": "while True:"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": 306,
+        "type": "Unbounded list growth",
+        "code": "run.errors.append(\"Cancelled by user\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": 338,
+        "type": "Infinite loops without breaks",
+        "code": "while True:"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/websocket_manager.py",
+        "line": 30,
+        "type": "Unbounded list growth",
+        "code": "self.active_connections.append(websocket)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/websocket_manager.py",
+        "line": 63,
+        "type": "Unbounded list growth",
+        "code": "disconnected.append(connection)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/routes/email_processor.py",
+        "line": 44,
+        "type": "Global variable accumulation",
+        "code": "global ws_manager, active_runs"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/routes/workflows.py",
+        "line": 80,
+        "type": "Unbounded list growth",
+        "code": "items.append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/routes/websocket.py",
+        "line": 26,
+        "type": "Infinite loops without breaks",
+        "code": "while True:"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/whatsapp_adapter.py",
+        "line": 99,
+        "type": "Unbounded list growth",
+        "code": "args.append(f\"--input.{key}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/whatsapp_adapter.py",
+        "line": 100,
+        "type": "Unbounded list growth",
+        "code": "args.append(shlex.quote(str(value)))"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/config/config_loader.py",
+        "line": 214,
+        "type": "Global variable accumulation",
+        "code": "global _config_instance"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/security/credential_manager.py",
+        "line": 173,
+        "type": "Unbounded list growth",
+        "code": "credentials.append(file.stem)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/security/credential_manager.py",
+        "line": 183,
+        "type": "Global variable accumulation",
+        "code": "global _default_manager"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/pdf/pdf_stream_handler.py",
+        "line": 75,
+        "type": "Unbounded list growth",
+        "code": "text_content.append(page_text)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/workflow/dag_run_store.py",
+        "line": 286,
+        "type": "Unbounded list growth",
+        "code": "results.append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/workflow/dag_run_store.py",
+        "line": 311,
+        "type": "Unbounded list growth",
+        "code": "active_runs.append(run)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/workflow/dag_runner.py",
+        "line": 182,
+        "type": "Unbounded list growth",
+        "code": "self.dag_run.metadata['errors'].append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/workflow/dag_runner.py",
+        "line": 252,
+        "type": "Unbounded list growth",
+        "code": "step.metadata['error_history'].append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/workflow/dag_runner.py",
+        "line": 280,
+        "type": "Unbounded list growth",
+        "code": "self.dag_run.metadata['step_failures'].append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/workflow/dag_runner_interface.py",
+        "line": 141,
+        "type": "Unbounded list growth",
+        "code": "order.append(step_id)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 55,
+        "type": "Unbounded list growth",
+        "code": "sections.append(f\"*Generated on {format_timestamp(timestamp)}*\\n\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 58,
+        "type": "Unbounded list growth",
+        "code": "sections.append(\"## Summary\\n\" + content + \"\\n\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 64,
+        "type": "Unbounded list growth",
+        "code": "source_info.append(f\"[Source]({source['url']})\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 67,
+        "type": "Unbounded list growth",
+        "code": "source_info.append(f\"Tags: {tags}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 70,
+        "type": "Unbounded list growth",
+        "code": "sections.append(\"### Source\\n\" + \"  \\n\".join(source_info) + \"\\n\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 95,
+        "type": "Unbounded list growth",
+        "code": "sections.append(f\"Generated on {format_timestamp(timestamp)}\\n\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 105,
+        "type": "Unbounded list growth",
+        "code": "source_info.append(f\"Source: {source['url']}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 108,
+        "type": "Unbounded list growth",
+        "code": "source_info.append(f\"Tags: {tags}\")"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 169,
+        "type": "Unbounded list growth",
+        "code": "lines.append('</ul>')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 211,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append(f'<div class=\"timestamp\">Generated on {format_timestamp(timestamp)}</div>')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 214,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append(f'<div class=\"content\">{html_content}</div>')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 221,
+        "type": "Unbounded list growth",
+        "code": "source_html.append(f'<div><strong>Source:</strong> <a href=\"{safe_url}\">{safe_url}</a></div>')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 225,
+        "type": "Unbounded list growth",
+        "code": "source_html.append(f'<div class=\"tags\"><strong>Tags:</strong> {\" \".join(tags_html)}</div>')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_formatter.py",
+        "line": 228,
+        "type": "Unbounded list growth",
+        "code": "html_parts.append('<div class=\"source\">' + '\\n'.join(source_html) + '</div>')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_orchestrator.py",
+        "line": 146,
+        "type": "Unbounded list growth",
+        "code": "self.processed_emails.append(result)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_orchestrator.py",
+        "line": 276,
+        "type": "Unbounded list growth",
+        "code": "metadata['attachments'].append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_orchestrator.py",
+        "line": 327,
+        "type": "Unbounded list growth",
+        "code": "attachments_data.append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_gateway.py",
+        "line": 241,
+        "type": "Infinite loops without breaks",
+        "code": "while True:"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_gateway.py",
+        "line": 280,
+        "type": "Unbounded list growth",
+        "code": "new_messages.append(msg_added['message'])"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_gateway.py",
+        "line": 394,
+        "type": "Unbounded list growth",
+        "code": "attachments.append({"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_router.py",
+        "line": 112,
+        "type": "Unbounded list growth",
+        "code": "self.rules.append(rule)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_router.py",
+        "line": 164,
+        "type": "Unbounded list growth",
+        "code": "conditions.append(matches)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_router.py",
+        "line": 174,
+        "type": "Unbounded list growth",
+        "code": "conditions.append(matches)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_router.py",
+        "line": 183,
+        "type": "Unbounded list growth",
+        "code": "conditions.append(matches)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_router.py",
+        "line": 190,
+        "type": "Unbounded list growth",
+        "code": "conditions.append(matches)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_router.py",
+        "line": 193,
+        "type": "Unbounded list growth",
+        "code": "conditions.append(False)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_router.py",
+        "line": 200,
+        "type": "Unbounded list growth",
+        "code": "conditions.append(has_attachments == rule.has_attachment)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_router.py",
+        "line": 212,
+        "type": "Unbounded list growth",
+        "code": "conditions.append(matches)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_router.py",
+        "line": 234,
+        "type": "Unbounded list growth",
+        "code": "self.rules.append(rule)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/orchestrator/autonomous_orchestrator.py",
+        "line": 48,
+        "type": "Unbounded list growth",
+        "code": "new_messages.append(file)"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/orchestrator/autonomous_orchestrator.py",
+        "line": 117,
+        "type": "Infinite loops without breaks",
+        "code": "while True:"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/orchestrator/simple_orchestrator.py",
+        "line": 70,
+        "type": "Infinite loops without breaks",
+        "code": "while True:"
+      }
+    ],
+    "error_handling": [
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/direct_triggers.py",
+        "line": 157,
+        "type": "bare_except",
+        "message": "Bare except clause - should specify exception type"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/signal_monitor.py",
+        "line": 56,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/signal_monitor.py",
+        "line": 366,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/demo_coordinator.py",
+        "line": 259,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/email_to_summary.py",
+        "line": 289,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/email_to_summary.py",
+        "line": 170,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/email_to_summary.py",
+        "line": 214,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/email_to_summary.py",
+        "line": 268,
+        "type": "bare_except",
+        "message": "Bare except clause - should specify exception type"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/agent_registry.py",
+        "line": 224,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance_cache.py",
+        "line": 160,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 457,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 109,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 220,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 144,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/validate_archive_integrity.py",
+        "line": 159,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/workflow_loader.py",
+        "line": 257,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/simulate_whatsapp.py",
+        "line": 70,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/simulate_whatsapp.py",
+        "line": 87,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/workflow_executor_with_email.py",
+        "line": 72,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/ingestion_to_digest_demo.py",
+        "line": 200,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/ingestion_to_digest_demo.py",
+        "line": 138,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/scripts/migrate_to_unified_engine.py",
+        "line": 157,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/scripts/migrate_to_unified_engine.py",
+        "line": 78,
+        "type": "bare_except",
+        "message": "Bare except clause - should specify exception type"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/cli/commands/run_dag.py",
+        "line": 83,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/main.py",
+        "line": 440,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/middleware.py",
+        "line": 115,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/routes/workflows.py",
+        "line": 68,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/routes/workflows.py",
+        "line": 88,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/routes/websocket.py",
+        "line": 56,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/routes/websocket.py",
+        "line": 77,
+        "type": "bare_except",
+        "message": "Bare except clause - should specify exception type"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/pdf/pdf_stream_handler.py",
+        "line": 195,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/validation/workflow_validator.py",
+        "line": 92,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/validation/workflow_validator.py",
+        "line": 157,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/orchestrator/autonomous_orchestrator.py",
+        "line": 141,
+        "type": "unlogged_exception",
+        "message": "Exception caught but not logged"
+      }
+    ],
+    "security": [
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/whatsapp_adapter.py",
+        "line": 103,
+        "type": "Use of exec() - security risk",
+        "code": "process = await asyncio.create_subprocess_exec("
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/config/config_loader.py",
+        "line": 95,
+        "type": "Hardcoded secret",
+        "code": "self.gmail_client_secret = self._get('GMAIL_CLIENT_SECRET', 'gmail_client_secret')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/config/config_loader.py",
+        "line": 104,
+        "type": "Hardcoded password",
+        "code": "self.smtp_password = self._get('SMTP_PASSWORD', 'smtp_password')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/config/config_loader.py",
+        "line": 112,
+        "type": "Hardcoded API key",
+        "code": "self.openai_api_key = self._get('OPENAI_API_KEY', 'openai_api_key')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/config/config_loader.py",
+        "line": 113,
+        "type": "Hardcoded API key",
+        "code": "self.anthropic_api_key = self._get('ANTHROPIC_API_KEY', 'anthropic_api_key')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/config/config_loader.py",
+        "line": 114,
+        "type": "Hardcoded API key",
+        "code": "self.google_api_key = self._get('GOOGLE_API_KEY', 'google_api_key')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/config/config_loader.py",
+        "line": 117,
+        "type": "Hardcoded API key",
+        "code": "self.resend_api_key = self._get('RESEND_API_KEY', 'resend_api_key')"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_adapter.py",
+        "line": 70,
+        "type": "Hardcoded password",
+        "code": "self.smtp_password = config.get('smtp_password')"
+      }
+    ],
+    "logging": [
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/direct_triggers.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/signal_monitor.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/demo_coordinator.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/demo/email_to_summary.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/unified_workflow_adapter.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/agent_registry.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/unified_workflow_engine.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/workflow_engine.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/workflow_engine_v2.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance_cache.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/core/performance.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/workflow_loader.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/simulate_whatsapp.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/ingestion_to_digest_demo.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/runner/workflow_executor.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/ingestion_agent.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/base_agent_v2.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/agents/digest_agent.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/examples/config_usage.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/scripts/migrate_to_unified_engine.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/prompts/prompt_loader.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/cli/utils/dag_run_printer.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/cli/commands/run_dag.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/performance_benchmark.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/demo_workflow_generator.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/middleware.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/websocket_manager.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/routes/email_processor.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/routes/workflows.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/apps/api/routes/websocket.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/config/config_loader.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/security/credential_manager.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/pdf/pdf_stream_handler.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/workflow/dag_run_store.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/workflow/dag_runner.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_output_adapter.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_orchestrator.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/oauth_server.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_gateway.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_snapshot.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/email/email_workflow_router.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/services/validation/workflow_validator.py",
+        "type": "no_config",
+        "message": "Logger created but no configuration"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/orchestrator/autonomous_orchestrator.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/orchestrator/simple_orchestrator.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      },
+      {
+        "file": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/orchestrator/build_autonomy.py",
+        "type": "uses_print",
+        "message": "Uses print() instead of logging"
+      }
+    ],
+    "performance": []
+  },
+  "recommendations": [
+    "Address 13 TODO items before production",
+    "Review and fix potential memory leaks, especially in long-running processes",
+    "Improve error handling with specific exception types and proper logging",
+    "CRITICAL: Address security issues immediately",
+    "Standardize logging across the codebase"
+  ]
+}

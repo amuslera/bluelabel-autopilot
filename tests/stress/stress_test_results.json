@@ -1,0 +1,67 @@
+{
+  "timestamp": "2025-05-29T00:38:37.935567",
+  "results": {
+    "workflow_stress_test": {
+      "total_duration_seconds": 11.047287702560425,
+      "total_operations": 135,
+      "operations_per_second": 12.220194099653176,
+      "success_count": 0,
+      "failure_count": 135,
+      "success_rate": 0.0,
+      "response_times": {
+        "min_ms": 0.3390312194824219,
+        "max_ms": 3.742218017578125,
+        "avg_ms": 1.2828244103325739,
+        "p50_ms": 1.051187515258789,
+        "p95_ms": 2.891063690185547,
+        "p99_ms": 3.728151321411133
+      },
+      "errors": [
+        "while scanning an alias\n  in \"<unicode string>\", line 10, column 40:\n     ... ext: \"Stress test document 0. \" * 100  # Moderate size\n                                         ^\nexpected alphabetic or numeric character, but found ' '\n  in \"<unicode string>\", line 10, column 41:\n     ... xt: \"Stress test document 0. \" * 100  # Moderate size\n                                         ^",
+        "while scanning an alias\n  in \"<unicode string>\", line 10, column 40:\n     ... ext: \"Stress test document 1. \" * 100  # Moderate size\n                                         ^\nexpected alphabetic or numeric character, but found ' '\n  in \"<unicode string>\", line 10, column 41:\n     ... xt: \"Stress test document 1. \" * 100  # Moderate size\n                                         ^",
+        "while scanning an alias\n  in \"<unicode string>\", line 10, column 40:\n     ... ext: \"Stress test document 2. \" * 100  # Moderate size\n                                         ^\nexpected alphabetic or numeric character, but found ' '\n  in \"<unicode string>\", line 10, column 41:\n     ... xt: \"Stress test document 2. \" * 100  # Moderate size\n                                         ^",
+        "while scanning an alias\n  in \"<unicode string>\", line 10, column 40:\n     ... ext: \"Stress test document 3. \" * 100  # Moderate size\n                                         ^\nexpected alphabetic or numeric character, but found ' '\n  in \"<unicode string>\", line 10, column 41:\n     ... xt: \"Stress test document 3. \" * 100  # Moderate size\n                                         ^",
+        "while scanning an alias\n  in \"<unicode string>\", line 10, column 40:\n     ... ext: \"Stress test document 4. \" * 100  # Moderate size\n                                         ^\nexpected alphabetic or numeric character, but found ' '\n  in \"<unicode string>\", line 10, column 41:\n     ... xt: \"Stress test document 4. \" * 100  # Moderate size\n                                         ^",
+        "while scanning an alias\n  in \"<unicode string>\", line 10, column 40:\n     ... ext: \"Stress test document 5. \" * 100  # Moderate size\n                                         ^\nexpected alphabetic or numeric character, but found ' '\n  in \"<unicode string>\", line 10, column 41:\n     ... xt: \"Stress test document 5. \" * 100  # Moderate size\n                                         ^",
+        "while scanning an alias\n  in \"<unicode string>\", line 10, column 40:\n     ... ext: \"Stress test document 6. \" * 100  # Moderate size\n                                         ^\nexpected alphabetic or numeric character, but found ' '\n  in \"<unicode string>\", line 10, column 41:\n     ... xt: \"Stress test document 6. \" * 100  # Moderate size\n                                         ^",
+        "while scanning an alias\n  in \"<unicode string>\", line 10, column 40:\n     ... ext: \"Stress test document 7. \" * 100  # Moderate size\n                                         ^\nexpected alphabetic or numeric character, but found ' '\n  in \"<unicode string>\", line 10, column 41:\n     ... xt: \"Stress test document 7. \" * 100  # Moderate size\n                                         ^",
+        "while scanning an alias\n  in \"<unicode string>\", line 10, column 40:\n     ... ext: \"Stress test document 8. \" * 100  # Moderate size\n                                         ^\nexpected alphabetic or numeric character, but found ' '\n  in \"<unicode string>\", line 10, column 41:\n     ... xt: \"Stress test document 8. \" * 100  # Moderate size\n                                         ^",
+        "while scanning an alias\n  in \"<unicode string>\", line 10, column 40:\n     ... ext: \"Stress test document 9. \" * 100  # Moderate size\n                                         ^\nexpected alphabetic or numeric character, but found ' '\n  in \"<unicode string>\", line 10, column 41:\n     ... xt: \"Stress test document 9. \" * 100  # Moderate size\n                                         ^"
+      ]
+    },
+    "api_stress_test": {
+      "total_duration_seconds": 0.4163331985473633,
+      "total_operations": 500,
+      "operations_per_second": 1200.9611574204514,
+      "success_count": 500,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "response_times": {
+        "min_ms": 18.535137176513672,
+        "max_ms": 98.56796264648438,
+        "avg_ms": 36.743690490722656,
+        "p50_ms": 25.807857513427734,
+        "p95_ms": 96.06194496154785,
+        "p99_ms": 97.74279594421387
+      },
+      "errors": []
+    },
+    "websocket_stress_test": {
+      "total_duration_seconds": 4.480165004730225,
+      "total_operations": 100,
+      "operations_per_second": 22.32060647195327,
+      "success_count": 0,
+      "failure_count": 100,
+      "success_rate": 0.0,
+      "response_times": {
+        "min_ms": 1132.3740482330322,
+        "max_ms": 3102.1082401275635,
+        "avg_ms": 2050.1839542388916,
+        "p50_ms": 2088.8822078704834,
+        "p95_ms": 2977.476119995117,
+        "p99_ms": 3102.1082401275635
+      },
+      "errors": []
+    }
+  }
+}
