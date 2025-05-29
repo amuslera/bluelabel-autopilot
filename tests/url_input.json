@@ -1,0 +1,10 @@
+{
+    "task_id": "test-url-pipeline",
+    "task_type": "url",
+    "source": "test",
+    "content": {
+        "url": "https://example.com"
+    },
+    "metadata": {},
+    "context": {}
+}

@@ -1,0 +1,10 @@
+{
+    "task_id": "test-pdf-pipeline",
+    "task_type": "pdf",
+    "source": "test",
+    "content": {
+        "file_path": "tests/sample.pdf"
+    },
+    "metadata": {},
+    "context": {}
+}

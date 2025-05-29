@@ -1,0 +1,40 @@
+# URL Workflow: Ingestion to Digest Pipeline
+# This workflow processes a URL through ingestion and digest agents
+
+workflow:
+  name: "URL Ingestion and Digest"
+  description: "Process a URL and generate a formatted digest"
+  version: "2.0.0"
+
+steps:
+  - id: ingest
+    name: "Ingest URL"
+    agent: ingestion_agent
+    # No input_file - will use initial_input
+    description: "Process URL content through ingestion agent"
+    outputs:
+      - content_id
+      - content_type
+      - metadata
+      - content_length
+
+  - id: digest
+    name: "Generate Digest" 
+    agent: digest_agent
+    input_from: ingest
+    description: "Generate markdown digest from ingested content"
+    config:
+      format: markdown
+      limit: 10
+    outputs:
+      - digest
+      - summary_count
+      - format
+
+metadata:
+  author: "System"
+  created: "2025-05-28"
+  tags:
+    - ingestion
+    - digest
+    - url-processing
