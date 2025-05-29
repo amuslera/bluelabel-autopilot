@@ -1,0 +1,43 @@
+{
+  "dag_id": "perf-test",
+  "run_id": "4d8b303b-97a4-43aa-81ac-07133a00e41a",
+  "status": "success",
+  "steps": {
+    "step1": {
+      "step_id": "step1",
+      "status": "success",
+      "start_time": "2025-05-29T00:37:02.117649",
+      "end_time": "2025-05-29T00:37:02.122831",
+      "retry_count": 0,
+      "max_retries": 3,
+      "error": null,
+      "result": {},
+      "metadata": {},
+      "duration_seconds": 0.005182
+    }
+  },
+  "start_time": "2025-05-29T00:37:02.112125",
+  "end_time": "2025-05-29T00:37:02.153200",
+  "total_retries": 0,
+  "error": null,
+  "metadata": {
+    "workflow_version": "1.0.0",
+    "description": "",
+    "inputs": {},
+    "workflow_def": {
+      "name": "simple-test",
+      "version": "1.0.0",
+      "steps": [
+        {
+          "name": "step1",
+          "agent": "ingestion",
+          "input": {
+            "text": "Simple test document"
+          },
+          "output": "result"
+        }
+      ]
+    }
+  },
+  "duration_seconds": 0.041075
+}

@@ -1,0 +1,34 @@
+metadata:
+  author: System
+  created: '2025-05-28'
+  tags:
+  - ingestion
+  - digest
+  - url-processing
+steps:
+- agent: ingestion_agent
+  description: Process URL content through ingestion agent
+  id: ingest
+  input_file: tests/url_input.json
+  name: Ingest URL
+  outputs:
+  - content_id
+  - content_type
+  - metadata
+  - content_length
+- agent: digest_agent
+  config:
+    format: markdown
+    limit: 10
+  description: Generate markdown digest from ingested content
+  id: digest
+  input_from: ingest
+  name: Generate Digest
+  outputs:
+  - digest
+  - summary_count
+  - format
+workflow:
+  description: Process a URL and generate a formatted digest
+  name: URL Ingestion and Digest
+  version: 1.0.0

@@ -1,0 +1,25 @@
+{
+  "step_id": "ingest",
+  "status": "success",
+  "timestamp": "2025-05-29T00:09:01.505789",
+  "result": {
+    "content_id": "url_20250529_000901",
+    "content_type": "url",
+    "metadata": {
+      "content_id": "url_20250529_000901",
+      "content_type": "url",
+      "source": "https://example.com",
+      "title": "Example Domain",
+      "author": null,
+      "created_at": "2025-05-29T00:09:01.505251",
+      "processed_at": "2025-05-29T00:09:01.505252",
+      "content_length": 1256,
+      "additional_metadata": {
+        "content_type": "text/html"
+      }
+    },
+    "content_length": 1256
+  },
+  "error": null,
+  "duration_ms": 157
+}

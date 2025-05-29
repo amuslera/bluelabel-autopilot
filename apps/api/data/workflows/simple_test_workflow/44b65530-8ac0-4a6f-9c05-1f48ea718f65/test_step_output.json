@@ -1,0 +1,12 @@
+{
+  "step_id": "test_step",
+  "status": "success",
+  "timestamp": "2025-05-28T23:28:53.004027",
+  "result": {
+    "digest": "No content available for digest generation.",
+    "summary_count": 0,
+    "format": "markdown"
+  },
+  "error": null,
+  "duration_ms": 2
+}

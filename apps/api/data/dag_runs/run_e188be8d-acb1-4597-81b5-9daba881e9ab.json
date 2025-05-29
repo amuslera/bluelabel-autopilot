@@ -1,0 +1,27 @@
+{
+  "dag_id": "Simple Test Workflow",
+  "run_id": "e188be8d-acb1-4597-81b5-9daba881e9ab",
+  "status": "success",
+  "steps": {
+    "test_step": {
+      "step_id": "test_step",
+      "status": "success",
+      "start_time": "2025-05-28T23:32:25.518795",
+      "end_time": "2025-05-28T23:32:25.518795",
+      "retry_count": 0,
+      "max_retries": 3,
+      "error": null,
+      "result": null,
+      "metadata": {
+        "name": "Test Step"
+      },
+      "duration_seconds": 0.0
+    }
+  },
+  "start_time": null,
+  "end_time": null,
+  "total_retries": 0,
+  "error": null,
+  "metadata": {},
+  "duration_seconds": null
+}

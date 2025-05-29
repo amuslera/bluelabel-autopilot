@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 import logging
+import hashlib
 
 from core.workflow_engine import WorkflowEngine
 from services.workflow.dag_runner import StatefulDAGRunner
@@ -23,6 +24,7 @@ from runner.workflow_loader import WorkflowLoader, WorkflowStep
 from interfaces.run_models import WorkflowRunResult, StepResult, WorkflowStatus
 from interfaces.agent_models import AgentInput, AgentOutput
 from core.agent_registry import get_agent
+from core.performance_cache import workflow_cache, cached, performance_monitor
 
 logger = logging.getLogger(__name__)
 
@@ -76,12 +78,27 @@ class UnifiedWorkflowAdapter:
         logger.info(f"Starting unified workflow execution: {workflow_name} (run_id: {run_id})")
         
         try:
-            # Load workflow definition
-            if workflow_yaml:
-                workflow_def = yaml.safe_load(workflow_yaml)
-            else:
-                loader = WorkflowLoader()
-                workflow_def = loader.load_workflow(workflow_name)
+            with performance_monitor.measure("workflow_run_total"):
+                # Load workflow definition with caching
+                with performance_monitor.measure("workflow_loading"):
+                    if workflow_yaml:
+                        # Hash the YAML for caching
+                        yaml_hash = hashlib.md5(workflow_yaml.encode()).hexdigest()
+                        cache_key = f"workflow_def_{yaml_hash}"
+                        
+                        workflow_def = workflow_cache.get(cache_key)
+                        if workflow_def is None:
+                            workflow_def = yaml.safe_load(workflow_yaml)
+                            workflow_cache.set(cache_key, workflow_def)
+                    else:
+                        # Cache loaded workflows by name
+                        cache_key = f"workflow_file_{workflow_name}"
+                        workflow_def = workflow_cache.get(cache_key)
+                        
+                        if workflow_def is None:
+                            loader = WorkflowLoader()
+                            workflow_def = loader.load_workflow(workflow_name)
+                            workflow_cache.set(cache_key, workflow_def)
             
             # Create DAGRun for tracking
             dag_run = DAGRun(

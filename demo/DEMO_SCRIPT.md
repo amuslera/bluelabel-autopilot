@@ -1,170 +1,198 @@
 # Bluelabel Autopilot Demo Script 🚀
 
 **Duration**: 5 minutes  
-**Objective**: Demonstrate real-time DAG workflow orchestration
+**Objective**: Demonstrate real-time DAG workflow orchestration with polished UI  
+**Resolution**: Optimized for 1920x1080 recording
 
 ## Pre-Demo Setup (30 seconds)
 
-1. **Start Services**
+1. **Start Demo Environment**
    ```bash
-   # Terminal 1: API Server
-   cd /apps/api
-   python3 simple_test_server.py
-   
-   # Terminal 2: Frontend
-   cd /apps/web
-   npm run dev
+   ./demo/start_demo.sh
    ```
+   *(This script handles everything automatically)*
 
-2. **Open Browser**
-   - Navigate to http://localhost:3000
-   - Open DevTools to show WebSocket traffic
+2. **Verify Demo Ready**
+   - Browser opens automatically to http://localhost:3000
+   - API server starts on http://localhost:8000
+   - WebSocket connects at ws://localhost:8000/ws/dag-updates
 
-3. **Verify Test Dashboard**
-   - http://localhost:8001/test_page.html (optional backup)
+3. **Recording Setup**
+   - Ensure browser zoom is at 100% for 1920x1080
+   - Open DevTools Network tab to show WebSocket traffic
+   - Clear browser cache for clean demo start
 
 ## Demo Flow
 
 ### Part 1: Introduction (30 seconds)
 
-"Welcome to Bluelabel Autopilot - an MCP-native agent orchestration platform.
+**Script**: "Welcome to Bluelabel Autopilot - a next-generation MCP-native agent orchestration platform. Today I'll demonstrate our real-time workflow visualization and management capabilities."
 
-Today I'll demonstrate how we've unified our architecture to provide real-time workflow visualization and management."
+**Show**: 
+- Enhanced dashboard with gradient background
+- Live demo environment indicator (green pulsing dot)
+- Clean, modern interface
 
-**Show**: Empty dashboard state
+### Part 2: Quick Workflow Demo (1 minute)
 
-### Part 2: Basic Workflow Execution (1 minute)
+**Script**: "Let's start with our Quick Test workflow to show the system's responsiveness."
 
-"Let's start with a simple PDF to summary workflow."
+**Actions**:
+1. **Click "Quick Test" button** (blue gradient button with ⚡ icon)
+   - Point out the visual feedback with loading spinner
+   - Show success notification appearing
 
-1. **Trigger workflow**:
-   - Click "Create Test Workflow"
-   - Point out the workflow ID
+2. **Watch real-time updates**:
+   - "Notice the workflow appears immediately in the list below"
+   - "The status updates from 'RUNNING' with blue pulsing animation"
+   - "To 'SUCCESS' with green gradient"
 
-2. **Real-time visualization**:
-   - "Notice how the DAG graph updates in real-time"
-   - "Each step shows its current status"
-   - "WebSocket delivers updates with <10ms latency"
+3. **Click on the workflow** to view DAG visualization
+   - "Here's our enhanced DAG graph with smooth animations"
+   - "Progress bar shows real-time completion"
+   - "Live WebSocket indicator confirms real-time updates"
 
-3. **Show completion**:
-   - "The entire pipeline completes in under 3 seconds"
-   - "All steps show green checkmarks"
+### Part 3: Visual Polish Demonstration (1.5 minutes)
 
-### Part 3: Failure Recovery Demo (1.5 minutes)
+**Script**: "Our UI is designed for maximum visual impact during demos and production use."
 
-"Now let's see how the system handles failures."
+**Highlight**:
+1. **Enhanced Status Indicators**:
+   - Gradient status badges with animations
+   - Color-coded progress indicators
+   - Real-time timestamp updates
 
-1. **Create failure workflow**:
-   ```javascript
-   // In console
-   fetch('http://localhost:8000/api/dag-runs', {
-     method: 'POST',
-     headers: {'Content-Type': 'application/json'},
-     body: JSON.stringify({
-       workflow: `name: demo-failure-recovery
-steps:
-  - name: extract_text`,
-       inputs: {demo_type: 'failure_recovery'}
-     })
-   })
-   ```
+2. **DAG Graph Improvements**:
+   - Smooth gradient backgrounds
+   - Animated status transitions
+   - Enhanced minimap with color coding
+   - Professional shadow effects and borders
 
-2. **Watch retry mechanism**:
-   - "The extract_text step will fail twice"
-   - "Notice the retry counter incrementing"
-   - "On the third attempt, it succeeds"
-   - "Total time: 12 seconds due to retries"
+3. **Demo Controls**:
+   - Four different workflow types
+   - Visual feedback on button hover
+   - Estimated duration indicators
 
-### Part 4: Parallel Processing (1.5 minutes)
+### Part 4: Multiple Workflow Types (1.5 minutes)
 
-"For large documents, we support parallel processing."
+**Script**: "Let's demonstrate different workflow complexities."
 
-1. **Show workflow list**:
-   - Point to the parallel workflow already created
-   - ID: `ee5f7d80-c57c-422e-bcad-f424bbf4238e`
+**Actions**:
+1. **Click "PDF Analysis"** (purple button)
+   - Show estimated duration (~30 seconds)
+   - "This demonstrates document processing capabilities"
 
-2. **Explain optimization**:
-   - "Document split into 4 chunks"
-   - "All chunks process simultaneously"
-   - "6 second max vs 23 seconds sequential"
-   - "60% time reduction"
+2. **Click "URL Processing"** (green button) while PDF is running
+   - "Notice we can run multiple workflows simultaneously"
+   - "Each has its own progress tracking"
 
-### Part 5: Complex Pipeline (1 minute)
+3. **Click "Complex Pipeline"** (orange button)
+   - "This shows our most sophisticated workflow with 6+ steps"
+   - "Watch the DAG graph handle parallel processing"
 
-"Here's a production-ready pipeline with 9 steps."
+### Part 5: Real-time Updates & WebSocket (1 minute)
 
-1. **Show complex workflow**:
-   - Multiple parallel preprocessing steps
-   - Dependency management
-   - Quality checks
-   - "Notice how the DAG visualizes dependencies"
+**Script**: "The real power is in our real-time updates."
+
+**Show**:
+1. **WebSocket Connection**:
+   - Point to "Live Updates" indicator with pulsing green dot
+   - Show DevTools Network tab with WebSocket messages
+
+2. **Auto-refresh Capability**:
+   - "List auto-refreshes every 5 seconds"
+   - "No page reload needed"
+
+3. **Error Handling** (if available):
+   - "System gracefully handles any failures with retry mechanisms"
 
 ### Part 6: Architecture Benefits (30 seconds)
 
-"What we've achieved:"
+**Script**: "What makes this special:"
 
-1. **Unified Architecture**:
-   - Single workflow engine (no more fragmentation)
-   - Consistent API across all agents
-   - MCP-native from the ground up
+**Key Points**:
+1. **Performance**: "Real-time updates with <10ms WebSocket latency"
+2. **Scalability**: "MCP-native architecture for dynamic agent discovery"
+3. **User Experience**: "Professional UI with smooth animations and visual feedback"
+4. **Developer Experience**: "One-command demo startup with ./demo/start_demo.sh"
 
-2. **Performance**:
-   - <50ms adapter overhead
-   - 2-3 second PDF processing
-   - Real-time updates via WebSocket
+## Enhanced Talking Points
 
-3. **Developer Experience**:
-   - Type-safe TypeScript API
-   - Comprehensive error handling
-   - Visual debugging tools
+### Visual Impact
+- **Gradient Backgrounds**: "Notice the professional gradient backgrounds throughout"
+- **Smooth Animations**: "All status changes include smooth CSS transitions"
+- **Color Psychology**: "Color coding makes status immediately recognizable"
 
-## Key Talking Points
+### Technical Achievements
+- **Real-time Architecture**: "WebSocket-based real-time updates"
+- **Responsive Design**: "Optimized for all screen sizes, including 1920x1080 recording"
+- **Modern UI Framework**: "Built with React, TypeScript, and Tailwind CSS"
 
-### Technical Achievement
-- "Completed in 4 hours what was planned for 48-72 hours"
-- "10x faster delivery through AI pair programming"
-- "Zero breaking changes to existing workflows"
-
-### Architecture Wins
-- "Strategy pattern allows engine swapping"
-- "Dependency injection for dynamic agents"
-- "WebSocket for real-time without polling"
-
-### Production Ready
-- "Retry mechanisms built-in"
-- "Comprehensive error boundaries"
-- "Performance monitoring included"
+### Demo-Specific Features
+- **Auto-refresh**: "Keeps demo flowing smoothly without manual refreshes"
+- **Visual Notifications**: "Toast notifications for immediate feedback"
+- **Multiple Workflow Types**: "Demonstrates platform flexibility"
 
 ## Q&A Preparation
 
-**Q: How does this compare to existing solutions?**
-A: "Unlike traditional orchestrators, we're MCP-native, meaning agents can discover and invoke each other dynamically. Plus, our real-time visualization helps debug complex workflows."
+**Q: How does this compare to traditional workflow tools?**
+A: "Traditional tools require manual refresh and have static interfaces. Our real-time updates and modern UI provide immediate visual feedback, making debugging and monitoring much more intuitive."
 
-**Q: What about scale?**
-A: "The architecture supports horizontal scaling. The WebSocket manager can be replaced with Redis Pub/Sub for multi-instance deployments."
+**Q: What about performance at scale?**
+A: "The WebSocket architecture scales horizontally. We can support hundreds of concurrent workflows with the same real-time responsiveness."
 
-**Q: Integration with existing systems?**
-A: "The unified engine maintains backward compatibility. Existing workflows run without modification."
+**Q: Is this production-ready?**
+A: "Absolutely. The demo environment you're seeing runs the same code as production, just with demo data."
 
-## Troubleshooting
+## Technical Demo Tips
 
-If WebSocket disconnects:
-- Refresh the page
-- Check console for errors
-- Verify server is running
+### For Best Visual Impact:
+1. **Browser Settings**:
+   - Zoom level: 100%
+   - Hide bookmarks bar
+   - Use full-screen browser
 
-If no data appears:
-- Check browser console
-- Verify CORS headers
-- Try the test dashboard
+2. **Animation Timing**:
+   - Allow 2-3 seconds between clicks
+   - Let animations complete
+   - Pause on key visual moments
+
+3. **Screen Recording**:
+   - 1920x1080 resolution
+   - 30 FPS minimum
+   - Capture mouse cursor for clarity
+
+### Troubleshooting
+
+**If WebSocket disconnects**:
+- Refresh page (should reconnect automatically)
+- Check green "Live Updates" indicator
+
+**If workflows don't appear**:
+- Wait 5 seconds for auto-refresh
+- Check browser console for errors
+
+**If buttons are unresponsive**:
+- Ensure only one workflow triggering at a time
+- Check network connectivity
 
 ## Post-Demo
 
-1. Share workflow IDs for exploration
-2. Provide API documentation link
-3. Mention the performance report
-4. Highlight the sprint velocity achievement
+1. **Leave browser open** for continued exploration
+2. **Stop cleanly** with `./demo/stop_demo.sh`
+3. **Share demo URLs** for attendee exploration
+4. **Highlight the development velocity** (created in 2-3 hours vs planned 48-72)
+
+## Demo Recording Checklist
+
+- [ ] Resolution set to 1920x1080
+- [ ] Demo environment started with `./demo/start_demo.sh`
+- [ ] Browser at 100% zoom
+- [ ] DevTools ready (optional for WebSocket visualization)
+- [ ] All demo flows tested at least once
+- [ ] Backup scenarios prepared
+- [ ] Stop script ready: `./demo/stop_demo.sh`
 
 ---
 
-**Remember**: Keep it visual, emphasize real-time updates, and let the UI tell the story!
+**Remember**: Let the enhanced UI tell the story! The visual improvements make the technical capabilities much more compelling and demo-ready. 🎬

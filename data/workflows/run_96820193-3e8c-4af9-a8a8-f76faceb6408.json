@@ -1,0 +1,106 @@
+{
+  "dag_id": "test-backend-integration",
+  "run_id": "96820193-3e8c-4af9-a8a8-f76faceb6408",
+  "status": "failed",
+  "steps": {
+    "ingest_text": {
+      "step_id": "ingest_text",
+      "status": "failed",
+      "start_time": "2025-05-28T21:42:05.854317",
+      "end_time": "2025-05-28T21:42:05.857663",
+      "retry_count": 3,
+      "max_retries": 3,
+      "error": "'IngestionAgent' object has no attribute 'execute'",
+      "result": null,
+      "metadata": {
+        "error_history": [
+          {
+            "timestamp": "2025-05-28T21:41:58.827249",
+            "attempt": 1,
+            "error": "'IngestionAgent' object has no attribute 'execute'",
+            "error_type": "AttributeError"
+          },
+          {
+            "timestamp": "2025-05-28T21:41:59.834253",
+            "attempt": 2,
+            "error": "'IngestionAgent' object has no attribute 'execute'",
+            "error_type": "AttributeError"
+          },
+          {
+            "timestamp": "2025-05-28T21:42:01.843507",
+            "attempt": 3,
+            "error": "'IngestionAgent' object has no attribute 'execute'",
+            "error_type": "AttributeError"
+          },
+          {
+            "timestamp": "2025-05-28T21:42:05.857664",
+            "attempt": 4,
+            "error": "'IngestionAgent' object has no attribute 'execute'",
+            "error_type": "AttributeError"
+          }
+        ]
+      },
+      "duration_seconds": 0.003346
+    },
+    "create_digest": {
+      "step_id": "create_digest",
+      "status": "skipped",
+      "start_time": null,
+      "end_time": "2025-05-28T21:42:05.860232",
+      "retry_count": 0,
+      "max_retries": 3,
+      "error": null,
+      "result": null,
+      "metadata": {
+        "skip_reason": "Skipped due to failure of ingest_text"
+      },
+      "duration_seconds": null
+    }
+  },
+  "start_time": "2025-05-28T21:41:58.825520",
+  "end_time": null,
+  "total_retries": 3,
+  "error": null,
+  "metadata": {
+    "workflow_version": "1.0.0",
+    "description": "Test workflow for backend integration",
+    "inputs": {
+      "test_mode": true
+    },
+    "workflow_def": {
+      "name": "test-backend-integration",
+      "version": "1.0.0",
+      "description": "Test workflow for backend integration",
+      "steps": [
+        {
+          "name": "ingest_text",
+          "agent": "ingestion",
+          "input": {
+            "text": "This is a test document for backend integration. Testing real agent execution."
+          },
+          "output": "ingested_content"
+        },
+        {
+          "name": "create_digest",
+          "agent": "digest",
+          "input": {
+            "content": "{{ingested_content}}",
+            "format": "brief"
+          },
+          "output": "final_digest"
+        }
+      ]
+    },
+    "step_failures": [
+      {
+        "step_id": "ingest_text",
+        "timestamp": "2025-05-28T21:42:05.860212",
+        "attempts": 4,
+        "final_error": "'IngestionAgent' object has no attribute 'execute'",
+        "critical": true
+      }
+    ],
+    "failure_reason": "Critical step 'ingest_text' failed after 4 attempts: 'IngestionAgent' object has no attribute 'execute'"
+  },
+  "duration_seconds": null
+}

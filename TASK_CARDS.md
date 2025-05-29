@@ -66,6 +66,56 @@ Brief description of the task objective.
 
 ## Active Tasks
 
+### TASK-163O: Demo Preparation and Environment Setup
+Status: IN_PROGRESS 🚧
+Assigned: CA
+Priority: CRITICAL
+Created: 2025-05-28
+Updated: 2025-05-28
+
+**Description:**
+Prepare a compelling demo environment that showcases the full end-to-end pipeline working in real-time. Create demo scenarios, ensure UI polish, and prepare recording setup.
+
+**Deliverables:**
+- [ ] 3-4 demo scenarios in /demo/scenarios/
+- [ ] UI polish for DAG visualization
+- [ ] Demo content in /demo/sample_content/
+- [ ] Demo startup script
+- [ ] Demo flow guide
+
+**Technical Details:**
+- Focus on visual impact
+- Ensure smooth execution
+- Test on 1920x1080 resolution
+- Keep demo under 5 minutes
+
+**Time Estimate:** 2-3 hours
+
+### TASK-163P: Performance Optimization and System Audit
+Status: IN_PROGRESS 🚧
+Assigned: CC
+Priority: HIGH
+Created: 2025-05-28
+Updated: 2025-05-28
+
+**Description:**
+Conduct a comprehensive performance audit of the integrated system, identify bottlenecks, implement optimizations, and ensure the system is production-ready.
+
+**Deliverables:**
+- [ ] Performance profiling report
+- [ ] Implemented optimizations
+- [ ] Stress test results
+- [ ] Code quality audit
+- [ ] Performance baseline metrics
+
+**Technical Details:**
+- Profile complete pipeline
+- Optimize DAGRunStore queries
+- Test with concurrent workflows
+- Check for memory leaks
+
+**Time Estimate:** 2-3 hours
+
 ### TASK-161J: Unify Agent Models and Standardize Imports
 Status: COMPLETED ✅
 Assigned: CC
@@ -711,7 +761,7 @@ Launch and document Sprint 3 with a focus on completing and validating the MVP p
 
 - Total Tasks: 50+
 - Completed: 45+
-- In Progress: 0
+- In Progress: 2
 - Blocked: 0
 - Cancelled: 0
 

@@ -12,6 +12,8 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 import logging
 from filelock import FileLock
+import sqlite3
+from contextlib import contextmanager
 
 from .dag_run_tracker import DAGRun, DAGRunStatus
 
@@ -31,13 +33,70 @@ class DAGRunStore:
         self.storage_path = Path(storage_path)
         self.storage_path.mkdir(parents=True, exist_ok=True)
         
-        # Index file for quick lookups
+        # SQLite index for fast queries
+        self.index_db = self.storage_path / "dag_runs_index.db"
+        self._init_index_db()
+        
+        # Legacy JSON index for compatibility
         self.index_file = self.storage_path / "dag_runs_index.json"
         self.index_lock = FileLock(str(self.index_file) + ".lock")
         
-        # Initialize index if it doesn't exist
-        if not self.index_file.exists():
-            self._save_index({})
+        # Migrate from JSON to SQLite if needed
+        self._migrate_index()
+    
+    def _init_index_db(self):
+        """Initialize SQLite index database."""
+        with self._get_db() as conn:
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS dag_runs (
+                    run_id TEXT PRIMARY KEY,
+                    dag_id TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    file_path TEXT NOT NULL
+                )
+            """)
+            
+            # Create indexes for common queries
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_dag_id ON dag_runs(dag_id)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_status ON dag_runs(status)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_created_at ON dag_runs(created_at)")
+            conn.commit()
+    
+    @contextmanager
+    def _get_db(self):
+        """Get database connection context."""
+        conn = sqlite3.connect(str(self.index_db))
+        conn.row_factory = sqlite3.Row
+        try:
+            yield conn
+        finally:
+            conn.close()
+    
+    def _migrate_index(self):
+        """Migrate from JSON index to SQLite if needed."""
+        if self.index_file.exists() and self.index_file.stat().st_size > 0:
+            try:
+                index = self._load_index()
+                with self._get_db() as conn:
+                    for run_id, info in index.items():
+                        conn.execute("""
+                            INSERT OR IGNORE INTO dag_runs 
+                            (run_id, dag_id, status, created_at, updated_at, file_path)
+                            VALUES (?, ?, ?, ?, ?, ?)
+                        """, (
+                            run_id,
+                            info.get('dag_id', ''),
+                            info.get('status', ''),
+                            info.get('created_at', ''),
+                            info.get('updated_at', ''),
+                            info.get('file', '')
+                        ))
+                    conn.commit()
+                logger.info(f"Migrated {len(index)} entries to SQLite index")
+            except Exception as e:
+                logger.warning(f"Failed to migrate index: {e}")
     
     def _get_run_file(self, run_id: str) -> Path:
         """Get file path for a specific run."""
@@ -80,7 +139,23 @@ class DAGRunStore:
             with open(run_file, 'w') as f:
                 json.dump(dag_run.to_dict(), f, indent=2)
             
-            # Update index
+            # Update SQLite index
+            with self._get_db() as conn:
+                conn.execute("""
+                    INSERT INTO dag_runs 
+                    (run_id, dag_id, status, created_at, updated_at, file_path)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """, (
+                    dag_run.run_id,
+                    dag_run.dag_id,
+                    dag_run.status.value,
+                    datetime.utcnow().isoformat(),
+                    datetime.utcnow().isoformat(),
+                    str(run_file.relative_to(self.storage_path))
+                ))
+                conn.commit()
+            
+            # Also update JSON index for compatibility
             index = self._load_index()
             index[dag_run.run_id] = {
                 'dag_id': dag_run.dag_id,

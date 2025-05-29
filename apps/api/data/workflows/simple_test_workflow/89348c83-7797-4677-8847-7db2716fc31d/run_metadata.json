@@ -1,0 +1,11 @@
+{
+  "workflow_name": "Simple Test Workflow",
+  "version": "1.0.0",
+  "timestamp": "2025-05-28T23:32:25.518017",
+  "completed_at": "2025-05-28T23:32:25.518006",
+  "status": "success",
+  "duration_ms": 3,
+  "steps_completed": 1,
+  "steps_failed": 0,
+  "run_id": "e188be8d-acb1-4597-81b5-9daba881e9ab"
+}
