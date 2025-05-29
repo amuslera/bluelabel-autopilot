@@ -1,0 +1,8 @@
+{
+  "step_id": "ingest",
+  "status": "error",
+  "timestamp": "2025-05-28T21:56:37.305436",
+  "result": null,
+  "error": "Input file not found: tests/sample_pdf_input.json",
+  "duration_ms": 0
+}

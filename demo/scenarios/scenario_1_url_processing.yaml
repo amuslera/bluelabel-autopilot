@@ -1,0 +1,65 @@
+name: demo-url-tech-article
+description: "Demo: Process a technical blog post from URL to summary"
+metadata:
+  scenario: "URL Article Processing"
+  demo_type: "tech_blog"
+  estimated_duration: "45 seconds"
+  talking_points:
+    - "Real-time URL content extraction"
+    - "AI-powered summarization"
+    - "Structured output generation"
+
+steps:
+  - id: url_fetch
+    name: "Fetch Article Content"
+    agent: ingestion_agent
+    inputs:
+      url: "https://blog.openai.com/introducing-chatgpt-4"
+      content_type: "article"
+    expected_duration: 3
+    
+  - id: content_extraction
+    name: "Extract Text Content"
+    agent: ingestion_agent
+    depends_on: [url_fetch]
+    inputs:
+      format: "clean_text"
+      remove_ads: true
+    expected_duration: 2
+    
+  - id: content_analysis
+    name: "Analyze Content Structure"
+    agent: ingestion_agent
+    depends_on: [content_extraction]
+    inputs:
+      extract_headings: true
+      identify_key_points: true
+    expected_duration: 4
+    
+  - id: summary_generation
+    name: "Generate Summary"
+    agent: digest_agent
+    depends_on: [content_analysis]
+    inputs:
+      max_length: 150
+      focus: "technical_insights"
+      format: "bullet_points"
+    expected_duration: 8
+    
+  - id: output_formatting
+    name: "Format Output"
+    agent: digest_agent
+    depends_on: [summary_generation]
+    inputs:
+      format: "markdown"
+      include_metadata: true
+    expected_duration: 2
+
+demo_inputs:
+  url: "https://blog.openai.com/introducing-chatgpt-4"
+  demo_mode: true
+  
+expected_outputs:
+  - summary: "AI article summary with key technical insights"
+  - metadata: "Article details, processing time, word count"
+  - format: "Clean markdown with structured sections" 

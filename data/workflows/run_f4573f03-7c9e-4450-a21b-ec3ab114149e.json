@@ -1,0 +1,76 @@
+{
+  "dag_id": "test-backend-integration",
+  "run_id": "f4573f03-7c9e-4450-a21b-ec3ab114149e",
+  "status": "running",
+  "steps": {
+    "ingest_text": {
+      "step_id": "ingest_text",
+      "status": "retry",
+      "start_time": "2025-05-28T21:40:48.733720",
+      "end_time": "2025-05-28T21:40:48.734658",
+      "retry_count": 1,
+      "max_retries": 3,
+      "error": null,
+      "result": null,
+      "metadata": {
+        "error_history": [
+          {
+            "timestamp": "2025-05-28T21:40:48.734659",
+            "attempt": 1,
+            "error": "1 validation error for AgentInput\nsource\n  Field required [type=missing, input_value={'task_id': 'f4573f03-7c9...real agent execution.'}}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.11/v/missing",
+            "error_type": "ValidationError"
+          }
+        ]
+      },
+      "duration_seconds": 0.000938
+    },
+    "create_digest": {
+      "step_id": "create_digest",
+      "status": "pending",
+      "start_time": null,
+      "end_time": null,
+      "retry_count": 0,
+      "max_retries": 3,
+      "error": null,
+      "result": null,
+      "metadata": {},
+      "duration_seconds": null
+    }
+  },
+  "start_time": "2025-05-28T21:40:48.732314",
+  "end_time": null,
+  "total_retries": 1,
+  "error": null,
+  "metadata": {
+    "workflow_version": "1.0.0",
+    "description": "Test workflow for backend integration",
+    "inputs": {
+      "test_mode": true
+    },
+    "workflow_def": {
+      "name": "test-backend-integration",
+      "version": "1.0.0",
+      "description": "Test workflow for backend integration",
+      "steps": [
+        {
+          "name": "ingest_text",
+          "agent": "ingestion",
+          "input": {
+            "text": "This is a test document for backend integration. Testing real agent execution."
+          },
+          "output": "ingested_content"
+        },
+        {
+          "name": "create_digest",
+          "agent": "digest",
+          "input": {
+            "content": "{{ingested_content}}",
+            "format": "brief"
+          },
+          "output": "final_digest"
+        }
+      ]
+    }
+  },
+  "duration_seconds": null
+}

@@ -1,0 +1,8 @@
+{
+  "step_id": "ingest",
+  "status": "error",
+  "timestamp": "2025-05-29T00:07:19.149714",
+  "result": null,
+  "error": "Input file not found: INITIAL_INPUT",
+  "duration_ms": 0
+}

@@ -1,0 +1,26 @@
+{
+  "step_id": "ingest",
+  "status": "success",
+  "timestamp": "2025-05-29T00:09:34.530687",
+  "result": {
+    "content_id": "pdf_20250529_000934",
+    "content_type": "pdf",
+    "metadata": {
+      "content_id": "pdf_20250529_000934",
+      "content_type": "pdf",
+      "source": "sample.pdf",
+      "title": null,
+      "author": null,
+      "created_at": "2025-05-29T00:09:34.530463",
+      "processed_at": "2025-05-29T00:09:34.530464",
+      "content_length": 19,
+      "additional_metadata": {
+        "filename": "sample.pdf",
+        "page_count": 1
+      }
+    },
+    "content_length": 19
+  },
+  "error": null,
+  "duration_ms": 15
+}

@@ -1,0 +1,8 @@
+{
+  "step_id": "test_step",
+  "status": "error",
+  "timestamp": "2025-05-28T22:00:25.669052",
+  "result": null,
+  "error": "Input file not found: tests/sample_digest_input.json",
+  "duration_ms": 0
+}

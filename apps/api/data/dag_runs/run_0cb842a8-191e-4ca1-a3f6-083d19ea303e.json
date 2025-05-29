@@ -1,0 +1,12 @@
+{
+  "dag_id": "Simple Test Workflow",
+  "run_id": "0cb842a8-191e-4ca1-a3f6-083d19ea303e",
+  "status": "success",
+  "steps": {},
+  "start_time": null,
+  "end_time": null,
+  "total_retries": 0,
+  "error": null,
+  "metadata": {},
+  "duration_seconds": null
+}

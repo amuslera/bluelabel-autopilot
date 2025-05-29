@@ -1,0 +1,82 @@
+name: demo-pdf-research-analysis
+description: "Demo: Analyze a research paper PDF with advanced processing"
+metadata:
+  scenario: "PDF Research Paper Analysis"
+  demo_type: "academic_paper"
+  estimated_duration: "90 seconds"
+  talking_points:
+    - "PDF text extraction with OCR capability"
+    - "Academic content structure analysis"
+    - "Research insights generation"
+    - "Citation and reference parsing"
+
+steps:
+  - id: pdf_upload
+    name: "Upload PDF Document"
+    agent: ingestion_agent
+    inputs:
+      file_type: "pdf"
+      max_size: "50MB"
+      ocr_enabled: true
+    expected_duration: 5
+    
+  - id: document_parsing
+    name: "Parse Document Structure"
+    agent: ingestion_agent
+    depends_on: [pdf_upload]
+    inputs:
+      extract_sections: true
+      identify_figures: true
+      parse_references: true
+    expected_duration: 12
+    
+  - id: content_analysis
+    name: "Analyze Research Content"
+    agent: ingestion_agent
+    depends_on: [document_parsing]
+    inputs:
+      identify_methodology: true
+      extract_key_findings: true
+      analyze_conclusions: true
+    expected_duration: 15
+    
+  - id: research_digest
+    name: "Generate Research Digest"
+    agent: digest_agent
+    depends_on: [content_analysis]
+    inputs:
+      summary_type: "research_paper"
+      include_methodology: true
+      highlight_contributions: true
+      max_length: 300
+    expected_duration: 20
+    
+  - id: citation_extraction
+    name: "Extract Citations"
+    agent: digest_agent
+    depends_on: [document_parsing]
+    inputs:
+      format_citations: "apa"
+      include_doi: true
+    expected_duration: 8
+    
+  - id: final_report
+    name: "Generate Final Report"
+    agent: digest_agent
+    depends_on: [research_digest, citation_extraction]
+    inputs:
+      format: "structured_report"
+      include_visual_summary: true
+    expected_duration: 10
+
+demo_inputs:
+  pdf_file: "sample_ai_research_paper.pdf"
+  analysis_depth: "comprehensive"
+  demo_mode: true
+  
+expected_outputs:
+  - research_summary: "Structured summary with key findings"
+  - methodology_overview: "Research methods and approach"
+  - key_contributions: "Novel contributions highlighted"
+  - citations: "Properly formatted reference list"
+  - visual_summary: "Charts and key metrics" 

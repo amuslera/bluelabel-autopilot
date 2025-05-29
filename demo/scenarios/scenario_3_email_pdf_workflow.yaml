@@ -1,0 +1,92 @@
+name: demo-email-pdf-summary
+description: "Demo: Email-triggered PDF processing with automated response"
+metadata:
+  scenario: "Email Trigger → PDF Attachment → Summary"
+  demo_type: "email_automation"
+  estimated_duration: "120 seconds"
+  talking_points:
+    - "Email-based workflow triggering"
+    - "Automatic PDF attachment processing"
+    - "Intelligent summary generation"
+    - "Automated email response with results"
+
+steps:
+  - id: email_receive
+    name: "Process Incoming Email"
+    agent: email_agent
+    inputs:
+      monitor_inbox: true
+      extract_attachments: true
+      sender_verification: true
+    expected_duration: 3
+    
+  - id: attachment_validation
+    name: "Validate PDF Attachment"
+    agent: ingestion_agent
+    depends_on: [email_receive]
+    inputs:
+      file_type_check: "pdf"
+      size_limit: "25MB"
+      security_scan: true
+    expected_duration: 4
+    
+  - id: pdf_processing
+    name: "Extract PDF Content"
+    agent: ingestion_agent
+    depends_on: [attachment_validation]
+    inputs:
+      ocr_enabled: true
+      preserve_formatting: true
+      extract_images: false
+    expected_duration: 15
+    
+  - id: content_classification
+    name: "Classify Document Type"
+    agent: ingestion_agent
+    depends_on: [pdf_processing]
+    inputs:
+      document_types: ["report", "invoice", "contract", "article"]
+      confidence_threshold: 0.8
+    expected_duration: 6
+    
+  - id: intelligent_summary
+    name: "Generate Contextual Summary"
+    agent: digest_agent
+    depends_on: [content_classification]
+    inputs:
+      summary_style: "executive"
+      key_points_max: 5
+      include_recommendations: true
+    expected_duration: 18
+    
+  - id: response_preparation
+    name: "Prepare Email Response"
+    agent: email_agent
+    depends_on: [intelligent_summary]
+    inputs:
+      response_tone: "professional"
+      include_attachments: false
+      format: "html"
+    expected_duration: 8
+    
+  - id: send_response
+    name: "Send Summary Email"
+    agent: email_agent
+    depends_on: [response_preparation]
+    inputs:
+      reply_to_sender: true
+      cc_configured_users: false
+      delivery_confirmation: true
+    expected_duration: 5
+
+demo_inputs:
+  trigger_email: "demo@bluelabel.ai"
+  pdf_attachment: "sample_business_report.pdf"
+  auto_reply: true
+  demo_mode: true
+  
+expected_outputs:
+  - email_response: "Professional summary email"
+  - document_classification: "Report type identification"
+  - key_insights: "Executive summary with recommendations"
+  - processing_metrics: "Time taken, confidence scores" 

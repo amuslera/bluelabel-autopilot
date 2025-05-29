@@ -1,0 +1,109 @@
+name: demo-error-recovery-workflow
+description: "Demo: Complex workflow with built-in error recovery and retry mechanisms"
+metadata:
+  scenario: "Multi-step Workflow with Error Recovery"
+  demo_type: "resilience_demo"
+  estimated_duration: "150 seconds"
+  talking_points:
+    - "Robust error handling and recovery"
+    - "Automatic retry with exponential backoff"
+    - "Graceful degradation when possible"
+    - "Comprehensive error reporting"
+
+steps:
+  - id: initial_validation
+    name: "Validate Input Data"
+    agent: ingestion_agent
+    inputs:
+      validation_rules: ["format", "size", "content_type"]
+      strict_mode: false
+    expected_duration: 3
+    retry_config:
+      max_attempts: 2
+      backoff_seconds: 1
+    
+  - id: content_fetch
+    name: "Fetch Content (Simulated Failure)"
+    agent: ingestion_agent
+    depends_on: [initial_validation]
+    inputs:
+      url: "https://example.com/unreliable-endpoint"
+      timeout: 5
+      simulate_failure: true  # Demo: This will fail first 2 attempts
+    expected_duration: 8
+    retry_config:
+      max_attempts: 3
+      backoff_seconds: 2
+      exponential: true
+    error_handling:
+      fallback_action: "use_cached_content"
+      
+  - id: parallel_processing_a
+    name: "Process Content - Path A"
+    agent: digest_agent
+    depends_on: [content_fetch]
+    inputs:
+      processing_type: "summary"
+      max_length: 100
+    expected_duration: 12
+    retry_config:
+      max_attempts: 2
+      backoff_seconds: 1
+      
+  - id: parallel_processing_b
+    name: "Process Content - Path B"
+    agent: digest_agent
+    depends_on: [content_fetch]
+    inputs:
+      processing_type: "keywords"
+      max_keywords: 10
+    expected_duration: 10
+    retry_config:
+      max_attempts: 2
+      backoff_seconds: 1
+      
+  - id: quality_check
+    name: "Quality Validation (May Fail)"
+    agent: digest_agent
+    depends_on: [parallel_processing_a, parallel_processing_b]
+    inputs:
+      quality_threshold: 0.9
+      simulate_quality_failure: true  # Demo: Will fail once
+    expected_duration: 6
+    retry_config:
+      max_attempts: 2
+      backoff_seconds: 3
+    error_handling:
+      fallback_action: "lower_threshold"
+      
+  - id: final_aggregation
+    name: "Aggregate Results"
+    agent: digest_agent
+    depends_on: [quality_check]
+    inputs:
+      combine_outputs: true
+      format: "structured"
+    expected_duration: 8
+    retry_config:
+      max_attempts: 1  # Final step, no retries
+      
+  - id: error_reporting
+    name: "Generate Error Report"
+    agent: digest_agent
+    depends_on: [final_aggregation]
+    inputs:
+      include_retry_details: true
+      performance_metrics: true
+    expected_duration: 4
+    always_run: true  # Runs even if previous steps fail
+
+demo_inputs:
+  simulate_failures: true
+  show_retry_animation: true
+  demo_mode: true
+  
+expected_outputs:
+  - final_result: "Successfully processed content despite failures"
+  - error_log: "Detailed log of failures and recoveries"
+  - retry_statistics: "Number of retries, backoff times, success rates"
+  - performance_report: "Total time including retry overhead" 

@@ -1,0 +1,11 @@
+{
+  "workflow_name": "URL Ingestion and Digest",
+  "version": "1.0.0",
+  "timestamp": "2025-05-29T00:09:01.531552",
+  "completed_at": "2025-05-29T00:09:01.531535",
+  "status": "success",
+  "duration_ms": 192,
+  "steps_completed": 2,
+  "steps_failed": 0,
+  "run_id": "c7b2beed-584d-44fe-9b6c-732832581458"
+}

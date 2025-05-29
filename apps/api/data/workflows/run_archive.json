@@ -1,0 +1,122 @@
+[
+  {
+    "workflow_id": "pdf_ingestion_and_digest",
+    "run_id": "24de9a64-4243-49ff-a862-6bfca54fed98",
+    "timestamp": "2025-05-28T21:56:37.306023",
+    "workflow_name": "PDF Ingestion and Digest",
+    "version": "1.0.0",
+    "status": "failed",
+    "duration_ms": 27,
+    "tags": [],
+    "summary": "",
+    "source": {}
+  },
+  {
+    "workflow_id": "pdf_ingestion_and_digest",
+    "run_id": "0cbafcb0-3a73-4c6f-94cb-e2205132242a",
+    "timestamp": "2025-05-28T21:56:47.335880",
+    "workflow_name": "PDF Ingestion and Digest",
+    "version": "1.0.0",
+    "status": "failed",
+    "duration_ms": 18,
+    "tags": [],
+    "summary": "",
+    "source": {}
+  },
+  {
+    "workflow_id": "simple_test_workflow",
+    "run_id": "45f24519-3942-4307-8b6a-72fca96c5ded",
+    "timestamp": "2025-05-28T22:00:25.669505",
+    "workflow_name": "Simple Test Workflow",
+    "version": "1.0.0",
+    "status": "failed",
+    "duration_ms": 10,
+    "tags": [],
+    "summary": "",
+    "source": {}
+  },
+  {
+    "workflow_id": "simple_test_workflow",
+    "run_id": "87b09729-9ff5-4588-b270-8b4865b4d11f",
+    "timestamp": "2025-05-28T23:01:49.274746",
+    "workflow_name": "Simple Test Workflow",
+    "version": "1.0.0",
+    "status": "success",
+    "duration_ms": 7,
+    "tags": [],
+    "summary": "No content available for digest generation.",
+    "source": {}
+  },
+  {
+    "workflow_id": "simple_test_workflow",
+    "run_id": "3a8e93e3-6bfc-4d19-87d4-a94b70f3eaff",
+    "timestamp": "2025-05-28T23:25:57.942973",
+    "workflow_name": "Simple Test Workflow",
+    "version": "1.0.0",
+    "status": "success",
+    "duration_ms": 18,
+    "tags": [],
+    "summary": "No content available for digest generation.",
+    "source": {}
+  },
+  {
+    "workflow_id": "simple_test_workflow",
+    "run_id": "0cb842a8-191e-4ca1-a3f6-083d19ea303e",
+    "timestamp": "2025-05-28T23:28:53.004588",
+    "workflow_name": "Simple Test Workflow",
+    "version": "1.0.0",
+    "status": "success",
+    "duration_ms": 12,
+    "tags": [],
+    "summary": "No content available for digest generation.",
+    "source": {}
+  },
+  {
+    "workflow_id": "simple_test_workflow",
+    "run_id": "3f4244e0-9911-448a-b966-c04a5e93ecb8",
+    "timestamp": "2025-05-28T23:31:39.179556",
+    "workflow_name": "Simple Test Workflow",
+    "version": "1.0.0",
+    "status": "success",
+    "duration_ms": 5,
+    "tags": [],
+    "summary": "No content available for digest generation.",
+    "source": {}
+  },
+  {
+    "workflow_id": "simple_test_workflow",
+    "run_id": "e188be8d-acb1-4597-81b5-9daba881e9ab",
+    "timestamp": "2025-05-28T23:32:25.518017",
+    "workflow_name": "Simple Test Workflow",
+    "version": "1.0.0",
+    "status": "success",
+    "duration_ms": 3,
+    "tags": [],
+    "summary": "No content available for digest generation.",
+    "source": {}
+  },
+  {
+    "workflow_id": "simple_test_workflow",
+    "run_id": "447dccc7-0297-46a7-8b8a-7ccf5e166bd8",
+    "timestamp": "2025-05-28T23:32:50.962431",
+    "workflow_name": "Simple Test Workflow",
+    "version": "1.0.0",
+    "status": "success",
+    "duration_ms": 13,
+    "tags": [],
+    "summary": "No content available for digest generation.",
+    "source": {}
+  },
+  {
+    "workflow_id": "simple_test_workflow",
+    "run_id": "d489be34-1c24-4d52-918b-5ef64dadff86",
+    "timestamp": "2025-05-28T23:34:38.889181",
+    "workflow_name": "Simple Test Workflow",
+    "version": "1.0.0",
+    "status": "success",
+    "duration_ms": 10,
+    "tags": [],
+    "summary": "No content available for digest generation.",
+    "source": {}
+  }
+]

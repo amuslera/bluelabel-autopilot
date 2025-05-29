@@ -1,0 +1,11 @@
+{
+  "workflow_name": "PDF Ingestion and Digest",
+  "version": "1.0.0",
+  "timestamp": "2025-05-29T00:09:34.556830",
+  "completed_at": "2025-05-29T00:09:34.556810",
+  "status": "success",
+  "duration_ms": 48,
+  "steps_completed": 2,
+  "steps_failed": 0,
+  "run_id": "9d50ddd4-39fe-476b-a2a9-675e0ab14635"
+}
