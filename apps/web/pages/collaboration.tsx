@@ -307,7 +307,8 @@ const CollaborationPage: React.FC = () => {
         // Update task progress
         setTasks(prev => prev.map(task => {
           if (task.status === 'in_progress' && Math.random() > 0.7) {
-            const newProgress = Math.min(task.actualHours + 0.1, task.estimatedHours);
+            const currentHours = task.actualHours || 0;
+            const newProgress = Math.min(currentHours + 0.1, task.estimatedHours);
             return { ...task, actualHours: newProgress, updatedAt: new Date().toISOString() };
           }
           return task;

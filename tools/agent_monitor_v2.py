@@ -12,7 +12,7 @@ import csv
 import threading
 import subprocess
 import pyperclip
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import shutil
 import argparse
@@ -84,12 +84,18 @@ class EnhancedAgentMonitor:
         """Format duration from start time"""
         if not start_time:
             return ""
-        duration = datetime.now() - self.parse_iso_datetime(start_time)
-        hours = int(duration.total_seconds() // 3600)
-        minutes = int((duration.total_seconds() % 3600) // 60)
-        if hours > 0:
-            return f"{hours}h {minutes}m"
-        return f"{minutes}m"
+        try:
+            start_dt = self.parse_iso_datetime(start_time)
+            # Make current time timezone-aware to match parsed datetime
+            now = datetime.now(timezone.utc)
+            duration = now - start_dt
+            hours = int(duration.total_seconds() // 3600)
+            minutes = int((duration.total_seconds() % 3600) // 60)
+            if hours > 0:
+                return f"{hours}h {minutes}m"
+            return f"{minutes}m"
+        except Exception:
+            return "?h"
     
     def record_historical_data(self):
         """Record current status for historical view"""
@@ -326,6 +332,36 @@ class EnhancedAgentMonitor:
         except:
             return {"total_tasks": 0, "completed": 0, "in_progress": 0, "tasks": {}}
     
+    def get_sprint_info(self):
+        """Get sprint goals and key information"""
+        progress = self.get_sprint_progress()
+        sprint_id = progress.get("sprint_id", "Unknown")
+        
+        # Define sprint information based on sprint ID
+        sprint_info = {
+            "PHASE_6.15_SPRINT_1": {
+                "goals": "Multi-agent orchestration infrastructure",
+                "theme": "Foundation & Coordination",
+                "key_metrics": "13 tasks, Infrastructure setup, Real-time monitoring"
+            },
+            "PHASE_6.15_SPRINT_2": {
+                "goals": "Advanced collaboration & workflow orchestration",
+                "theme": "Real-time Collaboration", 
+                "key_metrics": "3 tasks, Live collaboration UI, Advanced workflows, E2E testing"
+            },
+            "PHASE_6.15_SPRINT_3": {
+                "goals": "Complete AIOS v2 MVP as viable AI Operating System",
+                "theme": "AIOS v2 Product Delivery",
+                "key_metrics": "4 tasks, Email integration, Web UI, Production deploy, User experience"
+            }
+        }
+        
+        return sprint_info.get(sprint_id, {
+            "goals": "Sprint goals not defined",
+            "theme": "Current Sprint",
+            "key_metrics": "Metrics pending"
+        })
+    
     def get_next_planned_tasks(self):
         """Return list of next planned tasks"""
         return [
@@ -462,65 +498,88 @@ class EnhancedAgentMonitor:
         """Display normal detailed view"""
         width = self.get_terminal_width()
         
-        # Header
+        # Header with sprint information
+        progress = self.get_sprint_progress()
+        sprint_info = self.get_sprint_info()
+        sprint_id = progress.get("sprint_id", "Unknown")
+        
         print("=" * width)
-        print(f"🚀 ENHANCED AGENT STATUS MONITOR v2 - {datetime.now().strftime('%H:%M:%S')}")
+        print(f"🚀 AGENT MONITOR v2 - {datetime.now().strftime('%H:%M:%S')} | {sprint_id}")
+        print("=" * width)
+        print(f"📋 SPRINT THEME: {sprint_info['theme']}")
+        print(f"🎯 GOALS: {sprint_info['goals']}")
+        print(f"📊 METRICS: {sprint_info['key_metrics']}")
         print("=" * width)
         print()
         
-        # Agent statuses with time tracking
+        # Agent status - redesigned for clarity
         agents = ["CA", "CB", "CC", "ARCH"]
         
-        print("AGENT STATUS & PERFORMANCE:")
+        print("🤖 AGENT STATUS:")
         print("-" * width)
         
         for agent in agents:
             status = self.get_agent_status(agent)
-            metrics = self.get_agent_metrics(agent)
+            agent_names = {
+                "CA": "Frontend (Cursor)",
+                "CB": "Backend (Claude)",  
+                "CC": "Testing (Claude)",
+                "ARCH": "Architecture"
+            }
             
-            # Status line with time tracking
+            # Clean, readable status display
+            agent_name = agent_names.get(agent, agent)
+            
             if status["status"] == "working":
                 task = status["current_task"]
                 duration = self.format_duration(self.start_times.get(agent))
                 priority_icon = self.get_priority_icon(task.get("priority", "MEDIUM"))
-                print(f"{agent} [Working]: {task['task_id']} - {task['title']} {priority_icon} ⚡ ({duration})")
+                print(f"🔄 {agent} ({agent_name})")
+                print(f"   ├─ WORKING: {task['task_id']} - {task['title']} {priority_icon}")
+                print(f"   └─ Duration: {duration}")
+                
             elif status["status"] == "ready":
                 pending = status["pending_tasks"]
-                last_task = status["history"][-1] if status["history"] else None
-                last_info = f" Last: {last_task['task_id']} ✅" if last_task else ""
-                print(f"{agent} [Ready]: {len(pending)} task(s) pending ✓{last_info}")
+                print(f"✅ {agent} ({agent_name})")
+                print(f"   ├─ READY: {len(pending)} task(s) pending")
                 if pending:
                     priority_icon = self.get_priority_icon(pending[0].get("priority", "MEDIUM"))
-                    print(f"      Next: {pending[0]['task_id']} - {pending[0]['title']} {priority_icon}")
+                    print(f"   └─ Next: {pending[0]['task_id']} - {pending[0]['title']} {priority_icon}")
+                else:
+                    print(f"   └─ Awaiting task assignment")
+                    
             elif status["status"] == "idle":
                 last_task = status["history"][-1] if status["history"] else None
-                last_info = f" Last: {last_task['task_id']} ({last_task.get('metrics', {}).get('actual_hours', '?')}h)" if last_task else ""
-                print(f"{agent} [Idle]: No tasks 💤{last_info}")
+                print(f"💤 {agent} ({agent_name})")
+                print(f"   ├─ IDLE: No current tasks")
+                if last_task:
+                    hours = last_task.get('metrics', {}).get('actual_hours', '?')
+                    print(f"   └─ Last completed: {last_task['task_id']} ({hours}h)")
+                else:
+                    print(f"   └─ No previous tasks")
+                    
             elif status["status"] == "inactive":
-                print(f"{agent} [Inactive]: Decommissioned ❌")
+                print(f"❌ {agent} ({agent_name})")
+                print(f"   └─ DECOMMISSIONED")
+                
             else:
-                print(f"{agent} [Error]: {status.get('error', 'Unknown error')} ⚠️")
+                print(f"⚠️  {agent} ({agent_name})")
+                print(f"   └─ ERROR: {status.get('error', 'Unknown error')}")
             
-            # Performance metrics
-            if metrics and self.config["show_performance"]:
-                stars = self.get_agent_efficiency_stars(metrics)
-                avg_time = metrics.get("average_completion_time", 0)
-                success_rate = metrics.get("success_rate", 0)
-                print(f"      Performance: {stars} | Avg: {avg_time:.1f}h | Success: {success_rate:.0f}%")
-        
-        # WA status (always inactive)
-        print("WA [Inactive]: Decommissioned ❌")
-        
+        # WA status (decommissioned)
+        print(f"❌ WA (WhatsApp Agent)")
+        print(f"   └─ DECOMMISSIONED")
         print()
         
         # Recent Activity
-        print("RECENT ACTIVITY:")
+        print("📈 RECENT ACTIVITY:")
         print("-" * width)
         
         recent_activities = []
         for agent in agents:
             status = self.get_agent_status(agent)
-            for task in status.get("history", [])[-1:]:
+            # Get last 2 tasks to show more recent activity
+            for task in status.get("history", [])[-2:]:
                 if "timestamp" in task:
                     recent_activities.append({
                         "time": task["timestamp"],
@@ -530,16 +589,26 @@ class EnhancedAgentMonitor:
                         "hours": task.get("metrics", {}).get("actual_hours", "?")
                     })
         
-        # Sort by time and show last 3
+        # Sort by time and show last 5
         recent_activities.sort(key=lambda x: x["time"], reverse=True)
-        for activity in recent_activities[:3]:
-            time_str = self.parse_iso_datetime(activity["time"]).strftime("%H:%M")
-            try:
-                hours_val = float(activity["hours"])
-                emoji = "🚀" if hours_val < 0.5 else "✅"
-            except (ValueError, TypeError):
-                emoji = "⏱️"  # Unknown duration
-            print(f"[{time_str}] {activity['agent']} completed {activity['task']} in {activity['hours']}h {emoji}")
+        if recent_activities:
+            for activity in recent_activities[:5]:
+                time_str = self.parse_iso_datetime(activity["time"]).strftime("%H:%M")
+                try:
+                    hours_val = float(activity["hours"])
+                    emoji = "🚀" if hours_val < 0.5 else "✅"
+                except (ValueError, TypeError):
+                    emoji = "⏱️"  # Unknown duration
+                agent_names = {
+                    "CA": "Frontend",
+                    "CB": "Backend", 
+                    "CC": "Testing",
+                    "ARCH": "Architecture"
+                }
+                agent_name = agent_names.get(activity["agent"], activity["agent"])
+                print(f"[{time_str}] {agent_name} completed {activity['task']} in {activity['hours']}h {emoji}")
+        else:
+            print("No recent activity found")
         
         print()
         
@@ -577,10 +646,16 @@ class EnhancedAgentMonitor:
         for agent in agents:
             status = self.get_agent_status(agent)
             if status["status"] == "idle" and agent != "ARCH":
-                alerts.append(f"• {agent} idle - assign new task?")
+                agent_names = {
+                    "CA": "Frontend (Cursor)",
+                    "CB": "Backend (Claude)",  
+                    "CC": "Testing (Claude)"
+                }
+                agent_name = agent_names.get(agent, agent)
+                alerts.append(f"🔔 {agent} ({agent_name}) is idle - ready for new task assignment")
         
         if alerts:
-            print("⚠️  ALERTS:")
+            print("⚠️  TASK ASSIGNMENT ALERTS:")
             print("-" * width)
             for alert in alerts:
                 print(alert)

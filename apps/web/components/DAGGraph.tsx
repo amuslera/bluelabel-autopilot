@@ -106,9 +106,15 @@ const DAGGraph: React.FC<DAGGraphProps> = ({
 
   // Update nodes when steps change with smooth animations
   useEffect(() => {
-    if (updatedSteps && Object.keys(updatedSteps).length > 0 && nodes.length > 0) {
+    if (updatedSteps && updatedSteps.length > 0 && nodes.length > 0) {
+      // Convert steps array to object indexed by step ID
+      const stepsById = updatedSteps.reduce((acc, step) => {
+        acc[step.id] = step;
+        return acc;
+      }, {} as Record<string, any>);
+      
       const updatedNodes = nodes.map(node => {
-        const step = updatedSteps[node.id];
+        const step = stepsById[node.id];
         if (step) {
           return {
             ...node,
@@ -126,7 +132,7 @@ const DAGGraph: React.FC<DAGGraphProps> = ({
       setNodes(updatedNodes);
       setLastUpdateTime(Date.now());
     }
-  }, [updatedSteps]);
+  }, [updatedSteps, nodes, setNodes]);
 
   // Calculate enhanced metrics
   const metrics = currentProgress || (dagRun && Array.isArray(dagRun.steps) ? {
@@ -187,7 +193,7 @@ const DAGGraph: React.FC<DAGGraphProps> = ({
               <span className="text-white text-2xl">⚠</span>
             </div>
             <div className="text-red-600 font-medium">
-              Error: {apiError?.message || wsError || 'Failed to load DAG'}
+              Error: {apiError?.message || (wsError instanceof Error ? wsError.message : wsError) || 'Failed to load DAG'}
             </div>
           </div>
         </div>
@@ -295,15 +301,7 @@ const DAGGraph: React.FC<DAGGraphProps> = ({
               size={1}
               style={{ opacity: 0.5 }}
             />
-            <Controls 
-              style={{ 
-                button: { 
-                  backgroundColor: '#fff',
-                  border: '1px solid #e2e8f0',
-                  color: '#475569'
-                }
-              }}
-            />
+            <Controls />
             <MiniMap 
               style={{ 
                 backgroundColor: '#f8fafc',

@@ -1,13 +1,13 @@
 {
   "date": "20250529",
-  "total_signals": 5,
+  "total_signals": 7,
   "signals_by_type": {
-    "COMPLETED": 3,
+    "COMPLETED": 5,
     "READY": 1,
     "NEEDS_HELP": 1
   },
   "signals_by_agent": {
-    "CA": 4,
+    "CA": 6,
     "CB": 1
   },
   "signals": [
@@ -55,7 +55,25 @@
       "timestamp": "2025-05-29T09:05:14.674892Z",
       "priority": "HIGH",
       "response_required": false
+    },
+    {
+      "signal_id": "SIG-20250529-022428-NKH",
+      "type": "COMPLETED",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T09:24:28.639096Z",
+      "priority": "HIGH",
+      "response_required": false
+    },
+    {
+      "signal_id": "SIG-20250529-031555-CMN",
+      "type": "COMPLETED",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T10:15:55.564230Z",
+      "priority": "HIGH",
+      "response_required": false
     }
   ],
-  "last_updated": "2025-05-29T09:05:14.677894Z"
+  "last_updated": "2025-05-29T10:15:55.565306Z"
 }

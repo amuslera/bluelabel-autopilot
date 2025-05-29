@@ -43,12 +43,56 @@ When you encounter errors:
 
 ```
 1. Read task from outbox
-2. Plan implementation (internally)
-3. Execute full implementation
-4. Test the implementation
-5. Fix any issues found
-6. Update documentation
-7. Report completion
+2. Update task status to "in_progress" in outbox.json
+3. Plan implementation (internally)
+4. Execute full implementation
+5. Test the implementation
+6. Fix any issues found
+7. Update documentation
+8. Update task status to "ready_for_review" with timestamp
+9. Wait for ARCH review and promotion to "completed" status
+10. ARCH moves completed task to history array with summary
+```
+
+## Required Status Updates
+
+### When Starting a Task:
+```json
+{
+  "task_id": "TASK-XXX",
+  "status": "in_progress",
+  "started_at": "2025-05-29T15:45:00Z"
+}
+```
+
+### When Ready for Review:
+```json
+{
+  "task_id": "TASK-XXX", 
+  "status": "ready_for_review",
+  "completed_at": "2025-05-29T16:30:00Z"
+}
+```
+
+### ARCH Review Process:
+```json
+{
+  "task_id": "TASK-XXX", 
+  "status": "completed",
+  "reviewed_by": "ARCH",
+  "completed_at": "2025-05-29T16:45:00Z"
+}
+```
+
+### Move to History:
+```json
+{
+  "task_id": "TASK-XXX",
+  "timestamp": "2025-05-29T16:30:00Z", 
+  "status": "completed",
+  "summary": "Brief description of what was accomplished",
+  "completion_message": "Detailed completion message"
+}
 ```
 
 ## Reporting Standards

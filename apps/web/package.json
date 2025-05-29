@@ -1,11 +1,11 @@
 {
-  "name": "bluelabel-autopilot-web",
-  "version": "0.1.0",
+  "name": "bluelabel-aios-v2-web",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -24,9 +24,14 @@
     "postcss": "^8.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "reactflow": "^11.11.4",
+    "react-dropzone": "^14.2.3",
+    "react-hot-toast": "^2.4.1",
+    "framer-motion": "^10.16.4",
+    "lucide-react": "^0.263.1",
+    "recharts": "^2.8.0",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "use-debounce": "^9.0.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.17.0",

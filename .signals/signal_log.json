@@ -1,12 +1,12 @@
 {
   "version": "1.0",
   "created": "2025-05-29T08:54:29.627868Z",
-  "total_signals": 5,
-  "last_signal_id": "SIG-20250529-020514-RRC",
+  "total_signals": 7,
+  "last_signal_id": "SIG-20250529-031555-CMN",
   "agents": {
     "CA": {
-      "signals_sent": 4,
-      "last_activity": "2025-05-29T09:05:14.674892Z"
+      "signals_sent": 6,
+      "last_activity": "2025-05-29T10:15:55.564230Z"
     },
     "CB": {
       "signals_sent": 1,
@@ -29,7 +29,7 @@
       "last_activity": null
     }
   },
-  "last_updated": "2025-05-29T09:05:14.677479Z",
+  "last_updated": "2025-05-29T10:15:55.564921Z",
   "recent_signals": [
     {
       "signal_id": "SIG-20250529-015429-YKK",
@@ -69,6 +69,22 @@
       "from": "CA",
       "to": null,
       "timestamp": "2025-05-29T09:05:14.674892Z",
+      "priority": "HIGH"
+    },
+    {
+      "signal_id": "SIG-20250529-022428-NKH",
+      "type": "COMPLETED",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T09:24:28.639096Z",
+      "priority": "HIGH"
+    },
+    {
+      "signal_id": "SIG-20250529-031555-CMN",
+      "type": "COMPLETED",
+      "from": "CA",
+      "to": null,
+      "timestamp": "2025-05-29T10:15:55.564230Z",
       "priority": "HIGH"
     }
   ]

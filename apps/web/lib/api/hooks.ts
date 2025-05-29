@@ -169,7 +169,7 @@ export function useDAGRunUpdates(dagId: string, runId: string): UseDAGRunUpdates
               if (data.run_id === runId) {
                 setSteps(prevSteps => {
                   const updatedSteps = [...prevSteps];
-                  const stepIndex = updatedSteps.findIndex(s => s.step_id === data.data?.step_id);
+                  const stepIndex = updatedSteps.findIndex(s => s.id === data.data?.step_id);
                   if (stepIndex !== -1) {
                     updatedSteps[stepIndex] = { ...updatedSteps[stepIndex], ...data.data };
                   }
