@@ -4,7 +4,40 @@
   "agent_type": "ai",
   "version": "1.0.0",
   "expertise": ["python", "backend", "api", "system_design"],
-  "tasks": [],
+  "tasks": [
+    {
+      "task_id": "TASK-168A",
+      "title": "Critical Security Remediation - AIOS v2 Credential Rotation",
+      "priority": "CRITICAL",
+      "status": "in_progress",
+      "created_at": "2025-05-30T00:00:00Z",
+      "estimated_hours": 2,
+      "description": "CRITICAL SECURITY: Rotate all exposed credentials in AIOS v2, clean git history, and implement secure credential management",
+      "context": {
+        "goal": "Eliminate security vulnerabilities before production deployment",
+        "phase": "EMERGENCY_SECURITY_FIX",
+        "target_project": "/Users/arielmuslera/Development/Projects/bluelabel-AIOS-V2",
+        "critical_issue": "Exposed API keys in git history: OpenAI, Anthropic, Google OAuth",
+        "severity": "CRITICAL - BLOCKS PRODUCTION"
+      },
+      "deliverables": [
+        "Rotate ALL compromised API keys (OpenAI, Anthropic, Google)",
+        "Clean git history using BFG or git filter-branch",
+        "Implement secure .env.example without real credentials",
+        "Update .gitignore to prevent future credential commits",
+        "Create secure credential management system",
+        "Run credential validation tests",
+        "Document new credential setup process",
+        "Implement pre-commit hooks to detect secrets"
+      ],
+      "dependencies": [],
+      "signals_when_done": "No exposed credentials in repository, new secure credentials working",
+      "working_directory": "/Users/arielmuslera/Development/Projects/bluelabel-AIOS-V2",
+      "autonomy_level": "MAXIMUM - This is critical security work",
+      "special_instructions": "Use the scripts in /Users/arielmuslera/Development/Projects/bluelabel-autopilot/scripts/ for guidance",
+      "process_reminder": "Update status to 'in_progress' when starting, 'ready_for_review' when complete"
+    }
+  ],
   "history": [
     {
       "task_id": "TASK-167F",
@@ -161,7 +194,7 @@
     }
   ],
   "metadata": {
-    "last_updated": "2025-05-29T15:40:00Z",
-    "total_tasks_completed": 6
+    "last_updated": "2025-05-30T00:00:00Z",
+    "total_tasks_completed": 8
   }
 }

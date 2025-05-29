@@ -11,38 +11,49 @@
   ],
   "tasks": [
     {
-      "task_id": "TASK-167C",
-      "title": "AIOS v2 System Validation & Production Deployment",
-      "priority": "HIGH",
-      "status": "ready_for_review",
-      "started_at": "2025-05-29T15:30:00Z",
-      "completed_at": "2025-05-29T16:15:00Z",
-      "created_at": "2025-05-29T15:00:00Z",
-      "estimated_hours": 4,
-      "description": "Validate BlueLabel AIOS v2 system reliability, security, and production deployment readiness through comprehensive testing and deployment optimization",
+      "task_id": "TASK-168B",
+      "title": "AIOS v2 Comprehensive E2E Testing & Validation",
+      "priority": "CRITICAL",
+      "status": "pending",
+      "created_at": "2025-05-30T00:00:00Z",
+      "estimated_hours": 3,
+      "description": "Run comprehensive end-to-end integration tests on AIOS v2 to validate all systems before production deployment",
       "context": {
-        "goal": "Ensure AIOS v2 MVP is production-ready, secure, and reliable",
-        "phase": "PHASE_6.15_SPRINT_3",
+        "goal": "Ensure AIOS v2 is 100% functional and production-ready",
+        "phase": "PRE_PRODUCTION_VALIDATION",
         "target_project": "/Users/arielmuslera/Development/Projects/bluelabel-AIOS-V2",
-        "builds_on": "Existing test infrastructure, Docker configuration, security framework"
+        "depends_on": "CB must complete TASK-168A (security fixes) first",
+        "test_script": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/scripts/aios_v2_integration_tests.py"
       },
       "deliverables": [
-        "Create comprehensive end-to-end integration tests",
-        "Test and optimize Docker deployment configuration",
-        "Implement system health monitoring and alerting",
-        "Create performance benchmarks and load testing",
-        "Validate security implementation (OAuth, data handling)",
-        "Test multi-user scenarios and concurrent processing",
-        "Create deployment documentation and runbooks",
-        "Implement automated backup and recovery procedures"
+        "Run full E2E integration test suite",
+        "Test authentication flows (registration, login, OAuth)",
+        "Validate file upload/processing (PDF, URL, audio)",
+        "Test agent marketplace functionality",
+        "Verify all external integrations (Gmail, LLMs, DB)",
+        "Performance and load testing",
+        "Test real-time features (WebSocket, notifications)",
+        "Validate data persistence and recovery",
+        "Create comprehensive test report",
+        "Fix or document any failing tests"
       ],
-      "dependencies": ["TASK-167B (backend completion)", "TASK-167A (frontend completion)"],
-      "signals_when_done": "System passes all tests and runs reliably in production environment",
+      "dependencies": ["TASK-168A (security remediation must be complete)"],
+      "signals_when_done": "All tests passing, comprehensive test report available",
       "working_directory": "/Users/arielmuslera/Development/Projects/bluelabel-AIOS-V2",
-      "process_reminder": "🔔 NEW PROCESS: Please read your outbox! When starting, update status to 'in_progress'. When finished, update status to 'ready_for_review' for ARCH review before final 'completed' status. See /docs/system/TASK_STATUS_UPDATE_PROCESS.md"
+      "autonomy_level": "MAXIMUM - Use your testing expertise",
+      "special_instructions": "Use the test script provided, but enhance as needed",
+      "process_reminder": "Update status to 'in_progress' when starting, 'ready_for_review' when complete"
     }
   ],
   "history": [
+    {
+      "task_id": "TASK-167C",
+      "timestamp": "2025-05-29T16:15:00Z",
+      "status": "completed",
+      "reviewed_by": "ARCH",
+      "summary": "AIOS v2 System Validation & Production Deployment completed",
+      "completion_message": "System validation completed with comprehensive E2E tests, Docker optimization, health monitoring, performance benchmarks, security validation, multi-user testing, deployment documentation, and automated backup procedures. Production-ready."
+    },
     {
       "task_id": "TASK-165C",
       "timestamp": "2025-05-29T08:30:48Z",
@@ -66,7 +77,7 @@
     }
   ],
   "metadata": {
-    "last_updated": "2025-05-29T14:45:00Z",
+    "last_updated": "2025-05-30T00:00:00Z",
     "total_tasks_completed": 4
   }
 }

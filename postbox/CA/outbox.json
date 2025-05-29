@@ -11,7 +11,42 @@
     "user_experience",
     "tooling"
   ],
-  "tasks": [],
+  "tasks": [
+    {
+      "task_id": "TASK-168C",
+      "title": "Repository Cleanup & Documentation Organization",
+      "priority": "HIGH",
+      "status": "in_progress",
+      "created_at": "2025-05-30T00:00:00Z",
+      "started_at": "2025-05-30T00:30:00Z",
+      "estimated_hours": 2,
+      "description": "Clean up and organize the autopilot repository, archiving old documentation and creating a clean structure for production",
+      "context": {
+        "goal": "Create clean, organized repository structure for production",
+        "phase": "REPOSITORY_MAINTENANCE",
+        "target_project": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot",
+        "cleanup_script": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot/scripts/cleanup_repository.py"
+      },
+      "deliverables": [
+        "Run repository cleanup script",
+        "Archive old phase documentation (except Phase 6.15)",
+        "Archive old sprint documents (except Sprint 3)",
+        "Move test artifacts to archive",
+        "Organize remaining documentation by category",
+        "Create archive index for easy reference",
+        "Update README with new structure",
+        "Remove empty directories",
+        "Create clean documentation hierarchy",
+        "Ensure only production-relevant files remain visible"
+      ],
+      "dependencies": [],
+      "signals_when_done": "Repository is clean, organized, with clear structure and archived history",
+      "working_directory": "/Users/arielmuslera/Development/Projects/bluelabel-autopilot",
+      "autonomy_level": "MAXIMUM - Use your organizational expertise",
+      "special_instructions": "Use the cleanup script but enhance as needed for better organization",
+      "process_reminder": "Update status to 'in_progress' when starting, 'ready_for_review' when complete"
+    }
+  ],
   "history": [
     {
       "task_id": "TASK-165D",
@@ -72,7 +107,7 @@
     }
   ],
   "metadata": {
-    "last_updated": "2025-05-29T22:00:00Z",
-    "total_tasks_completed": 7
+    "last_updated": "2025-05-30T00:00:00Z",
+    "total_tasks_completed": 8
   }
 }
