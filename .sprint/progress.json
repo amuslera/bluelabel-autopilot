@@ -3,25 +3,27 @@
   "start_date": "2025-05-31",
   "end_date": "2025-06-04",
   "total_tasks": 2,
-  "completed": 0,
-  "in_progress": 0,
+  "completed": 1,
+  "in_progress": 1,
   "tasks": {
     "TASK-170A": {
-      "status": "pending",
+      "status": "completed",
       "agent": "CA",
       "title": "Foundation & Dashboard UI",
       "priority": "HIGH",
       "description": "Build MVP-Lite foundation with agent status dashboard",
-      "created_at": "2025-05-31T00:00:00Z"
+      "created_at": "2025-05-31T00:00:00Z",
+      "completed_at": "2025-05-31T01:30:00Z"
     },
     "TASK-170B": {
-      "status": "pending",
+      "status": "in_progress",
       "agent": "CB",
       "title": "Backend Foundation & Agent Setup",
       "priority": "HIGH",
       "description": "Establish backend foundation and core agent infrastructure",
-      "created_at": "2025-05-31T00:00:00Z"
+      "created_at": "2025-05-31T00:00:00Z",
+      "started_at": "2025-05-30T13:15:00Z"
     }
   },
-  "last_updated": "2025-05-31T00:00:00Z"
+  "last_updated": "2025-05-31T01:30:00Z"
 }

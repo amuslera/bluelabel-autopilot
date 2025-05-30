@@ -1,18 +1,404 @@
 openapi: 3.0.0
 info:
-  title: Bluelabel Autopilot DAG API
-  version: 1.0.0
-  description: API for DAG visualization and monitoring
+  title: AIOS v2 API Specification
+  version: 2.0.0
+  description: |
+    Comprehensive API specification for AIOS v2 (AI Operating System)
+    Covers all frontend UI requirements including file processing, agent management,
+    knowledge repository, analytics, and DAG visualization.
+  contact:
+    name: AIOS Development Team
+    email: dev@bluelabel.ai
 
 servers:
-  - url: /api/v1
-    description: API v1
+  - url: http://localhost:8000
+    description: Development server
+  - url: https://api.aios.bluelabel.ai
+    description: Production server
+
+security:
+  - BearerAuth: []
 
 paths:
-  /dags:
+  # File Processing Workflows
+  /api/workflows/upload-pdf:
+    post:
+      summary: Upload and process PDF
+      description: Upload a PDF file for text extraction and analysis
+      tags: [File Processing]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: PDF file to upload
+                extract_text:
+                  type: boolean
+                  default: true
+                  description: Whether to extract text from PDF
+                generate_summary:
+                  type: boolean
+                  default: false
+                  description: Whether to generate summary
+              required:
+                - file
+      responses:
+        '200':
+          description: Upload successful, processing started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  run_id:
+                    type: string
+                    description: Unique identifier for this processing job
+                  status:
+                    type: string
+                    enum: [pending, processing]
+                    description: Initial processing status
+                  message:
+                    type: string
+                    description: Status message
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '413':
+          description: File too large
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/workflows/upload-audio:
+    post:
+      summary: Upload and process audio file
+      description: Upload an audio file for transcription and analysis
+      tags: [File Processing]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Audio file to upload
+                transcribe:
+                  type: boolean
+                  default: true
+                  description: Whether to transcribe audio
+                summarize:
+                  type: boolean
+                  default: false
+                  description: Whether to summarize transcription
+              required:
+                - file
+      responses:
+        '200':
+          description: Upload successful, processing started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  run_id:
+                    type: string
+                  status:
+                    type: string
+                    enum: [pending, processing]
+                  message:
+                    type: string
+
+  /api/workflows/from-url:
+    post:
+      summary: Process content from URL
+      description: Extract and process content from a web URL
+      tags: [File Processing]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: URL to process
+                full_content:
+                  type: boolean
+                  default: true
+                  description: Whether to extract full content
+                generate_summary:
+                  type: boolean
+                  default: false
+                  description: Whether to generate summary
+              required:
+                - url
+      responses:
+        '200':
+          description: URL processing started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  run_id:
+                    type: string
+                  status:
+                    type: string
+                    enum: [pending, processing]
+                  message:
+                    type: string
+
+  # Processing Job Management
+  /api/workflows/dag-runs:
+    get:
+      summary: List processing jobs
+      description: Get a paginated list of all processing jobs/DAG runs
+      tags: [Processing Jobs]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, processing, completed, failed]
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [pdf, audio, url, email]
+      responses:
+        '200':
+          description: List of processing jobs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProcessingJob'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+
+  /api/workflows/dag-runs/{runId}:
+    get:
+      summary: Get processing job details
+      description: Get detailed information about a specific processing job
+      tags: [Processing Jobs]
+      parameters:
+        - name: runId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Processing job details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ProcessingJob'
+                  - type: object
+                    properties:
+                      steps:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DAGStep'
+                      result:
+                        type: object
+                        description: Processing results
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Agent Management
+  /api/agents:
+    get:
+      summary: List AI agents
+      description: Get a list of all available AI agents and their status
+      tags: [Agents]
+      responses:
+        '200':
+          description: List of AI agents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Agent'
+
+  /api/agents/{agentId}:
+    get:
+      summary: Get agent details
+      description: Get detailed information about a specific AI agent
+      tags: [Agents]
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Agent details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Knowledge Repository
+  /api/knowledge/search:
+    get:
+      summary: Search knowledge base
+      description: Search through the knowledge repository
+      tags: [Knowledge]
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [document, analysis, summary]
+          description: Filter by knowledge item type
+        - name: tags
+          in: query
+          schema:
+            type: string
+          description: Comma-separated list of tags to filter by
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/KnowledgeItem'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+
+  /api/knowledge/{itemId}:
+    get:
+      summary: Get knowledge item
+      description: Get detailed information about a specific knowledge item
+      tags: [Knowledge]
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Knowledge item details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeItem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Analytics & Insights
+  /api/analytics/dashboard:
+    get:
+      summary: Get dashboard metrics
+      description: Get key metrics for the dashboard
+      tags: [Analytics]
+      responses:
+        '200':
+          description: Dashboard metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardMetrics'
+
+  /api/analytics/insights:
+    get:
+      summary: Get AI insights
+      description: Get AI-generated insights and recommendations
+      tags: [Analytics]
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [trend, pattern, anomaly, recommendation]
+          description: Filter by insight type
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        '200':
+          description: List of insights
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Insight'
+
+  # DAG Operations (Legacy compatibility)
+  /api/v1/dags:
     get:
       summary: List all DAGs
-      description: Get a paginated list of all DAGs
+      description: Get a paginated list of all DAGs (legacy endpoint)
+      tags: [DAG Legacy]
       parameters:
         - name: page
           in: query
@@ -46,52 +432,11 @@ paths:
                   limit:
                     type: integer
 
-  /dags/{dagId}/runs:
-    get:
-      summary: List DAG runs
-      description: Get a paginated list of runs for a specific DAG
-      parameters:
-        - name: dagId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: page
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-      responses:
-        '200':
-          description: List of DAG runs
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/DAGRun'
-                  total:
-                    type: integer
-                  page:
-                    type: integer
-                  limit:
-                    type: integer
-
-  /dags/{dagId}/runs/{runId}:
+  /api/v1/dags/{dagId}/runs/{runId}:
     get:
       summary: Get DAG run details
-      description: Get detailed information about a specific DAG run
+      description: Get detailed information about a specific DAG run (legacy endpoint)
+      tags: [DAG Legacy]
       parameters:
         - name: dagId
           in: path
@@ -111,10 +456,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/DAGRun'
 
-  /dags/{dagId}/runs/{runId}/steps:
+  /api/v1/dags/{dagId}/runs/{runId}/steps:
     get:
       summary: Get DAG run steps
-      description: Get detailed information about steps in a DAG run
+      description: Get detailed information about steps in a DAG run (legacy endpoint)
+      tags: [DAG Legacy]
       parameters:
         - name: dagId
           in: path
@@ -136,8 +482,232 @@ paths:
                 items:
                   $ref: '#/components/schemas/DAGStep'
 
+  # WebSocket Connection
+  /ws:
+    get:
+      summary: WebSocket connection
+      description: Establish WebSocket connection for real-time updates
+      tags: [WebSocket]
+      responses:
+        '101':
+          description: WebSocket connection established
+
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
+    ProcessingJob:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique job identifier
+        type:
+          type: string
+          enum: [pdf, url, audio, email]
+          description: Type of content being processed
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+          description: Current processing status
+        filename:
+          type: string
+          description: Original filename (for file uploads)
+        url:
+          type: string
+          format: uri
+          description: Source URL (for URL processing)
+        progress:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Processing progress percentage
+        started_at:
+          type: string
+          format: date-time
+          description: When processing started
+        completed_at:
+          type: string
+          format: date-time
+          description: When processing completed
+        result:
+          type: object
+          description: Processing results (structure varies by type)
+        error:
+          type: string
+          description: Error message if processing failed
+
+    Agent:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique agent identifier
+        name:
+          type: string
+          description: Human-readable agent name
+        type:
+          type: string
+          description: Agent category/type
+        status:
+          type: string
+          enum: [idle, working, error, offline]
+          description: Current agent status
+        current_task:
+          type: string
+          description: Description of current task (if working)
+        performance:
+          type: object
+          properties:
+            tasks_completed:
+              type: integer
+              description: Total tasks completed
+            average_processing_time:
+              type: number
+              description: Average processing time in seconds
+            success_rate:
+              type: number
+              minimum: 0
+              maximum: 100
+              description: Success rate percentage
+          required:
+            - tasks_completed
+            - average_processing_time
+            - success_rate
+      required:
+        - id
+        - name
+        - type
+        - status
+        - performance
+
+    KnowledgeItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique knowledge item identifier
+        title:
+          type: string
+          description: Item title
+        type:
+          type: string
+          enum: [document, analysis, summary]
+          description: Type of knowledge item
+        content:
+          type: string
+          description: Main content/text
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+        created_at:
+          type: string
+          format: date-time
+          description: When item was created
+        updated_at:
+          type: string
+          format: date-time
+          description: When item was last updated
+        tags:
+          type: array
+          items:
+            type: string
+          description: Associated tags
+      required:
+        - id
+        - title
+        - type
+        - content
+        - created_at
+        - updated_at
+        - tags
+
+    Insight:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique insight identifier
+        title:
+          type: string
+          description: Insight title
+        description:
+          type: string
+          description: Detailed insight description
+        type:
+          type: string
+          enum: [trend, pattern, anomaly, recommendation]
+          description: Type of insight
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Confidence score (0-1)
+        created_at:
+          type: string
+          format: date-time
+          description: When insight was generated
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional insight metadata
+      required:
+        - id
+        - title
+        - description
+        - type
+        - confidence
+        - created_at
+
+    DashboardMetrics:
+      type: object
+      properties:
+        total_processed:
+          type: integer
+          description: Total number of items processed
+        processing_time:
+          type: number
+          description: Average processing time in seconds
+        success_rate:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Overall success rate percentage
+        active_agents:
+          type: integer
+          description: Number of currently active agents
+        knowledge_items:
+          type: integer
+          description: Total number of knowledge items
+        recent_activity:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+              title:
+                type: string
+              timestamp:
+                type: string
+                format: date-time
+          description: Recent processing activity
+      required:
+        - total_processed
+        - processing_time
+        - success_rate
+        - active_agents
+        - knowledge_items
+        - recent_activity
+
+    # Legacy DAG schemas for backward compatibility
     DAG:
       type: object
       properties:
@@ -155,10 +725,10 @@ components:
             type: string
         schedule:
           type: string
-        lastRun:
+        last_run:
           type: string
           format: date-time
-        nextRun:
+        next_run:
           type: string
           format: date-time
 
@@ -167,17 +737,17 @@ components:
       properties:
         id:
           type: string
-        dagId:
+        dag_id:
           type: string
-        runId:
+        run_id:
           type: string
-        executionDate:
-          type: string
-          format: date-time
-        startDate:
+        execution_date:
           type: string
           format: date-time
-        endDate:
+        start_date:
+          type: string
+          format: date-time
+        end_date:
           type: string
           format: date-time
         status:
@@ -212,19 +782,53 @@ components:
         status:
           type: string
           enum: [pending, running, success, failed, skipped]
-        startTime:
+        start_time:
           type: string
           format: date-time
-        endTime:
+        end_time:
           type: string
           format: date-time
         duration:
           type: integer
           description: Duration in milliseconds
-        retryCount:
+        retry_count:
           type: integer
         error:
           type: string
         metadata:
           type: object
-          additionalProperties: true 
+          additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                description: Error message
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                description: Error message
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                description: Error message 

@@ -65,8 +65,8 @@ class UnifiedWorkflowEngine(IWorkflowEngine):
                 engine_type = EngineType.SEQUENTIAL
         
         self.engine_type = engine_type
-        self.storage_path = storage_path or Path("./data/knowledge")
-        self.temp_path = temp_path or Path("./data/temp")
+        self.storage_path = Path(storage_path) if storage_path else Path("./data/knowledge")
+        self.temp_path = Path(temp_path) if temp_path else Path("./data/temp")
         self.engine_kwargs = engine_kwargs
         
         # Track execution for performance monitoring
