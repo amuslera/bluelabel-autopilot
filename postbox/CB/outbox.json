@@ -6,35 +6,35 @@
   "expertise": ["python", "backend", "api", "system_design"],
   "tasks": [
     {
-      "task_id": "TASK-168A",
-      "title": "Critical Security Remediation - AIOS v2 Credential Rotation",
-      "priority": "CRITICAL",
+      "task_id": "TASK-168D",
+      "title": "Production Infrastructure Setup & Deployment Scripts",
+      "priority": "HIGH",
       "status": "in_progress",
-      "created_at": "2025-05-30T00:00:00Z",
-      "estimated_hours": 2,
-      "description": "CRITICAL SECURITY: Rotate all exposed credentials in AIOS v2, clean git history, and implement secure credential management",
+      "created_at": "2025-05-30T11:30:00Z",
+      "estimated_hours": 3,
+      "description": "Create production deployment infrastructure and automation scripts for AIOS v2, preparing for tomorrow's launch",
       "context": {
-        "goal": "Eliminate security vulnerabilities before production deployment",
-        "phase": "EMERGENCY_SECURITY_FIX",
+        "goal": "Prepare complete production deployment automation",
+        "phase": "PRODUCTION_PREPARATION",
         "target_project": "/Users/arielmuslera/Development/Projects/bluelabel-AIOS-V2",
-        "critical_issue": "Exposed API keys in git history: OpenAI, Anthropic, Google OAuth",
-        "severity": "CRITICAL - BLOCKS PRODUCTION"
+        "deployment_target": "Multi-cloud ready (AWS/GCP/Azure/DO)"
       },
       "deliverables": [
-        "Rotate ALL compromised API keys (OpenAI, Anthropic, Google)",
-        "Clean git history using BFG or git filter-branch",
-        "Implement secure .env.example without real credentials",
-        "Update .gitignore to prevent future credential commits",
-        "Create secure credential management system",
-        "Run credential validation tests",
-        "Document new credential setup process",
-        "Implement pre-commit hooks to detect secrets"
+        "Create Docker production configuration with multi-stage builds",
+        "Write Kubernetes deployment manifests (deployments, services, ingress)",
+        "Create Terraform/CloudFormation templates for infrastructure",
+        "Write deployment automation scripts (deploy.sh)",
+        "Create health check and readiness probe endpoints",
+        "Set up production environment variables template",
+        "Create database migration scripts for production",
+        "Write backup and recovery automation",
+        "Create monitoring and alerting configuration",
+        "Document deployment procedures and rollback plans"
       ],
       "dependencies": [],
-      "signals_when_done": "No exposed credentials in repository, new secure credentials working",
+      "signals_when_done": "Complete deployment automation ready, one-command production deployment possible",
       "working_directory": "/Users/arielmuslera/Development/Projects/bluelabel-AIOS-V2",
-      "autonomy_level": "MAXIMUM - This is critical security work",
-      "special_instructions": "Use the scripts in /Users/arielmuslera/Development/Projects/bluelabel-autopilot/scripts/ for guidance",
+      "autonomy_level": "MAXIMUM - Design the deployment architecture",
       "process_reminder": "Update status to 'in_progress' when starting, 'ready_for_review' when complete"
     }
   ],

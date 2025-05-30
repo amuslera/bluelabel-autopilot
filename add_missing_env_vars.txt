@@ -1,0 +1,7 @@
+# Add these lines to your AIOS v2 .env file:
+
+# Service identification
+SERVICE_NAME=bluelabel-aios-v2
+
+# Encryption key for sensitive data
+ENCRYPTION_KEY=Qm4R8K9Xn2Pz5Vw7Yt3Mq6Nj8Lk2Hf4Gd7Bs9Ax3Cv5

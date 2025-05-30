@@ -37,6 +37,46 @@ bluelabel-autopilot/
     └── knowledge/         # Processed content storage
 ```
 
+## 📁 Repository Structure
+
+### Active Development
+- **`/agents/`** - Agent implementations and core processing logic
+- **`/apps/`** - Application code (web UI, API server)
+  - `/apps/api/` - FastAPI backend server
+  - `/apps/web/` - Next.js frontend application
+- **`/core/`** - Core system functionality and shared libraries
+- **`/services/`** - Service implementations and microservices
+- **`/workflows/`** - Workflow definitions and processing pipelines
+- **`/tests/`** - Active test suites (unit, integration, e2e)
+
+### Documentation
+- **`/docs/`** - Organized documentation by category
+  - `/docs/architecture/` - System architecture and design docs
+  - `/docs/operations/` - Operational guides and live status
+  - `/docs/development/` - Development standards and guidelines
+  - `/docs/project-management/` - Sprint protocols and coordination
+  - `/docs/reports/` - Performance reports and analysis
+  - `/docs/security/` - Security documentation and audits
+  - `/docs/devphases/PHASE_6.15/` - Current development phase documentation
+
+### Configuration & Scripts
+- **`/config/`** - Configuration files and environment settings
+- **`/scripts/`** - Utility scripts and automation tools
+- **`/demo/`** - Demo scenarios and example workflows
+
+### Archived Content
+- **`/archive/`** - Historical documentation and deprecated files
+  - `/archive/phases/` - Previous development phases (6.11, 6.12, 6.13)
+  - `/archive/sprints/` - Historical sprint documentation
+  - `/archive/context/` - Old context and coordination files
+  - `/archive/test_artifacts/` - Legacy test files and artifacts
+  - `/archive/old_docs/` - Deprecated documentation
+  - `ARCHIVE_INDEX.json` - Complete index of archived content
+
+### Current Development Phase
+- **Phase 6.15** - Multi-Agent Orchestration & AIOS v2 MVP
+- **Sprint 3** - Production Deployment (COMPLETED)
+
 ## 🚀 Quick Start
 
 ### Installation

@@ -1,0 +1,220 @@
+{
+  "created": "2025-05-29T11:37:12.800574",
+  "cleanup_enhanced": true,
+  "stats": {
+    "files_moved": 28,
+    "directories_archived": 3,
+    "space_freed_mb": 0.2,
+    "empty_directories_cleaned": 35
+  },
+  "archived_content": {
+    "context": [
+      {
+        "name": "CURSOR_CONTEXT.md",
+        "path": "context/CURSOR_CONTEXT.md",
+        "size": 6258,
+        "modified": "2025-05-27T17:29:04.143682"
+      },
+      {
+        "name": "CLAUDE_CONTEXT.md",
+        "path": "context/CLAUDE_CONTEXT.md",
+        "size": 18442,
+        "modified": "2025-05-29T01:15:30.498820"
+      },
+      {
+        "name": "WINDSURF_CONTEXT.md",
+        "path": "context/WINDSURF_CONTEXT.md",
+        "size": 5839,
+        "modified": "2025-05-24T11:27:20.787447"
+      }
+    ],
+    "sprints": [
+      {
+        "name": "SPRINT_3_POSTMORTEM.md",
+        "path": "sprints/SPRINT_3_POSTMORTEM.md",
+        "size": 4893,
+        "modified": "2025-05-24T19:47:09.662961"
+      },
+      {
+        "name": "SPRINT_1_POSTMORTEM.md",
+        "path": "sprints/SPRINT_1_POSTMORTEM.md",
+        "size": 7296,
+        "modified": "2025-05-27T17:29:04.138054"
+      },
+      {
+        "name": "SPRINT_2_POSTMORTEM.md",
+        "path": "sprints/SPRINT_2_POSTMORTEM.md",
+        "size": 4398,
+        "modified": "2025-05-27T17:34:33.205814"
+      }
+    ],
+    "test_artifacts": [
+      {
+        "name": "test_gmail_client.py",
+        "path": "test_artifacts/test_gmail_client.py",
+        "size": 3670,
+        "modified": "2025-05-29T03:17:36.775636"
+      },
+      {
+        "name": "test_gmail_server.py",
+        "path": "test_artifacts/test_gmail_server.py",
+        "size": 9356,
+        "modified": "2025-05-29T03:12:54.756907"
+      },
+      {
+        "name": "test_gmail_oauth_simple.py",
+        "path": "test_artifacts/test_gmail_oauth_simple.py",
+        "size": 9788,
+        "modified": "2025-05-29T03:11:38.081058"
+      },
+      {
+        "name": "test_gmail_oauth.py",
+        "path": "test_artifacts/test_gmail_oauth.py",
+        "size": 7803,
+        "modified": "2025-05-29T03:10:53.389980"
+      }
+    ],
+    "old_docs": [
+      {
+        "name": "AIOS_V2_GIT_CLEANUP_GUIDE.md",
+        "path": "old_docs/AIOS_V2_GIT_CLEANUP_GUIDE.md",
+        "size": 3298,
+        "modified": "2025-05-29T11:13:38.441050"
+      }
+    ],
+    "phases": [
+      {
+        "name": "PHASE_6.12_SUMMARY.md",
+        "path": "phases/PHASE_6.12_SUMMARY.md",
+        "size": 1888,
+        "modified": "2025-05-24T18:46:46.882693"
+      },
+      {
+        "name": "PHASE_6.11_SPRINT_2_POSTMORTEM.md",
+        "path": "phases/PHASE_6.11_SPRINT_2_POSTMORTEM.md",
+        "size": 4818,
+        "modified": "2025-05-24T10:21:57.180752"
+      },
+      {
+        "name": "PHASE_6.13_PLAN.md",
+        "path": "phases/PHASE_6.13_PLAN.md",
+        "size": 4204,
+        "modified": "2025-05-24T18:46:17.178273"
+      },
+      {
+        "name": "PHASE_6.15_SPRINT_3_POSTMORTEM.md",
+        "path": "phases/PHASE_6.15_SPRINT_3_POSTMORTEM.md",
+        "size": 5268,
+        "modified": "2025-05-29T04:39:44.000538"
+      },
+      {
+        "name": "PHASE_6.11_SPRINT_HISTORY.md",
+        "path": "phases/PHASE_6.11_SPRINT_HISTORY.md",
+        "size": 11703,
+        "modified": "2025-05-24T12:25:51.640796"
+      },
+      {
+        "name": "PHASE_6.15_SPRINT_PLAN.md",
+        "path": "phases/PHASE_6.15_SPRINT_PLAN.md",
+        "size": 4538,
+        "modified": "2025-05-29T01:17:24.381084"
+      },
+      {
+        "name": "PHASE_6.11_SPRINT_4_POSTMORTEM.md",
+        "path": "phases/PHASE_6.11_SPRINT_4_POSTMORTEM.md",
+        "size": 5823,
+        "modified": "2025-05-24T12:25:51.641112"
+      },
+      {
+        "name": "PHASE_6.11_SPRINT_3_POSTMORTEM.md",
+        "path": "phases/PHASE_6.11_SPRINT_3_POSTMORTEM.md",
+        "size": 3635,
+        "modified": "2025-05-24T11:28:15.805128"
+      },
+      {
+        "name": "PHASE_6.11_SUMMARY.md",
+        "path": "phases/PHASE_6.11_SUMMARY.md",
+        "size": 9470,
+        "modified": "2025-05-24T12:25:51.641538"
+      },
+      {
+        "name": "PHASE_6.12_SPRINT_HISTORY.md",
+        "path": "phases/PHASE_6.12_SPRINT_HISTORY.md",
+        "size": 5249,
+        "modified": "2025-05-24T19:47:09.662295"
+      },
+      {
+        "name": ".DS_Store",
+        "path": "phases/PHASE_6.11/.DS_Store",
+        "size": 6148,
+        "modified": "2025-05-24T11:22:05.970765"
+      },
+      {
+        "name": "SPRINT_2_PLAN.md",
+        "path": "phases/PHASE_6.11/sprints/SPRINT_2_PLAN.md",
+        "size": 4081,
+        "modified": "2025-05-24T10:06:48.530037"
+      },
+      {
+        "name": "SPRINT_3_PLAN.md",
+        "path": "phases/PHASE_6.11/sprints/SPRINT_3_PLAN.md",
+        "size": 3511,
+        "modified": "2025-05-24T10:22:34.905264"
+      },
+      {
+        "name": "SPRINT_4_PLAN.md",
+        "path": "phases/PHASE_6.11/sprints/SPRINT_4_PLAN.md",
+        "size": 3369,
+        "modified": "2025-05-24T14:29:54.066612"
+      },
+      {
+        "name": ".DS_Store",
+        "path": "phases/PHASE_6.12/.DS_Store",
+        "size": 6148,
+        "modified": "2025-05-24T19:52:28.477158"
+      },
+      {
+        "name": "SPRINT_1_PLAN.md",
+        "path": "phases/PHASE_6.13/sprints/SPRINT_1_PLAN.md",
+        "size": 1093,
+        "modified": "2025-05-27T17:29:04.137621"
+      },
+      {
+        "name": "SPRINT_4_RAPID_EXECUTION.md",
+        "path": "phases/PHASE_6.13/sprints/SPRINT_4_RAPID_EXECUTION.md",
+        "size": 2949,
+        "modified": "2025-05-28T10:03:29.234481"
+      },
+      {
+        "name": "SPRINT_3_PLAN.md",
+        "path": "phases/PHASE_6.13/sprints/SPRINT_3_PLAN.md",
+        "size": 3216,
+        "modified": "2025-05-27T19:11:55.775597"
+      },
+      {
+        "name": "SPRINT_4_INTEGRATION_PLAN.md",
+        "path": "phases/PHASE_6.13/sprints/SPRINT_4_INTEGRATION_PLAN.md",
+        "size": 5632,
+        "modified": "2025-05-28T09:56:32.953711"
+      }
+    ],
+    "deprecated": [
+      {
+        "name": "progress.json.tmp",
+        "path": "deprecated/progress.json.tmp",
+        "size": 0,
+        "modified": "2025-05-29T02:33:57.113681"
+      }
+    ]
+  },
+  "organization_completed": {
+    "phase_directories_archived": [
+      "PHASE_6.11",
+      "PHASE_6.12",
+      "PHASE_6.13"
+    ],
+    "documentation_organized": true,
+    "root_files_organized": true,
+    "readme_updated": true
+  }
+}

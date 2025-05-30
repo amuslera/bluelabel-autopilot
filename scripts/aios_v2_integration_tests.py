@@ -14,7 +14,7 @@ from typing import Dict, List, Optional, Tuple
 from datetime import datetime
 
 class IntegrationTestSuite:
-    def __init__(self, base_url: str = "http://localhost:8000"):
+    def __init__(self, base_url: str = "http://localhost:8001"):
         self.base_url = base_url
         self.session = requests.Session()
         self.test_results = []
@@ -562,7 +562,7 @@ def main():
     print(f"🔍 Testing AIOS v2 at: {args.url}")
     
     try:
-        response = requests.get(f"{args.url}/api/health", timeout=5)
+        response = requests.get(f"{args.url}/health", timeout=5)
         if response.status_code != 200:
             print("❌ AIOS v2 is not responding correctly")
             print("Please ensure the application is running:")
