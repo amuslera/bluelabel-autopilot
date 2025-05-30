@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import Head from 'next/head';
 import { useDropzone } from 'react-dropzone';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,10 +10,7 @@ import {
   Bot,
   AlertCircle,
   CheckCircle,
-  X,
-  Loader2,
-  Wifi,
-  WifiOff
+  X
 } from 'lucide-react';
 
 // Types
@@ -59,14 +56,13 @@ const mockAgents: Agent[] = [
   }
 ];
 
-// Enhanced File Upload Component with progress indicator
+// File Upload Component
 const FileUpload: React.FC<{
   accept: string;
   placeholder: string;
   fileTypes: string[];
   onFileSelect: (file: File | null) => void;
-  uploadProgress?: number;
-}> = ({ accept, placeholder, fileTypes, onFileSelect, uploadProgress = 0 }) => {
+}> = ({ accept, placeholder, fileTypes, onFileSelect }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string>('');
 
@@ -109,7 +105,7 @@ const FileUpload: React.FC<{
       <div
         {...getRootProps()}
         className={`
-          border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer transition-all duration-200
+          border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-200
           ${isDragActive 
             ? 'border-blue-500 bg-blue-50' 
             : 'border-gray-300 hover:border-gray-400'
@@ -118,13 +114,13 @@ const FileUpload: React.FC<{
         `}
       >
         <input {...getInputProps()} />
-        <Upload className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mb-3 sm:mb-4" />
+        <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
         {isDragActive ? (
-          <p className="text-blue-600 font-medium text-sm sm:text-base">Drop file here...</p>
+          <p className="text-blue-600 font-medium">Drop file here...</p>
         ) : (
           <div>
-            <p className="text-gray-600 font-medium text-sm sm:text-base">{placeholder}</p>
-            <p className="text-xs sm:text-sm text-gray-500 mt-2">
+            <p className="text-gray-600 font-medium">{placeholder}</p>
+            <p className="text-sm text-gray-500 mt-2">
               Supported: {fileTypes.join(', ')} • Max 50MB
             </p>
           </div>
@@ -135,43 +131,23 @@ const FileUpload: React.FC<{
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-3"
+          className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg"
         >
-          <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
-            <div className="flex items-center space-x-3 min-w-0 flex-1">
-              <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-              <div className="min-w-0 flex-1">
-                <p className="font-medium text-green-800 truncate">{selectedFile.name}</p>
-                <p className="text-sm text-green-600">
-                  {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
-                </p>
-              </div>
+          <div className="flex items-center space-x-3">
+            <CheckCircle className="h-5 w-5 text-green-600" />
+            <div>
+              <p className="font-medium text-green-800">{selectedFile.name}</p>
+              <p className="text-sm text-green-600">
+                {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+              </p>
             </div>
-            <button
-              onClick={removeFile}
-              className="p-1 hover:bg-green-100 rounded-full transition-colors flex-shrink-0"
-            >
-              <X className="h-4 w-4 text-green-600" />
-            </button>
           </div>
-          
-          {/* Progress indicator for Day 3 integration */}
-          {uploadProgress > 0 && uploadProgress < 100 && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Uploading...</span>
-                <span className="text-gray-900 font-medium">{uploadProgress}%</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <motion.div
-                  className="bg-blue-600 h-2 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${uploadProgress}%` }}
-                  transition={{ duration: 0.3 }}
-                />
-              </div>
-            </div>
-          )}
+          <button
+            onClick={removeFile}
+            className="p-1 hover:bg-green-100 rounded-full transition-colors"
+          >
+            <X className="h-4 w-4 text-green-600" />
+          </button>
         </motion.div>
       )}
 
@@ -181,33 +157,20 @@ const FileUpload: React.FC<{
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-lg"
         >
-          <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
-          <p className="text-red-700 text-sm">{error}</p>
+          <AlertCircle className="h-5 w-5 text-red-600" />
+          <p className="text-red-700">{error}</p>
         </motion.div>
       )}
     </div>
   );
 };
 
-// Enhanced Agent Selector Component
+// Agent Selector Component
 const AgentSelector: React.FC<{
   agents: Agent[];
   selectedAgent: string | null;
   onAgentSelect: (agentId: string) => void;
-  isLoading: boolean;
-}> = ({ agents, selectedAgent, onAgentSelect, isLoading }) => {
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Select Agent</h3>
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-          <span className="ml-2 text-gray-600">Loading agents...</span>
-        </div>
-      </div>
-    );
-  }
-
+}> = ({ agents, selectedAgent, onAgentSelect }) => {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-gray-900">Select Agent</h3>
@@ -218,7 +181,7 @@ const AgentSelector: React.FC<{
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={`
-              p-3 sm:p-4 border rounded-lg cursor-pointer transition-all duration-200
+              p-4 border rounded-lg cursor-pointer transition-all duration-200
               ${selectedAgent === agent.id
                 ? 'border-blue-500 bg-blue-50 shadow-md'
                 : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
@@ -226,19 +189,19 @@ const AgentSelector: React.FC<{
             `}
             onClick={() => onAgentSelect(agent.id)}
           >
-            <div className="flex items-center space-x-3 sm:space-x-4">
+            <div className="flex items-center space-x-4">
               <input
                 type="radio"
                 name="agent"
                 value={agent.id}
                 checked={selectedAgent === agent.id}
                 onChange={() => onAgentSelect(agent.id)}
-                className="h-4 w-4 text-blue-600 flex-shrink-0"
+                className="h-4 w-4 text-blue-600"
               />
-              <div className="text-xl sm:text-2xl flex-shrink-0">{agent.icon}</div>
-              <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-gray-900 text-sm sm:text-base">{agent.name}</h4>
-                <p className="text-xs sm:text-sm text-gray-600">{agent.description}</p>
+              <div className="text-2xl">{agent.icon}</div>
+              <div className="flex-1">
+                <h4 className="font-medium text-gray-900">{agent.name}</h4>
+                <p className="text-sm text-gray-600">{agent.description}</p>
               </div>
             </div>
           </motion.div>
@@ -247,27 +210,6 @@ const AgentSelector: React.FC<{
     </div>
   );
 };
-
-// API Status Indicator
-const APIStatusIndicator: React.FC<{ isOnline: boolean }> = ({ isOnline }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    className="flex items-center space-x-2 text-xs text-gray-500"
-  >
-    {isOnline ? (
-      <>
-        <Wifi className="h-3 w-3 text-green-500" />
-        <span>API Connected</span>
-      </>
-    ) : (
-      <>
-        <WifiOff className="h-3 w-3 text-orange-500" />
-        <span>Using offline data</span>
-      </>
-    )}
-  </motion.div>
-);
 
 // Main Process Page Component
 const ProcessPage: React.FC = () => {
@@ -279,48 +221,20 @@ const ProcessPage: React.FC = () => {
   const [urlError, setUrlError] = useState('');
   const [textError, setTextError] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [agents, setAgents] = useState<Agent[]>(mockAgents);
-  const [isLoadingAgents, setIsLoadingAgents] = useState(false);
-  const [isAPIOnline, setIsAPIOnline] = useState(false);
-
-  // Enhanced API integration with fallback to mock data
-  useEffect(() => {
-    const fetchAgents = async () => {
-      setIsLoadingAgents(true);
-      try {
-        const response = await fetch('/api/agents');
-        if (response.ok) {
-          const apiAgents = await response.json();
-          setAgents(apiAgents);
-          setIsAPIOnline(true);
-        } else {
-          throw new Error('API not available');
-        }
-      } catch (error) {
-        console.log('API not ready, using mock data');
-        setAgents(mockAgents);
-        setIsAPIOnline(false);
-      } finally {
-        setIsLoadingAgents(false);
-      }
-    };
-
-    fetchAgents();
-  }, []);
 
   // Filter agents based on input type
-  const filteredAgents = agents.filter(agent => 
+  const filteredAgents = mockAgents.filter(agent => 
     agent.supportedInputs.includes(activeTab)
   );
 
   // Reset selected agent when changing tabs if current agent doesn't support new input type
-  useEffect(() => {
+  React.useEffect(() => {
     if (selectedAgent && !filteredAgents.find(a => a.id === selectedAgent)) {
       setSelectedAgent(null);
     }
   }, [activeTab, selectedAgent, filteredAgents]);
 
-  // Enhanced input validation
+  // Input validation
   const validateURL = (url: string) => {
     try {
       new URL(url);
@@ -359,36 +273,23 @@ const ProcessPage: React.FC = () => {
     }
   };
 
-  // Enhanced form submission with state storage for Day 3
+  // Handle form submission
   const handleProcess = async () => {
     setIsProcessing(true);
-    
-    // Store form data in state for Day 3 integration
-    const formData = {
-      inputType: activeTab,
-      agentId: selectedAgent,
-      content: activeTab === 'url' ? urlInput : 
-               activeTab === 'text' ? textInput : 
-               selectedFile?.name,
-      timestamp: new Date().toISOString()
-    };
-    
-    // Store in localStorage for Day 3 integration
-    localStorage.setItem('pendingProcessingJob', JSON.stringify(formData));
     
     // Mock processing delay
     setTimeout(() => {
       setIsProcessing(false);
-      alert('Processing started! Data stored for Day 3 integration.');
+      alert('Processing started! (This is a mock for Day 2)');
     }, 2000);
   };
 
-  // Enhanced tab configuration with better mobile icons
+  // Tab configuration
   const tabs = [
-    { id: 'file' as InputType, label: 'File', icon: FileText, shortLabel: 'File' },
-    { id: 'url' as InputType, label: 'URL', icon: Globe, shortLabel: 'URL' },
-    { id: 'text' as InputType, label: 'Text', icon: FileText, shortLabel: 'Text' },
-    { id: 'audio' as InputType, label: 'Audio', icon: Mic, shortLabel: 'Audio' }
+    { id: 'file' as InputType, label: 'File', icon: FileText },
+    { id: 'url' as InputType, label: 'URL', icon: Globe },
+    { id: 'text' as InputType, label: 'Text', icon: FileText },
+    { id: 'audio' as InputType, label: 'Audio', icon: Mic }
   ];
 
   return (
@@ -396,24 +297,20 @@ const ProcessPage: React.FC = () => {
       <Head>
         <title>Process Content - AIOS v2</title>
         <meta name="description" content="Process your content with AI agents" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
+      <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Enhanced Page Header */}
-          <div className="text-center mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4">Process Content</h1>
-            <p className="text-base sm:text-lg text-gray-600">
+          {/* Page Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Process Content</h1>
+            <p className="text-lg text-gray-600">
               Upload files, analyze URLs, or process text with AI agents
             </p>
-            <div className="mt-3 flex justify-center">
-              <APIStatusIndicator isOnline={isAPIOnline} />
-            </div>
           </div>
 
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            {/* Enhanced Tab Navigation for Mobile */}
+            {/* Tab Navigation */}
             <div className="border-b border-gray-200">
               <nav className="flex space-x-0">
                 {tabs.map((tab) => {
@@ -423,28 +320,27 @@ const ProcessPage: React.FC = () => {
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
                       className={`
-                        flex-1 flex items-center justify-center space-x-1 sm:space-x-2 px-2 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 transition-all duration-200
+                        flex-1 flex items-center justify-center space-x-2 px-6 py-4 text-sm font-medium border-b-2 transition-all duration-200
                         ${activeTab === tab.id
                           ? 'border-blue-500 text-blue-600 bg-blue-50'
                           : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                         }
                       `}
                     >
-                      <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
-                      <span className="hidden sm:inline">{tab.label}</span>
-                      <span className="sm:hidden">{tab.shortLabel}</span>
+                      <Icon className="h-5 w-5" />
+                      <span>{tab.label}</span>
                     </button>
                   );
                 })}
               </nav>
             </div>
 
-            {/* Enhanced Content Area */}
-            <div className="p-4 sm:p-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-                {/* Enhanced Input Section */}
-                <div className="space-y-4 sm:space-y-6">
-                  <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
+            {/* Content Area */}
+            <div className="p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Input Section */}
+                <div className="space-y-6">
+                  <h2 className="text-xl font-semibold text-gray-900">
                     {activeTab === 'file' && 'Upload File'}
                     {activeTab === 'url' && 'Enter URL'}
                     {activeTab === 'text' && 'Enter Text'}
@@ -479,7 +375,7 @@ const ProcessPage: React.FC = () => {
                             }}
                             placeholder="https://example.com/article"
                             className={`
-                              w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm sm:text-base
+                              w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors
                               ${urlError ? 'border-red-300' : 'border-gray-300'}
                             `}
                           />
@@ -489,7 +385,7 @@ const ProcessPage: React.FC = () => {
                               animate={{ opacity: 1, y: 0 }}
                               className="flex items-center space-x-2 text-red-600"
                             >
-                              <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                              <AlertCircle className="h-4 w-4" />
                               <span className="text-sm">{urlError}</span>
                             </motion.div>
                           )}
@@ -505,14 +401,14 @@ const ProcessPage: React.FC = () => {
                               validateText(e.target.value);
                             }}
                             placeholder="Paste your content here..."
-                            rows={6}
+                            rows={8}
                             className={`
-                              w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-vertical text-sm sm:text-base
+                              w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-vertical
                               ${textError ? 'border-red-300' : 'border-gray-300'}
                             `}
                           />
-                          <div className="flex justify-between items-center text-sm">
-                            <span className={`${textInput.length > 45000 ? 'text-red-600' : 'text-gray-500'}`}>
+                          <div className="flex justify-between items-center">
+                            <span className={`text-sm ${textInput.length > 45000 ? 'text-red-600' : 'text-gray-500'}`}>
                               {textInput.length.toLocaleString()} / 50,000 characters
                             </span>
                             {textError && (
@@ -541,22 +437,21 @@ const ProcessPage: React.FC = () => {
                   </AnimatePresence>
                 </div>
 
-                {/* Enhanced Agent Selection Section */}
-                <div className="space-y-4 sm:space-y-6">
+                {/* Agent Selection Section */}
+                <div className="space-y-6">
                   <AgentSelector
                     agents={filteredAgents}
                     selectedAgent={selectedAgent}
                     onAgentSelect={setSelectedAgent}
-                    isLoading={isLoadingAgents}
                   />
 
-                  {/* Enhanced Process Button */}
+                  {/* Process Button */}
                   <motion.button
                     whileTap={{ scale: 0.98 }}
                     onClick={handleProcess}
                     disabled={!isFormValid() || isProcessing}
                     className={`
-                      w-full py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-semibold text-white transition-all duration-200
+                      w-full py-4 px-6 rounded-lg font-semibold text-white transition-all duration-200
                       ${isFormValid() && !isProcessing
                         ? 'bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg'
                         : 'bg-gray-300 cursor-not-allowed'
@@ -566,20 +461,20 @@ const ProcessPage: React.FC = () => {
                     <div className="flex items-center justify-center space-x-2">
                       {isProcessing ? (
                         <>
-                          <Loader2 className="h-5 w-5 animate-spin" />
-                          <span className="text-sm sm:text-base">Processing...</span>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          <span>Processing...</span>
                         </>
                       ) : (
                         <>
                           <Bot className="h-5 w-5" />
-                          <span className="text-sm sm:text-base">Process Content</span>
+                          <span>Process Content</span>
                         </>
                       )}
                     </div>
                   </motion.button>
 
                   {!isFormValid() && (
-                    <p className="text-xs sm:text-sm text-gray-500 text-center">
+                    <p className="text-sm text-gray-500 text-center">
                       Select input content and an agent to continue
                     </p>
                   )}
@@ -593,4 +488,4 @@ const ProcessPage: React.FC = () => {
   );
 };
 
-export default ProcessPage;
+export default ProcessPage; 

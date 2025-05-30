@@ -16,7 +16,7 @@
       "task_id": "TASK-170C",
       "title": "MVP-Lite Day 2: Multi-Input Upload & Process Page",
       "priority": "HIGH",
-      "status": "pending",
+      "status": "ready_for_review",
       "created_at": "2025-05-31T01:45:00Z",
       "estimated_hours": 8,
       "description": "Build the Process page with multi-input support (File/URL/Text/Audio) and agent selection",
