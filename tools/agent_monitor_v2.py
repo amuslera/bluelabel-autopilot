@@ -353,6 +353,11 @@ class EnhancedAgentMonitor:
                 "goals": "Complete AIOS v2 MVP as viable AI Operating System",
                 "theme": "AIOS v2 Product Delivery",
                 "key_metrics": "4 tasks, Email integration, Web UI, Production deploy, User experience"
+            },
+            "PHASE_6.16_MVP_LITE": {
+                "goals": "Establish MVP-Lite foundation with core agent infrastructure",
+                "theme": "MVP-Lite Foundation",
+                "key_metrics": "2 tasks, Dashboard UI, Backend foundation, 5-day sprint (May 31 - June 4)"
             }
         }
         
@@ -365,11 +370,12 @@ class EnhancedAgentMonitor:
     def get_next_planned_tasks(self):
         """Return list of next planned tasks"""
         return [
-            "TASK-165M: Security audit tools",
-            "TASK-165N: Batch task processing", 
-            "TASK-165O: Agent health monitoring",
-            "TASK-165P: Workflow visualization",
-            "TASK-165Q: Sprint automation tools"
+            "TASK-170A: Foundation & Dashboard UI (CA - Day 1)",
+            "TASK-170B: Backend Foundation & Agent Setup (CB - Day 1)",
+            "Day 2: Process Content page and job processing",
+            "Day 3: Agent pages and result viewing",
+            "Day 4: Integration testing and polish",
+            "Day 5: Production deployment"
         ]
     
     def get_priority_icon(self, priority):

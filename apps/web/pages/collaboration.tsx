@@ -98,20 +98,20 @@ const CollaborationPage: React.FC = () => {
       {
         id: 'CA',
         name: 'Cursor AI Frontend',
-        status: 'working',
-        currentTask: 'TASK-166A',
+        status: 'ready',
+        currentTask: null,
         expertise: ['frontend', 'ui', 'react', 'typescript'],
-        workload: 85,
+        workload: 0,
         lastSeen: new Date().toISOString(),
         avatar: '🎨'
       },
       {
         id: 'CB',
         name: 'Claude Backend',
-        status: 'busy',
-        currentTask: 'TASK-165E',
+        status: 'ready',
+        currentTask: null,
         expertise: ['backend', 'api', 'database', 'python'],
-        workload: 70,
+        workload: 0,
         lastSeen: new Date(Date.now() - 300000).toISOString(),
         avatar: '⚙️'
       },
@@ -127,74 +127,46 @@ const CollaborationPage: React.FC = () => {
       {
         id: 'ARCH',
         name: 'Architecture Agent',
-        status: 'working',
-        currentTask: 'TASK-166B',
+        status: 'idle',
+        currentTask: null,
         expertise: ['architecture', 'system_design', 'planning'],
-        workload: 60,
+        workload: 0,
         lastSeen: new Date(Date.now() - 120000).toISOString(),
         avatar: '🏗️'
       }
     ];
 
-    // Mock tasks
+    // Mock tasks for Phase 6.16 MVP-Lite Sprint
     const mockTasks: Task[] = [
       {
-        id: 'TASK-166A',
-        title: 'Real-time agent collaboration interface',
-        description: 'Create interactive UI for real-time agent collaboration',
-        status: 'in_progress',
+        id: 'TASK-170A',
+        title: 'Foundation & Dashboard UI',
+        description: 'Build MVP-Lite foundation with agent status dashboard',
+        status: 'pending',
         assignee: 'CA',
         priority: 'high',
         dependencies: [],
-        estimatedHours: 3,
-        actualHours: 1.5,
-        tags: ['frontend', 'ui', 'collaboration'],
-        dueDate: new Date(Date.now() + 86400000).toISOString(),
-        createdAt: new Date(Date.now() - 3600000).toISOString(),
-        updatedAt: new Date().toISOString()
+        estimatedHours: 8,
+        actualHours: 0,
+        tags: ['frontend', 'ui', 'dashboard', 'mvp'],
+        dueDate: new Date('2025-05-31T17:00:00').toISOString(),
+        createdAt: new Date('2025-05-31T00:00:00').toISOString(),
+        updatedAt: new Date('2025-05-31T00:00:00').toISOString()
       },
       {
-        id: 'TASK-165E',
-        title: 'Performance metrics API',
-        description: 'Implement backend API for performance tracking',
-        status: 'in_progress',
-        assignee: 'CB',
-        priority: 'medium',
-        dependencies: [],
-        estimatedHours: 4,
-        actualHours: 2.8,
-        tags: ['backend', 'api', 'metrics'],
-        dueDate: new Date(Date.now() + 172800000).toISOString(),
-        createdAt: new Date(Date.now() - 7200000).toISOString(),
-        updatedAt: new Date(Date.now() - 1800000).toISOString()
-      },
-      {
-        id: 'TASK-166B',
-        title: 'System architecture review',
-        description: 'Review and optimize current system architecture',
-        status: 'in_progress',
-        assignee: 'ARCH',
-        priority: 'medium',
-        dependencies: ['TASK-165E'],
-        estimatedHours: 2,
-        actualHours: 0.5,
-        tags: ['architecture', 'review', 'optimization'],
-        dueDate: new Date(Date.now() + 259200000).toISOString(),
-        createdAt: new Date(Date.now() - 5400000).toISOString(),
-        updatedAt: new Date(Date.now() - 600000).toISOString()
-      },
-      {
-        id: 'TASK-166C',
-        title: 'Integration testing framework',
-        description: 'Setup automated integration testing',
+        id: 'TASK-170B',
+        title: 'Backend Foundation & Agent Setup',
+        description: 'Establish backend foundation and core agent infrastructure',
         status: 'pending',
-        priority: 'low',
-        dependencies: ['TASK-166A', 'TASK-165E'],
-        estimatedHours: 3,
-        tags: ['testing', 'automation', 'integration'],
-        dueDate: new Date(Date.now() + 345600000).toISOString(),
-        createdAt: new Date(Date.now() - 1800000).toISOString(),
-        updatedAt: new Date(Date.now() - 1800000).toISOString()
+        assignee: 'CB',
+        priority: 'high',
+        dependencies: [],
+        estimatedHours: 8,
+        actualHours: 0,
+        tags: ['backend', 'api', 'database', 'mvp'],
+        dueDate: new Date('2025-05-31T17:00:00').toISOString(),
+        createdAt: new Date('2025-05-31T00:00:00').toISOString(),
+        updatedAt: new Date('2025-05-31T00:00:00').toISOString()
       }
     ];
 
@@ -203,31 +175,30 @@ const CollaborationPage: React.FC = () => {
       {
         id: '1',
         from: 'ARCH',
-        message: 'Starting daily coordination. Current sprint has 4 active tasks.',
+        message: 'Starting Phase 6.16 MVP-Lite Sprint. 2 tasks assigned for Day 1.',
         timestamp: new Date(Date.now() - 1800000).toISOString(),
         type: 'system'
       },
       {
         id: '2',
-        from: 'CB',
-        message: 'Performance API is 70% complete. Will need frontend integration soon.',
+        from: 'CA',
+        message: 'Ready to start TASK-170A: Foundation & Dashboard UI',
         timestamp: new Date(Date.now() - 1200000).toISOString(),
         type: 'message'
       },
       {
         id: '3',
-        from: 'CA',
-        message: 'Ready to integrate once CB finishes the metrics endpoints.',
+        from: 'CB',
+        message: 'Ready to start TASK-170B: Backend Foundation & Agent Setup',
         timestamp: new Date(Date.now() - 900000).toISOString(),
         type: 'message'
       },
       {
         id: '4',
-        from: 'CB',
-        message: 'Task TASK-165E updated: 80% complete',
+        from: 'ARCH',
+        message: 'MVP-Lite Sprint initialized. Focus on core functionality.',
         timestamp: new Date(Date.now() - 300000).toISOString(),
-        type: 'task_update',
-        metadata: { taskId: 'TASK-165E', progress: 80 }
+        type: 'system'
       }
     ];
 
