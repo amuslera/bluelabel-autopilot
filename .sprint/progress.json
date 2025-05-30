@@ -1,82 +1,69 @@
 {
-  "sprint_id": "PHASE_6.16_MVP_LITE",
-  "start_date": "2025-05-31",
-  "end_date": "2025-06-04",
+  "sprint_id": "PHASE_6.17_MVP_SPRINT_1",
+  "start_date": "2025-06-01",
+  "end_date": "2025-06-02",
   "total_tasks": 6,
-  "completed": 6,
+  "completed": 0,
   "in_progress": 0,
-  "pending": 0,
+  "pending": 6,
   "tasks": {
-    "TASK-170A": {
-      "status": "completed",
-      "agent": "CA",
-      "title": "Foundation & Dashboard UI",
-      "priority": "HIGH",
-      "description": "Build MVP-Lite foundation with agent status dashboard",
-      "created_at": "2025-05-31T00:00:00Z",
-      "completed_at": "2025-05-31T01:30:00Z"
-    },
-    "TASK-170B": {
-      "status": "completed",
-      "agent": "CB",
-      "title": "Backend Foundation & Agent Setup",
-      "priority": "HIGH",
-      "description": "Establish backend foundation and core agent infrastructure",
-      "created_at": "2025-05-31T00:00:00Z",
-      "started_at": "2025-05-30T13:15:00Z",
-      "completed_at": "2025-05-30T14:00:00Z"
-    },
-    "TASK-170C": {
-      "status": "completed",
-      "agent": "CA",
-      "title": "Process Page & Real-time Updates",
-      "priority": "HIGH",
-      "description": "Build process monitoring page with real-time job status",
-      "created_at": "2025-05-31T00:00:00Z",
-      "completed_at": "2025-05-30T21:00:00Z"
-    },
-    "TASK-170D": {
-      "status": "completed",
+    "TASK-171A": {
+      "status": "pending",
       "agent": "CC",
-      "title": "Process API & Job Handling",
+      "title": "User Authentication System",
       "priority": "HIGH",
-      "description": "Implement job processing backend with real-time status updates",
-      "created_at": "2025-05-31T00:00:00Z",
-      "started_at": "2025-05-30T14:20:00Z",
-      "completed_at": "2025-05-31T02:30:00Z"
+      "description": "Implement JWT-based authentication with user registration, login, and profile management",
+      "created_at": "2025-06-01T09:30:00Z"
     },
-    "TASK-170E": {
-      "status": "completed",
-      "agent": "CB",
-      "title": "API Contract Testing & Integration Validation",
+    "TASK-171B": {
+      "status": "pending",
+      "agent": "CC",
+      "title": "Agent Marketplace Backend",
       "priority": "HIGH",
-      "description": "Create comprehensive API contract testing and integration validation",
-      "created_at": "2025-05-31T00:00:00Z",
-      "started_at": "2025-05-30T14:20:00Z",
-      "completed_at": "2025-05-30T15:30:00Z"
+      "description": "Build backend APIs for agent marketplace with listing, install, and rating features",
+      "created_at": "2025-06-01T09:30:00Z"
     },
-    "TASK-170F": {
-      "status": "completed",
+    "TASK-171C": {
+      "status": "pending",
       "agent": "CA",
-      "title": "Agents Page & Job Submission Flow",
+      "title": "Custom Agent Builder UI",
       "priority": "HIGH",
-      "description": "Build the Agents page and implement complete job submission flow",
-      "created_at": "2025-05-31T02:30:00Z",
-      "started_at": "2025-05-31T02:30:00Z",
-      "completed_at": "2025-05-31T02:45:00Z"
+      "description": "Create intuitive interface for users to build custom agents with prompts and configurations",
+      "created_at": "2025-06-01T09:30:00Z"
+    },
+    "TASK-171D": {
+      "status": "pending",
+      "agent": "CB",
+      "title": "Production Error Handling",
+      "priority": "MEDIUM",
+      "description": "Implement comprehensive error handling, logging, and recovery mechanisms for production",
+      "created_at": "2025-06-01T09:30:00Z"
+    },
+    "TASK-171E": {
+      "status": "pending",
+      "agent": "CA",
+      "title": "Authentication UI Integration",
+      "priority": "HIGH",
+      "description": "Create login/register pages and integrate authentication flow in frontend",
+      "created_at": "2025-06-01T09:30:00Z"
+    },
+    "TASK-171F": {
+      "status": "pending",
+      "agent": "CB",
+      "title": "Integration Testing Suite",
+      "priority": "HIGH",
+      "description": "Comprehensive E2E tests for auth flow, marketplace, and agent builder",
+      "created_at": "2025-06-01T09:30:00Z"
     }
   },
-  "other_completed": {
-    "SPRINT4-001": {
-      "status": "completed",
-      "agent": "CC",
-      "title": "UnifiedWorkflowEngine Adapter",
-      "completed_at": "2025-05-30T14:30:00Z",
-      "description": "Created adapter to unify fragmented workflow architecture"
-    }
+  "previous_sprint": {
+    "sprint_id": "PHASE_6.16_MVP_LITE",
+    "status": "COMPLETED",
+    "completion_date": "2025-05-31T02:40:00Z",
+    "velocity": "600% faster than planned",
+    "postmortem": "/docs/devphases/PHASE_6.16/PHASE_6.16_MVP_LITE_POSTMORTEM.md"
   },
-  "last_updated": "2025-05-31T02:40:00Z",
-  "sprint_status": "COMPLETED",
-  "closeout_date": "2025-05-31T02:40:00Z",
-  "postmortem": "/docs/devphases/PHASE_6.16/PHASE_6.16_MVP_LITE_POSTMORTEM.md"
+  "last_updated": "2025-06-01T09:30:00Z",
+  "sprint_status": "ACTIVE",
+  "sprint_goal": "Transform MVP-Lite into production-ready system with user auth and agent marketplace"
 }

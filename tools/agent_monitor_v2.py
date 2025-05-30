@@ -357,7 +357,12 @@ class EnhancedAgentMonitor:
             "PHASE_6.16_MVP_LITE": {
                 "goals": "Establish MVP-Lite foundation with core agent infrastructure",
                 "theme": "MVP-Lite Foundation",
-                "key_metrics": "2 tasks, Dashboard UI, Backend foundation, 5-day sprint (May 31 - June 4)"
+                "key_metrics": "6 tasks completed in 1 day! 600% faster than planned"
+            },
+            "PHASE_6.17_MVP_SPRINT_1": {
+                "goals": "Transform MVP-Lite into production-ready system with auth & marketplace",
+                "theme": "Production MVP Sprint 1",
+                "key_metrics": "6 tasks, User auth, Agent marketplace, Custom agents, 1-2 day sprint"
             }
         }
         
@@ -370,12 +375,12 @@ class EnhancedAgentMonitor:
     def get_next_planned_tasks(self):
         """Return list of next planned tasks"""
         return [
-            "TASK-170A: Foundation & Dashboard UI (CA - Day 1)",
-            "TASK-170B: Backend Foundation & Agent Setup (CB - Day 1)",
-            "Day 2: Process Content page and job processing",
-            "Day 3: Agent pages and result viewing",
-            "Day 4: Integration testing and polish",
-            "Day 5: Production deployment"
+            "TASK-171A: User Authentication System (CC - Day 1)",
+            "TASK-171B: Agent Marketplace Backend (CC - Day 1)",
+            "TASK-171C: Custom Agent Builder UI (CA - Day 1)",
+            "TASK-171D: Production Error Handling (CB - Day 1)",
+            "TASK-171E: Authentication UI Integration (CA - Day 2)",
+            "TASK-171F: Integration Testing Suite (CB - Day 2)"
         ]
     
     def get_priority_icon(self, priority):

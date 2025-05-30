@@ -12,6 +12,19 @@
     "tooling"
   ],
   "tasks": [
+    {
+      "task_id": "TASK-171C",
+      "title": "Custom Agent Builder UI",
+      "description": "Create intuitive interface for users to build custom agents with prompts and configurations",
+      "priority": "high",
+      "status": "in_progress",
+      "created_at": "2025-06-01T09:30:00Z",
+      "started_at": "2025-06-01T10:00:00Z",
+      "estimated_hours": 4,
+      "assigned_phase": "Phase 6.17",
+      "details_file": "inbox/TASK-171C-agent-builder-ui.md",
+      "progress_notes": "Starting implementation - setting up branch and project structure"
+    }
   ],
   "history": [
     {
