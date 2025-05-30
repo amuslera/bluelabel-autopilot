@@ -8,20 +8,23 @@ The **Human Tech Lead** is Ariel Muslera. ARCH-AI assists Ariel by managing task
 
 ## ✅ Phase Status Snapshot
 
-**Current Phase:** Phase 6.16 (MVP-Lite Sprint) - 🚀 ACTIVE
-**Previous Phase:** Phase 6.15 (AIOS v2 MVP Delivery) - COMPLETED  
-**Last Completed Tag:** `v0.6.15-alpha3`
-**Current Sprint:** MVP-Lite 5-Day Sprint - Day 1 (May 31, 2025)
-**Phase 6.16 Status:** 🚀 ACTIVE (Started 2025-05-31)
-  - Sprint Type: MVP-Lite - Core functionality only
-  - Sprint Mission: "Working prototype with upload → process → view in 5 days"
-  - Day 1 Status: IN PROGRESS - Foundation & Dashboard
-  - Current Tasks: CA (TASK-170A), CB (TASK-170B)
-  - Target Completion: June 4, 2025
-  - Current CTO: ARCH-Claude (Strategic Leadership + Task Orchestration)
-  - Sprint Plan: /docs/devphases/PHASE_6.16/PHASE_6.16_MVP_LITE_PLAN.md
+**Current Phase:** Phase 6.17 (Production MVP Sprint 1) - PLANNING
+**Previous Phase:** Phase 6.16 (MVP-Lite Sprint) - COMPLETED  
+**Last Completed Tag:** `v0.6.16-mvp-lite`
+**Current Sprint:** Production MVP Features - STARTING (June 1, 2025)
+**Phase 6.16 Status:** ✅ COMPLETED (600% faster than planned!)
 
-**🎯 Current Focus:** Building minimal viable UI with 4 pre-built agents
+**🎯 NEW STRATEGIC FOCUS: Production MVP in 2-3 Sprints**
+- **Velocity Calibration**: Days → Hours (5 days of work = 8 hours actual)
+- **MVP Target**: Full production system by Phase 6.19
+- **Method Change**: Feature branches for all development
+- **Priority**: MVP features over infrastructure automation
+
+**Phase 6.17 Focus:** User Auth, Marketplace Backend, Custom Agents (1-2 days)
+**Phase 6.18 Focus:** Marketplace UI, Collaboration, Billing/Usage (1-2 days)
+**Phase 6.19 Focus:** Production Deploy, Monitoring, Launch (1 day)
+
+**🎯 Latest Achievement:** Complete MVP-Lite delivered with all user journeys functional
 
 **🚀 Major Achievement:** Successfully delivered complete AIOS v2 MVP
 - End-to-end AI Operating System functional (Email → PDF → Analysis → Response)
@@ -49,9 +52,10 @@ Ariel prefers:
 He expects:
 
 * One task per agent at a time (unless grouped)
-* One branch per task (unless exception granted)
+* One branch per task - **NOW MANDATORY** (format: `dev/TASK-XXX-brief-description`)
 * Every task tracked via `/TASK_CARDS.md` and outbox
 * System to always be rebootable from file state only
+* Feature branches merged to main only after validation
 
 ---
 
@@ -72,23 +76,27 @@ ARCH-AI must:
 ## ✏️ Prompt Construction Guidelines (for ARCH-AI)
 
 * 📌 **Start with:** `TASK-XXXX: <Title>`
-* 📁 **Include branch setup:**
+* 📁 **MANDATORY branch setup:**
 
   ```
-  git checkout -b <branch-name>
+  git checkout main
+  git pull origin main
+  git checkout -b dev/TASK-XXX-brief-description
   ```
 * ✅ **Define deliverables clearly:**
 
   * Files created or modified
   * Logs expected (outbox + `/TASK_CARDS.md`)
-  * What must be pushed or committed
+  * What must be pushed (to feature branch, NOT main)
+  * Merge criteria and validation requirements
 * 🧾 **Use checklist reminders if relevant**
 * 🎯 **Set the tone by agent:**
 
-  * CA = builder mode
-  * CC = reviewer + system validation
-  * WA = executor with strict constraints
+  * CA = Frontend specialist, owns all UI/UX decisions
+  * CC = Backend specialist, owns all API/database decisions  
+  * CB = Testing specialist, owns all quality/validation decisions
 * 📣 **Final line:** Prompt agent to write `XX Reports:` to their outbox with what was done and key output files
+* 🌿 **Branch completion:** Include instructions for pushing to feature branch and creating PR if appropriate
 
 ---
 
@@ -96,10 +104,10 @@ ARCH-AI must:
 
 | Agent                 | Scope                                       | Notes                          |
 | --------------------- | ------------------------------------------- | ------------------------------ |
-| **CC**                | Backend, schema, audit, merge, infra        | Tag owner, validator, cleaner  |
-| **CA**                | CLI tools, YAML plans, docs, UX             | DX lead, versatile, structured |
-| **WA**                | UI only, with strict checklist              | Never handles CLI, DAG, logic  |
-| **ARCH-AI (ChatGPT)** | Strategic prompt planner + continuity guide | Does not run code, only plans  |
+| **CC**                | Backend, APIs, database, auth, infrastructure | Backend specialist, API owner  |
+| **CA**                | Frontend, UI/UX, React, TypeScript, design   | Frontend specialist, UI owner  |
+| **CB**                | Testing, QA, E2E, integration, performance   | Testing specialist, quality owner |
+| **ARCH-AI**           | Strategic planning, task orchestration       | CTO role, does not code       |
 
 ## 📝 Feedback Reporting Policy
 

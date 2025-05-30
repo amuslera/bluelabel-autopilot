@@ -303,7 +303,7 @@ class EnhancedAgentMonitor:
                     "status": "working",
                     "current_task": active_task,
                     "pending_tasks": pending_tasks,
-                    "history": history[-3:]  # Last 3 completed tasks
+                    "history": history[-3:] if len(history) <= 3 else sorted(history, key=lambda x: x.get("timestamp", ""), reverse=True)[:3]  # Last 3 completed tasks by timestamp
                 }
             elif pending_tasks:
                 # Clear start time if not working
@@ -312,11 +312,11 @@ class EnhancedAgentMonitor:
                     "status": "ready",
                     "current_task": None,
                     "pending_tasks": pending_tasks,
-                    "history": history[-3:]
+                    "history": history[-3:] if len(history) <= 3 else sorted(history, key=lambda x: x.get("timestamp", ""), reverse=True)[:3]
                 }
                 
             self.start_times.pop(agent_id, None)
-            return {"status": "idle", "current_task": None, "pending_tasks": [], "history": history[-3:]}
+            return {"status": "idle", "current_task": None, "pending_tasks": [], "history": history[-3:] if len(history) <= 3 else sorted(history, key=lambda x: x.get("timestamp", ""), reverse=True)[:3]}
             
         except Exception as e:
             return {"status": "error", "current_task": None, "pending_tasks": [], "history": [], "error": str(e)}
@@ -555,7 +555,9 @@ class EnhancedAgentMonitor:
                     print(f"   └─ Awaiting task assignment")
                     
             elif status["status"] == "idle":
-                last_task = status["history"][-1] if status["history"] else None
+                # Sort history by timestamp to get the actual most recent task
+                sorted_history = sorted(status["history"], key=lambda x: x.get("timestamp", ""), reverse=True) if status["history"] else []
+                last_task = sorted_history[0] if sorted_history else None
                 print(f"💤 {agent} ({agent_name})")
                 print(f"   ├─ IDLE: No current tasks")
                 if last_task:
