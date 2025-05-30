@@ -8,18 +8,20 @@ The **Human Tech Lead** is Ariel Muslera. ARCH-AI assists Ariel by managing task
 
 ## ✅ Phase Status Snapshot
 
-**Current Phase:** Phase 6.15 (AIOS v2 MVP Delivery) - ✅ COMPLETED
-**Previous Phase:** Phase 6.13 (System Hardening) - COMPLETED  
+**Current Phase:** Phase 6.16 (MVP-Lite Sprint) - 🚀 ACTIVE
+**Previous Phase:** Phase 6.15 (AIOS v2 MVP Delivery) - COMPLETED  
 **Last Completed Tag:** `v0.6.15-alpha3`
-**Last Sprint Completed:** Sprint 3 - Complete AIOS v2 MVP & Production Launch Preparation
-**Phase 6.15 Status:** ✅ COMPLETED (2025-05-30) - 100% SUCCESS
-  - Sprint 3 Status: ✅ COMPLETED (2025-05-30) - Tag: v0.6.15-alpha3
-  - Sprint Mission: "Transform technical excellence into user value" - ACHIEVED
-  - Sprint Focus: Complete AIOS v2 MVP with production readiness - DELIVERED
-  - Strategic Outcome: AI Operating System ready for user acquisition - SUCCESS
+**Current Sprint:** MVP-Lite 5-Day Sprint - Day 1 (May 31, 2025)
+**Phase 6.16 Status:** 🚀 ACTIVE (Started 2025-05-31)
+  - Sprint Type: MVP-Lite - Core functionality only
+  - Sprint Mission: "Working prototype with upload → process → view in 5 days"
+  - Day 1 Status: IN PROGRESS - Foundation & Dashboard
+  - Current Tasks: CA (TASK-170A), CB (TASK-170B)
+  - Target Completion: June 4, 2025
   - Current CTO: ARCH-Claude (Strategic Leadership + Task Orchestration)
-  - Postmortem: /docs/devphases/PHASE_6.15/sprints/SPRINT_3_POSTMORTEM.md
-  - Next Phase: Production launch and user acquisition (Phase 6.16)
+  - Sprint Plan: /docs/devphases/PHASE_6.16/PHASE_6.16_MVP_LITE_PLAN.md
+
+**🎯 Current Focus:** Building minimal viable UI with 4 pre-built agents
 
 **🚀 Major Achievement:** Successfully delivered complete AIOS v2 MVP
 - End-to-end AI Operating System functional (Email → PDF → Analysis → Response)

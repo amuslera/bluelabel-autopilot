@@ -1,3 +1,30 @@
+## Phase 6.16 - MVP-Lite Sprint
+
+### MVP-Lite: Core Functionality in 5 Days
+**Dates:** 2025-05-31 to 2025-06-04
+**Tag:** TBD (v0.6.16-mvp)
+**Status:** 🚀 ACTIVE - Day 1
+**Sprint Plan:** /docs/devphases/PHASE_6.16/PHASE_6.16_MVP_LITE_PLAN.md
+
+#### Mission
+**"Working prototype with upload → process → view in 5 days"**
+- Focus on core user journey only
+- 4 pre-built agents (no custom creation)
+- All input types supported (file, URL, text, audio)
+- Simple session-based auth
+
+#### Day 1 Tasks (May 31)
+- **TASK-170A:** Foundation & Dashboard UI (CA) - IN PROGRESS
+- **TASK-170B:** Backend Foundation & Agent Setup (CB) - IN PROGRESS
+
+#### Target Deliverables
+- 4 working pages (Dashboard, Process, Agents, Results)
+- 4 pre-configured agents
+- Complete upload → process → view flow
+- Mobile responsive design
+
+---
+
 ## Phase 6.15 - AIOS v2 MVP Delivery
 
 ### Sprint 3: Complete AIOS v2 MVP & Production Launch Preparation
