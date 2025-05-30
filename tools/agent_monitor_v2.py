@@ -640,8 +640,11 @@ class EnhancedAgentMonitor:
             sprint_start = progress.get("start_date")
             if sprint_start:
                 days_elapsed = (datetime.now() - self.parse_iso_datetime(sprint_start)).days + 1
-                daily_rate = completed / days_elapsed
-                print(f"Velocity: {daily_rate:.1f} tasks/day")
+                if days_elapsed > 0 and completed > 0:
+                    daily_rate = completed / days_elapsed
+                    print(f"Velocity: {daily_rate:.1f} tasks/day")
+                else:
+                    print(f"Velocity: -- tasks/day (Day {days_elapsed})")
         else:
             print("No sprint tasks defined")
         
