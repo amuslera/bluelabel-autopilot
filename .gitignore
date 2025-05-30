@@ -3,3 +3,13 @@ node_modules/
 *.log
 *.lock
 __pycache__/
+
+# AIOS-V2 is a separate git repository
+bluelabel-AIOS-V2/
+
+# Metrics and exports
+.metrics/
+.cache/
+
+# Git garbage collection
+.git/gc.log
