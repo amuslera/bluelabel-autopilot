@@ -339,6 +339,16 @@ class EnhancedAgentMonitor:
         
         # Define sprint information based on sprint ID
         sprint_info = {
+            "PHASE_6.17_SPRINT_2": {
+                "goals": "Production deployment & user experience polish",
+                "theme": "Launch Ready",
+                "key_metrics": "6 tasks, Full stack deployment, <200ms API, <3s page load"
+            },
+            "PHASE_6.17_SPRINT_1": {
+                "goals": "Transform MVP-Lite to Production MVP",
+                "theme": "Production Foundation",
+                "key_metrics": "6 tasks completed, JWT auth, Marketplace API, 70%+ test coverage"
+            },
             "PHASE_6.15_SPRINT_1": {
                 "goals": "Multi-agent orchestration infrastructure",
                 "theme": "Foundation & Coordination",
