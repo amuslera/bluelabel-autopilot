@@ -3,7 +3,7 @@ assigned_to: CC
 priority: HIGH
 blocked_by: []
 blocks: [SPRINT4-002, SPRINT4-003]
-status: PLANNED
+status: COMPLETED
 
 title: Create UnifiedWorkflowEngine Adapter
 description: |

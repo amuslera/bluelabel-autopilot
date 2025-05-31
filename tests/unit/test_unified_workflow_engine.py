@@ -146,7 +146,21 @@ class TestUnifiedWorkflowEngine:
         mock_runner.register_step = Mock()
         
         with patch('core.unified_workflow_engine.DAGRunnerFactory.create_runner', return_value=mock_runner):
-            with patch('core.unified_workflow_engine.WorkflowLoader'):
+            # Mock WorkflowLoader properly
+            mock_loader = Mock()
+            mock_loader.load.return_value = {
+                'workflow': {
+                    'name': 'Test Workflow',
+                    'version': '1.0.0'
+                }
+            }
+            mock_loader.parse_steps.return_value = [
+                Mock(id='step1', name='Step 1', agent='ingestion_agent', input_file='input.json', input_from=None, config=None),
+                Mock(id='step2', name='Step 2', agent='digest_agent', input_file=None, input_from='step1', config=None)
+            ]
+            mock_loader.get_execution_order.return_value = ['step1', 'step2']
+            
+            with patch('core.unified_workflow_engine.WorkflowLoader', return_value=mock_loader):
                 # Mock agents
                 mock_agents = {
                     'ingestion_agent': AsyncMock(),
